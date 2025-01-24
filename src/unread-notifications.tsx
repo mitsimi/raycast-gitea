@@ -1,4 +1,4 @@
-import { List, getPreferenceValues, Toast } from "@raycast/api";
+import { List, getPreferenceValues, Toast, Icon } from "@raycast/api";
 import { apiBaseUrl } from "./common/global";
 import { Notification } from "./interfaces/notification";
 import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
@@ -37,7 +37,7 @@ export default function Command() {
       throttle
     >
       {notifications.length <= 0 ? (
-        <List.EmptyView icon={{ source: "gitea-icon.png" }} title="You have no new notifications" />
+        <List.EmptyView icon={Icon.Tray} title="No unread notifications." />
       ) : (
         <NotificationPanel notifications={notifications} setNotifications={setNotifications} />
       )}
