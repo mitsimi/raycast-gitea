@@ -4,14 +4,12 @@ import { apiBaseUrl } from "../common/global";
 import fetch from "node-fetch";
 
 export default function NotificationActions(props: { item: Notification; setNotifications }) {
-  const { item, setNotifications } = props;
-
   const markAsRead = async () => {
     const toStatus = item.unread ? "read" : "unread";
 
     const { serverUrl, accessToken } = getPreferenceValues<{ serverUrl: string; accessToken: string }>();
     const notifyUrl =
-      serverUrl + apiBaseUrl + `/notifications/threads/${item.id}?token=${accessToken}&query=${toStatus}`;
+      serverUrl + apiBaseUrl + `/notifications/threads/${props.item.id}?token=${accessToken}&query=${toStatus}`;
 
     const toast = await showToast({ style: Toast.Style.Animated, title: "Marking notification as read" });
     try {
@@ -36,7 +34,7 @@ export default function NotificationActions(props: { item: Notification; setNoti
 
       <ActionPanel.Section>
         <Action
-          title={item.unread ? "Mark as Read" : "Mark as Unread"}
+          title={props.item.unread ? "Mark as Read" : "Mark as Unread"}
           icon={Icon.Eye}
           shortcut={{ modifiers: ["ctrl"], key: "r" }}
           onAction={markAsRead}
