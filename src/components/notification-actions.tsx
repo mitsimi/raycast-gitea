@@ -3,22 +3,32 @@ import { Notification } from "../interfaces/notification";
 import { apiBaseUrl } from "../common/global";
 import fetch from "node-fetch";
 
-export default function NotificationActions(props: { item: Notification; setNotifications }) {
+export default function NotificationActions(props: {
+  item: Notification;
+  setNotifications: (newNotifications: Notification[]) => void;
+}) {
   const markAsRead = async () => {
-    const toStatus = item.unread ? "read" : "unread";
+    const toStatus = props.item.unread ? "read" : "unread";
 
     const { serverUrl, accessToken } = getPreferenceValues<{ serverUrl: string; accessToken: string }>();
     const notifyUrl =
-      serverUrl + apiBaseUrl + `/notifications/threads/${props.item.id}?token=${accessToken}&query=${toStatus}`;
+      serverUrl + apiBaseUrl + `/notifications/threads/${props.item.id}?token=${accessToken}&to-status=${toStatus}`;
 
     const toast = await showToast({ style: Toast.Style.Animated, title: "Marking notification as read" });
     try {
-      let response = await fetch(notifyUrl);
-      const data: Notification[] = await response.json();
-      //setNotifications(data);
+      let response = await fetch(notifyUrl, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let data: Notification[] = await response.json();
+      props.setNotifications(data);
+
       toast.style = Toast.Style.Success;
       toast.title = `Marked as ${toStatus}`;
-    } catch (err) {
+    } catch (err: any) {
       toast.style = Toast.Style.Failure;
       toast.title = `Could not mark as ${toStatus}`;
       toast.message = err.message;
