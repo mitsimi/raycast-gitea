@@ -2,11 +2,9 @@ import { Action, ActionPanel, getPreferenceValues, Icon, showToast, Toast } from
 import { Notification } from "../interfaces/notification";
 import { apiBaseUrl } from "../common/global";
 import fetch from "node-fetch";
+import { MutatePromise } from "@raycast/utils";
 
-export default function NotificationActions(props: {
-  item: Notification;
-  setNotifications: (newNotifications: Notification[]) => void;
-}) {
+export default function NotificationActions(props: { item: Notification; mutate: MutatePromise<unknown, unknown> }) {
   const markAsRead = async () => {
     const toStatus = props.item.unread ? "read" : "unread";
 
@@ -16,22 +14,30 @@ export default function NotificationActions(props: {
 
     const toast = await showToast({ style: Toast.Style.Animated, title: "Marking notification as read" });
     try {
-      let response = await fetch(notifyUrl, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await props.mutate(
+        fetch(notifyUrl, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }),
+      );
+      //let response = await fetch(notifyUrl, {
+      //  method: "PATCH",
+      //  headers: {
+      //    "Content-Type": "application/json",
+      //  },
+      //});
 
-      let data: Notification[] = await response.json();
-      props.setNotifications(data);
+      //let data = await response.json();
+      //props.setNotifications(data);
 
       toast.style = Toast.Style.Success;
       toast.title = `Marked as ${toStatus}`;
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.style = Toast.Style.Failure;
       toast.title = `Could not mark as ${toStatus}`;
-      toast.message = err.message;
+      toast.message = err instanceof Error ? err.message : String(err);
     }
   };
 
