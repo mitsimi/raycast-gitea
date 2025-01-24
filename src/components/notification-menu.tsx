@@ -13,10 +13,10 @@ export default function NotificationMenu(props: { items: Notification[]; mutate:
         title={item.subject.title}
         subtitle={item.repository.full_name}
         accessories={[
-          { text: { value: item.subject.type, color: Color.PrimaryText } },
-          { text: "#" + getLastStr(item.subject.html_url) },
-          //{ text: `[${item.id}]` },
           item.pinned ? { icon: Icon.Tack } : {},
+          { text: { value: item.subject.type, color: Color.PrimaryText } },
+          { text: { value: "#" + getLastStr(item.subject.html_url), color: Color.SecondaryText } },
+          //{ text: `[${item.id}]` },
         ]}
         actions={<NotificationActions item={item} mutate={props.mutate} />}
       />

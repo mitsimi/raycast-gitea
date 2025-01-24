@@ -22,21 +22,39 @@ export default function NotificationActions(props: { item: Notification; mutate:
           },
         }),
       );
-      //let response = await fetch(notifyUrl, {
-      //  method: "PATCH",
-      //  headers: {
-      //    "Content-Type": "application/json",
-      //  },
-      //});
-
-      //let data = await response.json();
-      //props.setNotifications(data);
 
       toast.style = Toast.Style.Success;
       toast.title = `Marked as ${toStatus}`;
     } catch (err: unknown) {
       toast.style = Toast.Style.Failure;
       toast.title = `Could not mark as ${toStatus}`;
+      toast.message = err instanceof Error ? err.message : String(err);
+    }
+  };
+
+  const pinNotification = async () => {
+    const toStatus = props.item.pinned ? "read" : "pinned";
+
+    const { serverUrl, accessToken } = getPreferenceValues<{ serverUrl: string; accessToken: string }>();
+    const notifyUrl =
+      serverUrl + apiBaseUrl + `/notifications/threads/${props.item.id}?token=${accessToken}&to-status=${toStatus}`;
+
+    const toast = await showToast({ style: Toast.Style.Animated, title: "Marking notification as read" });
+    try {
+      await props.mutate(
+        fetch(notifyUrl, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }),
+      );
+
+      toast.style = Toast.Style.Success;
+      toast.title = `${props.item.pinned ? "Unpinned" : "Pinned"} notification`;
+    } catch (err: unknown) {
+      toast.style = Toast.Style.Failure;
+      toast.title = `Could not ${props.item.pinned ? "unpin" : "pin"} notification`;
       toast.message = err instanceof Error ? err.message : String(err);
     }
   };
@@ -59,7 +77,7 @@ export default function NotificationActions(props: { item: Notification; mutate:
           title={props.item.unread ? "Pin Notification" : "Unpin Notification"}
           icon={Icon.Pin}
           shortcut={{ modifiers: ["ctrl"], key: "p" }}
-          //onAction={() => pinNotification(item)}
+          onAction={pinNotification}
         />
       </ActionPanel.Section>
     </ActionPanel>
