@@ -1,10 +1,9 @@
 import { List } from "@raycast/api";
-import { getNotificationFilter, NotificationFilter } from "../interfaces/notification";
-import { toTitleCase } from "../common/utils";
+import { CommonOptionType } from "../types/common";
 
 export default function NotificationDropdown(props: {
-  notifyFilter: NotificationFilter[];
-  onFilterChange: (newValue: NotificationFilter) => void;
+  notifyFilter: CommonOptionType[];
+  onFilterChange: (newValue: string) => void;
 }) {
   const { notifyFilter, onFilterChange } = props;
   return (
@@ -12,12 +11,12 @@ export default function NotificationDropdown(props: {
       tooltip="Filter notifications"
       storeValue={true}
       onChange={(newValue) => {
-        onFilterChange(getNotificationFilter(newValue)!);
+        onFilterChange(newValue);
       }}
     >
       <List.Dropdown.Section>
         {notifyFilter.map((filter) => (
-          <List.Dropdown.Item key={filter} title={toTitleCase(filter)} value={filter} />
+          <List.Dropdown.Item key={filter.id} title={filter.name} value={filter.value} />
         ))}
       </List.Dropdown.Section>
     </List.Dropdown>

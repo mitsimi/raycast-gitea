@@ -1,3 +1,4 @@
+import { Icon } from "@raycast/api";
 import { StateType } from "./issue";
 import { Repository } from "./repository";
 
@@ -22,13 +23,4 @@ export enum NotifySubjectType {
   Pull = "Pull",
   Commit = "Commit",
   Repository = "Repository",
-}
-
-export enum NotificationFilter {
-  Unread = "unread",
-  All = "all",
-}
-
-export function getNotificationFilter(value: string): NotificationFilter | undefined {
-  return (Object.values(NotificationFilter) as string[]).includes(value) ? (value as NotificationFilter) : undefined;
 }
