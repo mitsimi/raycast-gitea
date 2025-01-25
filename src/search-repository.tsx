@@ -1,8 +1,8 @@
-import { Detail, getPreferenceValues, List, Toast } from "@raycast/api";
+import { List, Toast } from "@raycast/api";
 import RepositorynMenu from "./components/repository-menu";
 import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
 import { Repository } from "./interfaces/repository";
-import { apiBaseUrl } from "./common/global";
+import { APIBuilder } from "./common/api";
 
 export default function Command() {
   const [repositories, setRepository] = useCachedState<Repository[]>("repositories", []);
@@ -11,23 +11,21 @@ export default function Command() {
     setFilter(newValue);
   };
 
-  const { serverUrl, accessToken } = getPreferenceValues<{ serverUrl: string; accessToken: string }>();
-  const repoUrl = serverUrl + apiBaseUrl + `/user/repos?token=${accessToken}&page=${1}&limit=${20}`;
+  const repoUrl = new APIBuilder().setPath(`/user/repos`).build();
 
-  // TODO: Make proper use of pagination
-  const { isLoading, pagination, mutate } = useFetch(repoUrl, {
+  const { isLoading, mutate } = useFetch(repoUrl, {
     initialData: [],
     keepPreviousData: true,
     onError() {
       showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retreive repositories" });
     },
     onData(data) {
-      Array.isArray(data) ? setRepository(data) : null;
+      Array.isArray(data) ? setRepository(data as Repository[]) : null;
     },
   });
 
   return (
-    <List isLoading={isLoading} pagination={pagination} throttle>
+    <List isLoading={isLoading} throttle>
       <RepositorynMenu items={repositories} mutate={mutate} />
     </List>
   );

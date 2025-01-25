@@ -1,16 +1,19 @@
-import { Action, ActionPanel, getPreferenceValues, Icon, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Icon, showToast, Toast } from "@raycast/api";
 import { Notification } from "../interfaces/notification";
-import { apiBaseUrl } from "../common/global";
 import fetch from "node-fetch";
 import { MutatePromise } from "@raycast/utils";
+import { APIBuilder } from "../common/api";
 
 export default function NotificationActions(props: { item: Notification; mutate: MutatePromise<unknown, unknown> }) {
   const markAsRead = async () => {
-    const toStatus = props.item.unread ? "read" : "unread";
+    let toStatus = props.item.unread ? "read" : "unread";
 
-    const { serverUrl, accessToken } = getPreferenceValues<{ serverUrl: string; accessToken: string }>();
-    const notifyUrl =
-      serverUrl + apiBaseUrl + `/notifications/threads/${props.item.id}?token=${accessToken}&to-status=${toStatus}`;
+    if (props.item.pinned) toStatus = "read";
+
+    const notifyUrl = new APIBuilder()
+      .setPath(`/notifications/threads/${props.item.id}`)
+      .setQueryArg("to-status", toStatus)
+      .build();
 
     const toast = await showToast({ style: Toast.Style.Animated, title: "Marking notification as read" });
     try {
@@ -33,11 +36,12 @@ export default function NotificationActions(props: { item: Notification; mutate:
   };
 
   const pinNotification = async () => {
-    const toStatus = props.item.pinned ? "read" : "pinned";
+    const toStatus = props.item.pinned ? "unread" : "pinned";
 
-    const { serverUrl, accessToken } = getPreferenceValues<{ serverUrl: string; accessToken: string }>();
-    const notifyUrl =
-      serverUrl + apiBaseUrl + `/notifications/threads/${props.item.id}?token=${accessToken}&to-status=${toStatus}`;
+    const notifyUrl = new APIBuilder()
+      .setPath(`/notifications/threads/${props.item.id}`)
+      .setQueryArg("to-status", toStatus)
+      .build();
 
     const toast = await showToast({ style: Toast.Style.Animated, title: "Marking notification as read" });
     try {
@@ -48,6 +52,7 @@ export default function NotificationActions(props: { item: Notification; mutate:
             "Content-Type": "application/json",
           },
         }),
+        { shouldRevalidateAfter: true },
       );
 
       toast.style = Toast.Style.Success;

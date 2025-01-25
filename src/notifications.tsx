@@ -1,10 +1,11 @@
-import { List, getPreferenceValues, Toast, Icon } from "@raycast/api";
-import { apiBaseUrl } from "./common/global";
+import { List, Toast, Icon } from "@raycast/api";
 import { Notification } from "./interfaces/notification";
 import { MutatePromise, showFailureToast, useCachedState, useFetch } from "@raycast/utils";
 import NotificationDropdown from "./components/notification-dropdown";
-import { notificationSortTypes } from "./types/notification-search";
+import { NotificationSortTypes } from "./types/notification-search";
 import NotificationMenu from "./components/notification-menu";
+import { APIBuilder } from "./common/api";
+import { Fragment } from "react/jsx-runtime";
 
 export default function Command() {
   const [notifications, setNotifications] = useCachedState<Notification[]>("notifications", []);
@@ -13,11 +14,11 @@ export default function Command() {
     setFilter(newValue);
   };
 
-  const { serverUrl, accessToken } = getPreferenceValues<{ serverUrl: string; accessToken: string }>();
-  const notifyUrl =
-    serverUrl +
-    apiBaseUrl +
-    `/notifications?token=${accessToken}&limit=20&all=${filter == "unread" ? "false" : "true"}`;
+  const notifyUrl = new APIBuilder()
+    .setPath(`/notifications`)
+    .setQueryArg("limit", "20")
+    .setQueryArg("all", filter == "unread" ? "false" : "true")
+    .build();
 
   const { isLoading, mutate } = useFetch(notifyUrl, {
     initialData: [],
@@ -33,18 +34,17 @@ export default function Command() {
   return (
     <List
       isLoading={isLoading}
-      searchBarAccessory={<NotificationDropdown notifyFilter={notificationSortTypes} onFilterChange={onFilterChange} />}
+      searchBarAccessory={<NotificationDropdown notifyFilter={NotificationSortTypes} onFilterChange={onFilterChange} />}
       throttle
     >
       {notifications.length <= 0 ? (
         <List.EmptyView icon={Icon.Tray} title="No unread notifications." />
       ) : (
-        <NotificationPanel notifications={notifications} mutate={mutate} />
+        <Fragment>
+          <NotificationMenu items={notifications.filter((value) => value.pinned)} mutate={mutate} />
+          <NotificationMenu items={notifications.filter((value) => !value.pinned)} mutate={mutate} />
+        </Fragment>
       )}
     </List>
   );
-}
-
-function NotificationPanel(props: { notifications: Notification[]; mutate: MutatePromise<unknown, unknown> }) {
-  return <NotificationMenu items={props.notifications} mutate={props.mutate} />;
 }
