@@ -41,8 +41,12 @@ export default function Command() {
         <List.EmptyView icon={Icon.Tray} title="No unread notifications." />
       ) : (
         <Fragment>
-          <NotificationMenu items={notifications.filter((value) => value.pinned)} mutate={mutate} />
-          <NotificationMenu items={notifications.filter((value) => !value.pinned)} mutate={mutate} />
+          <List.Section>
+            <NotificationMenu items={notifications.filter((value) => value.pinned)} mutate={mutate} />
+          </List.Section>
+          <List.Section>
+            <NotificationMenu items={notifications.filter((value) => !value.pinned)} mutate={mutate} />
+          </List.Section>
         </Fragment>
       )}
     </List>

@@ -36,7 +36,7 @@ export default function NotificationActions(props: { item: Notification; mutate:
   };
 
   const pinNotification = async () => {
-    const toStatus = props.item.pinned ? "unread" : "pinned";
+    const toStatus = "pinned";
 
     const notifyUrl = new APIBuilder()
       .setPath(`/notifications/threads/${props.item.id}`)
@@ -73,17 +73,19 @@ export default function NotificationActions(props: { item: Notification; mutate:
 
       <ActionPanel.Section>
         <Action
-          title={props.item.unread ? "Mark as Read" : "Mark as Unread"}
-          icon={Icon.Eye}
+          title={props.item.unread ? "Mark as Read" : props.item.pinned ? "Mark as Read" : "Mark as Unread"}
+          icon={props.item.unread ? Icon.Eye : Icon.EyeDisabled}
           shortcut={{ modifiers: ["ctrl"], key: "r" }}
           onAction={markAsRead}
         />
-        <Action
-          title={props.item.unread ? "Pin Notification" : "Unpin Notification"}
-          icon={Icon.Pin}
-          shortcut={{ modifiers: ["ctrl"], key: "p" }}
-          onAction={pinNotification}
-        />
+        {!props.item.pinned ? (
+          <Action
+            title={"Pin Notification"}
+            icon={Icon.Pin}
+            shortcut={{ modifiers: ["ctrl"], key: "p" }}
+            onAction={pinNotification}
+          />
+        ) : null}
       </ActionPanel.Section>
     </ActionPanel>
   );
