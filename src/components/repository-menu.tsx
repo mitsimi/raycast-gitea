@@ -2,7 +2,10 @@ import { Color, Icon, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { Repository } from "../interfaces/repository";
 
-export default function RepositorynMenu(props: { items: Repository[]; mutate: MutatePromise<unknown, unknown> }) {
+export default function RepositorynMenu(props: {
+  items: Repository[];
+  mutate: MutatePromise<Repository[] | unknown, Repository[] | unknown, any>;
+}) {
   return props.items.map((item) => {
     return (
       <List.Item

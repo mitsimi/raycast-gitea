@@ -8,12 +8,14 @@ export interface Repository {
   owner: RepositoryOwner;
   full_name: string;
   description: string;
+  avatar_url: string;
+  clone_url: string;
   html_url: string;
   language: string;
   stars_count: number;
-  starsCount: string;
   forks_count: number;
-  avatar_url: string;
+  updated_at: string;
+  archived: boolean;
 }
 
 export interface RepositoryOwner {
