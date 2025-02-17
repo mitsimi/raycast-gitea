@@ -1,6 +1,6 @@
 import { List, Toast, Icon } from "@raycast/api";
 import { Notification } from "./interfaces/notification";
-import { MutatePromise, showFailureToast, useCachedState, useFetch } from "@raycast/utils";
+import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
 import NotificationDropdown from "./components/notification-dropdown";
 import { NotificationSortTypes } from "./types/notification-search";
 import NotificationMenu from "./components/notification-menu";
