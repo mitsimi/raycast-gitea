@@ -19,7 +19,7 @@ export default function Command() {
     initialData: [],
     keepPreviousData: true,
     onError() {
-      showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retreive repositories" });
+      showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retrieve repositories" });
     },
     onData(data) {
       Array.isArray(data) ? setRepository(data as Repository[]) : null;
