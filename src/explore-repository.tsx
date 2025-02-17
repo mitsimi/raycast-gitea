@@ -15,7 +15,7 @@ export default function Command() {
 
   const repoUrl = new APIBuilder().setPath(`/user/repos`).build();
 
-  const { isLoading, mutate } = useFetch(repoUrl, {
+  const { isLoading } = useFetch(repoUrl, {
     initialData: [],
     keepPreviousData: true,
     onError() {
@@ -32,7 +32,7 @@ export default function Command() {
       searchBarAccessory={<RepositoryDropdown repoFilter={RepositorySortTypes} onFilterChange={onFilterChange} />}
       throttle
     >
-      <RepositorynMenu items={SortRepositories(repositories, filter)} mutate={mutate} />
+      <RepositorynMenu items={SortRepositories(repositories, filter)} />
     </List>
   );
 }
