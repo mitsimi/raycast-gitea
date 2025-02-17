@@ -5,7 +5,7 @@ export interface RepositorySearchResponse {
 
 export interface Repository {
   id: string;
-  owner: RepositoryOwner;
+  owner: User;
   full_name: string;
   description: string;
   avatar_url: string;
@@ -17,11 +17,4 @@ export interface Repository {
   updated_at: string;
   created_at: string;
   archived: boolean;
-}
-
-export interface RepositoryOwner {
-  id: string;
-  username: string;
-  avatar_url: string;
-  html_url: string;
 }
