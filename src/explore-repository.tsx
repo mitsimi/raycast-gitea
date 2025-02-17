@@ -3,10 +3,12 @@ import RepositorynMenu from "./components/repository-menu";
 import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
 import { Repository } from "./interfaces/repository";
 import { APIBuilder } from "./common/api";
+import RepositoryDropdown from "./components/repository-dropdown";
+import { RepositorySortTypes, SortRepositories } from "./types/repository-search";
 
 export default function Command() {
   const [repositories, setRepository] = useCachedState<Repository[]>("repositories", []);
-  const [filter, setFilter] = useCachedState<string>("repositories-filter", "all");
+  const [filter, setFilter] = useCachedState<string>("repositories-filter", "most stars");
   const onFilterChange = (newValue: string) => {
     setFilter(newValue);
   };
@@ -25,8 +27,12 @@ export default function Command() {
   });
 
   return (
-    <List isLoading={isLoading} throttle>
-      <RepositorynMenu items={repositories} mutate={mutate} />
+    <List
+      isLoading={isLoading}
+      searchBarAccessory={<RepositoryDropdown repoFilter={RepositorySortTypes} onFilterChange={onFilterChange} />}
+      throttle
+    >
+      <RepositorynMenu items={SortRepositories(repositories, filter)} mutate={mutate} />
     </List>
   );
 }

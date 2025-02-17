@@ -15,6 +15,7 @@ export interface Repository {
   stars_count: number;
   forks_count: number;
   updated_at: string;
+  created_at: string;
   archived: boolean;
 }
 

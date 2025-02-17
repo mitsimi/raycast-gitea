@@ -12,7 +12,7 @@ export default function RepositorynMenu(props: {
         key={item.id}
         icon={item.avatar_url ? { source: item.avatar_url } : { source: "repo.svg", tintColor: Color.PrimaryText }}
         title={item.full_name}
-        subtitle={item.description}
+        subtitle={item.updated_at}
         accessories={[
           { text: { value: item.language, color: Color.PrimaryText } },
           { icon: Icon.Star, text: { value: `${item.stars_count}`, color: Color.SecondaryText } },

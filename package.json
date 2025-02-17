@@ -35,15 +35,16 @@
       "mode": "view"
     },
     {
-      "name": "search-repository",
-      "title": "Search Repository",
-      "description": "Search your repository by name",
+      "name": "explore-repository",
+      "title": "Explore Repository",
+      "description": "Explore Repositories available to you",
       "mode": "view"
     }
   ],
   "dependencies": {
     "@raycast/api": "^1.89.0",
     "@raycast/utils": "^1.17.0",
+    "dayjs": "^1.11.13",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
