@@ -4,7 +4,11 @@ import { getLastStr } from "../../common/utils";
 import { getNotificationIcon, Notification } from "../../interfaces/notification";
 import { MutatePromise } from "@raycast/utils";
 
-export default function NotificationMenu(props: { items: Notification[]; mutate: MutatePromise<unknown, unknown> }) {
+export default function NotificationMenu(props: {
+  items: Notification[];
+  revalidate?: () => void;
+  mutate?: MutatePromise<Notification[], Notification[]>;
+}) {
   return props.items.map((item) => {
     return (
       <List.Item

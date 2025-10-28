@@ -1,31 +1,18 @@
 import { Action, ActionPanel, Icon, showToast, Toast } from "@raycast/api";
 import { Notification } from "../../interfaces/notification";
-import fetch from "node-fetch";
+import { updateNotificationStatus } from "../../api/notifications";
 import { MutatePromise } from "@raycast/utils";
-import { APIBuilder } from "../../common/api";
 
-export default function NotificationActions(props: { item: Notification; mutate: MutatePromise<unknown, unknown> }) {
+export default function NotificationActions(props: {
+  item: Notification;
+  mutate?: MutatePromise<Notification[], Notification[]>;
+}) {
   const markAsRead = async () => {
-    let toStatus = props.item.unread ? "read" : "unread";
-
+    let toStatus: "read" | "unread" = props.item.unread ? "read" : "unread";
     if (props.item.pinned) toStatus = "read";
-
-    const notifyUrl = new APIBuilder()
-      .setPath(`/notifications/threads/${props.item.id}`)
-      .setQueryArg("to-status", toStatus)
-      .build();
-
-    const toast = await showToast({ style: Toast.Style.Animated, title: "Marking notification as read" });
+    const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
     try {
-      await props.mutate(
-        fetch(notifyUrl, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }),
-      );
-
+      await props.mutate?.(updateNotificationStatus(props.item.id, toStatus), { shouldRevalidateAfter: true });
       toast.style = Toast.Style.Success;
       toast.title = `Marked as ${toStatus}`;
     } catch (err: unknown) {
@@ -36,25 +23,9 @@ export default function NotificationActions(props: { item: Notification; mutate:
   };
 
   const pinNotification = async () => {
-    const toStatus = "pinned";
-
-    const notifyUrl = new APIBuilder()
-      .setPath(`/notifications/threads/${props.item.id}`)
-      .setQueryArg("to-status", toStatus)
-      .build();
-
-    const toast = await showToast({ style: Toast.Style.Animated, title: "Marking notification as read" });
+    const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
     try {
-      await props.mutate(
-        fetch(notifyUrl, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }),
-        { shouldRevalidateAfter: true },
-      );
-
+      await props.mutate?.(updateNotificationStatus(props.item.id, "pinned"), { shouldRevalidateAfter: true });
       toast.style = Toast.Style.Success;
       toast.title = `${props.item.pinned ? "Unpinned" : "Pinned"} notification`;
     } catch (err: unknown) {
@@ -70,17 +41,16 @@ export default function NotificationActions(props: { item: Notification; mutate:
         <Action.OpenInBrowser title="Open Repository" url={props.item.subject.html_url} />
         <Action.CopyToClipboard title="Copy URL to Clipboard" content={props.item.subject.html_url} />
       </ActionPanel.Section>
-
       <ActionPanel.Section>
         <Action
-          title={props.item.unread ? "Mark as Read" : props.item.pinned ? "Mark as Read" : "Mark as Unread"}
+          title={props.item.unread || props.item.pinned ? "Mark as Read" : "Mark as Unread"}
           icon={props.item.unread ? Icon.Eye : Icon.EyeDisabled}
           shortcut={{ modifiers: ["ctrl"], key: "r" }}
           onAction={markAsRead}
         />
         {!props.item.pinned ? (
           <Action
-            title={"Pin Notification"}
+            title="Pin Notification"
             icon={Icon.Pin}
             shortcut={{ modifiers: ["ctrl"], key: "p" }}
             onAction={pinNotification}
