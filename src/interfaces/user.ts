@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface User {
   active: boolean;
   avatar_url: string;
