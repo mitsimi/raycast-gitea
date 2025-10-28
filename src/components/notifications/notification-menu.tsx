@@ -1,6 +1,6 @@
 import { Color, Icon, List } from "@raycast/api";
 import NotificationActions from "./notification-actions";
-import { getLastStr } from "../../utils/string";
+import { getTrailingNumberFromUrl } from "../../utils/string";
 import { getNotificationIcon, Notification } from "../../types/notification";
 import { MutatePromise } from "@raycast/utils";
 
@@ -19,7 +19,7 @@ export default function NotificationMenu(props: {
         accessories={[
           ...(item.pinned ? [{ icon: Icon.Tack } as const] : []),
           { text: { value: item.subject.type, color: Color.PrimaryText } },
-          { text: { value: "#" + getLastStr(item.subject.html_url), color: Color.SecondaryText } },
+          { text: { value: "#" + getTrailingNumberFromUrl(item.subject.html_url), color: Color.SecondaryText } },
           //{ text: `[${item.id}]` },
         ]}
         actions={<NotificationActions item={item} mutate={props.mutate} />}

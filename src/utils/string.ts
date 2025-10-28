@@ -1,9 +1,6 @@
-export function getLastStr(url: string): string {
-  const lastSlashIndex = url.lastIndexOf("/");
-  if (lastSlashIndex === -1) {
-    return "";
-  }
-  return url.substring(lastSlashIndex + 1);
+export function getTrailingNumberFromUrl(url: string): string | undefined {
+  const m = url.match(/(\d+)(?:\/?$)/);
+  return m?.[1];
 }
 
 export function toTitleCase(str: string): string {
