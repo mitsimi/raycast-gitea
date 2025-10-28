@@ -3,7 +3,7 @@ import { Repository } from "../interfaces/repository";
 import RepositoryActions from "./repository-actions";
 import dayjs from "dayjs";
 
-export default function RepositorynMenu(props: { items: Repository[]; currentFilter?: string }) {
+export default function RepositoryMenu(props: { items: Repository[]; currentFilter?: string }) {
   return props.items.map((item) => {
     return (
       <List.Item

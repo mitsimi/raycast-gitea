@@ -1,5 +1,5 @@
 import { List, Toast } from "@raycast/api";
-import RepositorynMenu from "./components/repository-menu";
+import RepositoryMenu from "./components/repository-menu";
 import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
 import { Repository, RepositorySearchResponse } from "./interfaces/repository";
 import { APIBuilder } from "./common/api";
@@ -36,7 +36,7 @@ export default function Command() {
       }
       throttle
     >
-      <RepositorynMenu items={sortedRepos} currentFilter={sort} />
+      <RepositoryMenu items={sortedRepos} currentFilter={sort} />
     </List>
   );
 }
