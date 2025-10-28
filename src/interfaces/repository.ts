@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface RepositorySearchResponse {
   ok: boolean;
   data: Repository[];
