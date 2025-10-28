@@ -1,7 +1,7 @@
 import { Color, Icon, List } from "@raycast/api";
 import NotificationActions from "./notification-actions";
-import { getLastStr } from "../common/utils";
-import { getNotificationIcon, Notification } from "../interfaces/notification";
+import { getLastStr } from "../../common/utils";
+import { getNotificationIcon, Notification } from "../../interfaces/notification";
 import { MutatePromise } from "@raycast/utils";
 
 export default function NotificationMenu(props: { items: Notification[]; mutate: MutatePromise<unknown, unknown> }) {

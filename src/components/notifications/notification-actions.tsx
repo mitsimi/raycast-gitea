@@ -1,8 +1,8 @@
 import { Action, ActionPanel, Icon, showToast, Toast } from "@raycast/api";
-import { Notification } from "../interfaces/notification";
+import { Notification } from "../../interfaces/notification";
 import fetch from "node-fetch";
 import { MutatePromise } from "@raycast/utils";
-import { APIBuilder } from "../common/api";
+import { APIBuilder } from "../../common/api";
 
 export default function NotificationActions(props: { item: Notification; mutate: MutatePromise<unknown, unknown> }) {
   const markAsRead = async () => {

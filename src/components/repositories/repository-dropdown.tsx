@@ -1,21 +1,21 @@
 import { List } from "@raycast/api";
-import { CommonOptionType } from "../types/common";
+import { CommonOptionType } from "../../types/common";
 
-export default function NotificationDropdown(props: {
-  notifyFilter: CommonOptionType[];
+export default function RepositoryDropdown(props: {
+  repoFilter: CommonOptionType[];
   onFilterChange: (newValue: string) => void;
 }) {
-  const { notifyFilter, onFilterChange } = props;
+  const { repoFilter, onFilterChange } = props;
   return (
     <List.Dropdown
-      tooltip="Filter notifications"
+      tooltip="Filter repositories"
       storeValue={true}
       onChange={(newValue) => {
         onFilterChange(newValue);
       }}
     >
       <List.Dropdown.Section>
-        {notifyFilter.map((filter) => (
+        {repoFilter.map((filter) => (
           <List.Dropdown.Item key={filter.id} title={filter.name} value={filter.value} />
         ))}
       </List.Dropdown.Section>

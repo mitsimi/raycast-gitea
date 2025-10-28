@@ -1,9 +1,8 @@
 import { List, Toast } from "@raycast/api";
-import RepositoryMenu from "./components/repository-menu";
 import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
 import { Repository, RepositorySearchResponse } from "./interfaces/repository";
 import { APIBuilder } from "./common/api";
-import RepositoryDropdown from "./components/repository-dropdown";
+import { RepositoryMenu, RepositoryDropdown } from "./components/repositories";
 import { RepositorySortTypes, SortRepositories } from "./types/repository-search";
 import { useMemo, useState } from "react";
 

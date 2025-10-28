@@ -1,9 +1,8 @@
 import { List, Toast, Icon } from "@raycast/api";
 import { Notification } from "./interfaces/notification";
 import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
-import NotificationDropdown from "./components/notification-dropdown";
+import { NotificationDropdown, NotificationMenu } from "./components/notifications";
 import { NotificationSortTypes } from "./types/notification-search";
-import NotificationMenu from "./components/notification-menu";
 import { APIBuilder } from "./common/api";
 import { Fragment } from "react/jsx-runtime";
 
