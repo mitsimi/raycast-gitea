@@ -1,6 +1,6 @@
 import { useCachedState, useCachedPromise } from "@raycast/utils";
 import { listNotifications } from "../api/notifications";
-import type { Notification } from "../interfaces/notification";
+import type { Notification } from "../types/notification";
 
 export function useNotifications(filter: "unread" | "all") {
   const [items, setItems] = useCachedState<Notification[]>("notifications", []);

@@ -1,9 +1,9 @@
 import { List, Toast } from "@raycast/api";
 import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
-import { Repository, RepositorySearchResponse } from "./interfaces/repository";
+import { Repository, RepositorySearchResponse } from "./types/repository";
 import { APIBuilder } from "./common/api";
 import { RepositoryMenu, RepositoryDropdown } from "./components/repositories";
-import { RepositorySortTypes, SortRepositories } from "./types/repository-search";
+import { RepositorySortTypes, SortRepositories } from "./types/sorts/repository-search";
 import { useMemo, useState } from "react";
 
 export default function Command() {

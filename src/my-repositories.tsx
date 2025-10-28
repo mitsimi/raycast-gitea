@@ -1,10 +1,10 @@
 import { List, Toast } from "@raycast/api";
 import { RepositoryMenu, RepositoryDropdown } from "./components/repositories";
 import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
-import { Repository } from "./interfaces/repository";
+import { Repository } from "./types/repository";
 import { APIBuilder } from "./common/api";
 import { useMemo, useState } from "react";
-import { RepositorySortTypes, SortRepositories } from "./types/repository-search";
+import { RepositorySortTypes, SortRepositories } from "./types/sorts/repository-search";
 
 export default function Command() {
   const [repositories, setRepository] = useCachedState<Repository[]>("my-repositories", []);

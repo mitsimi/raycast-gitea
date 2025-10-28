@@ -1,5 +1,5 @@
 import { Color, Icon, List } from "@raycast/api";
-import { Repository } from "../../interfaces/repository";
+import { Repository } from "../../types/repository";
 import RepositoryActions from "./repository-actions";
 import dayjs from "dayjs";
 

@@ -1,5 +1,5 @@
 import { Action, ActionPanel, Icon, showToast, Toast } from "@raycast/api";
-import { Notification } from "../../interfaces/notification";
+import { Notification } from "../../types/notification";
 import { updateNotificationStatus } from "../../api/notifications";
 import { MutatePromise } from "@raycast/utils";
 

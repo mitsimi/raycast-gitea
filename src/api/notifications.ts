@@ -1,5 +1,5 @@
 import { getClient } from "./client";
-import type { Notification } from "../interfaces/notification";
+import type { Notification } from "../types/notification";
 
 export type ListNotificationParams = { limit?: number; all?: boolean; page?: number };
 export async function listNotifications(params: ListNotificationParams = {}) {

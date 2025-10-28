@@ -1,7 +1,7 @@
 import { Color, Icon, List } from "@raycast/api";
 import NotificationActions from "./notification-actions";
 import { getLastStr } from "../../common/utils";
-import { getNotificationIcon, Notification } from "../../interfaces/notification";
+import { getNotificationIcon, Notification } from "../../types/notification";
 import { MutatePromise } from "@raycast/utils";
 
 export default function NotificationMenu(props: {
@@ -17,7 +17,7 @@ export default function NotificationMenu(props: {
         title={item.subject.title}
         subtitle={item.repository.full_name}
         accessories={[
-          item.pinned ? { icon: Icon.Tack } : {},
+          ...(item.pinned ? [{ icon: Icon.Tack } as const] : []),
           { text: { value: item.subject.type, color: Color.PrimaryText } },
           { text: { value: "#" + getLastStr(item.subject.html_url), color: Color.SecondaryText } },
           //{ text: `[${item.id}]` },
