@@ -1,6 +1,6 @@
 import { Color, Icon, List } from "@raycast/api";
 import NotificationActions from "./notification-actions";
-import { getLastStr } from "../../common/utils";
+import { getLastStr } from "../../utils/string";
 import { getNotificationIcon, Notification } from "../../types/notification";
 import { MutatePromise } from "@raycast/utils";
 
