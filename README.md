@@ -1,20 +1,40 @@
-# Gitea
+# Gitea Raycast Extension
 
-Check your notifications and manage issues and pull requests.
+Check your notifications, explore repositories, and manage issues and pull requests.
 
-## Configuring a Personal Access Token and Server URL
+## Installation
 
-1. Go to your Gitea Server(e.g. https://gitea.com) user settings.
-2. Click "Applications".
-3. Add a token name and select the scopes you want.
-4. Click "Generate token".
-5. Copy the token and paste it into the "Access Token" field.
-6. Add your server url to the "Gitea URL" field.
+Currently, you need to clone this repo and install it locally in developer mode.
 
-## Scopes
+You will need to have [Node.js](https://nodejs.org) installed.
+
+### Steps
+
+1. Clone this repo `git clone https://github.com/mitsimi/raycast-gitea.git`
+2. Go to the folder `cd raycast-gitea`
+3. Install dependencies `npm install`
+4. Go to Raycast, run `Import Extension` and select the folder
+
+## Configuration
+
+You need to configure your personal access token and server URL to use this extension.
+
+### Configuring a Personal Access Token and Server URL
+
+1. Go to your Gitea Server (e.g. https://gitea.com).
+2. Open your user settings.
+3. Click "Applications".
+4. Add a token name and select the scopes you want (recommended scopes below).
+5. Click "Generate token".
+6. Copy the token and paste it into the "Access Token" field.
+7. Add your server url to the "Gitea URL" field.
+
+### Recommended Scopes
 
 To use this extension to its fullest potential, you need to set following scopes while creating your access token:
 
-- notification -> read and write
-- repository -> read and write
-- user -> read and write
+| Scope        | Permissions    |
+| ------------ | -------------- |
+| notification | read and write |
+| repository   | read and write |
+| user         | read and write |
