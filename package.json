@@ -40,7 +40,14 @@
       "description": "Explore Repositories available to you",
       "mode": "view"
     }
-  ],
+  ,
+    {
+      "name": "my-repositories",
+      "title": "My Repositories",
+      "description": "Shows your repositories",
+      "mode": "view"
+    }
+      ],
   "dependencies": {
     "@raycast/api": "^1.89.0",
     "@raycast/utils": "^1.17.0",
