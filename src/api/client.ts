@@ -20,7 +20,7 @@ export function getClient() {
       throw new Error(`HTTP ${res.status}: ${text || res.statusText}`);
     }
 
-    if (res.status === 204 || res.status === 205) return undefined as unknown as T;
+    if (res.status === 204) return undefined as unknown as T;
     return (await res.json()) as T;
   }
 
