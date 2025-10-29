@@ -38,3 +38,8 @@ To use this extension to its fullest potential, you need to set following scopes
 | notification | read and write |
 | repository   | read and write |
 | user         | read and write |
+
+## Language Colors
+
+This extension uses [`assets/colors.json`](assets/colors.json), a file derived from the [GitHub Linguist project](https://github.com/github-linguist/linguist).  
+It contains metadata and color mappings for over 8,000 programming languages, markup languages, and data formats.
