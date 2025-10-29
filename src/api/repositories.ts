@@ -13,13 +13,12 @@ export async function listRepositories(params: ListRepositoriesParams = {}) {
   });
 }
 
-export async function listUserRepositories(params: ListRepositoriesParams = {}) {
+export type ListUserRepositoriesParams = { limit?: number; page?: number };
+export async function listUserRepositories(params: ListUserRepositoriesParams = {}) {
   const client = getClient();
-  const { limit = 20, page, sort, order } = params;
+  const { limit = 20, page } = params;
   return client.get<Repository[]>("/user/repos", {
     limit,
     ...(page ? { page } : {}),
-    ...(sort ? { sort } : {}),
-    ...(order ? { order } : {}),
   });
 }

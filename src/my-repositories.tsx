@@ -1,42 +1,27 @@
-import { List, Toast } from "@raycast/api";
+import { List } from "@raycast/api";
 import { RepositoryMenu, RepositoryDropdown } from "./components/repositories";
-import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
-import { Repository } from "./types/repository";
-import { APIBuilder } from "./common/api";
-import { useMemo, useState } from "react";
-import { RepositorySortTypes, SortRepositories } from "./types/sorts/repository-search";
+import { useCachedState } from "@raycast/utils";
+import { RepositorySortOption, RepositorySortTypes } from "./types/sorts/repository-search";
+import { useUserRepositories } from "./hooks/useUserRepositories";
 
 export default function Command() {
-  const [repositories, setRepository] = useCachedState<Repository[]>("my-repositories", []);
-  const [sort, setSort] = useState<string>("least recently");
+  const [sort, setSort] = useCachedState<RepositorySortOption>(RepositorySortOption.MostStars);
 
-  const repoUrl = new APIBuilder().setPath(`/user/repos`).build();
-  const { isLoading } = useFetch(repoUrl, {
-    initialData: [],
-    keepPreviousData: true,
-    onError() {
-      showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retrieve repositories" });
-    },
-    onData(data) {
-      if (Array.isArray(data)) {
-        setRepository(data as Repository[]);
-      }
-    },
-  });
-
-  const filteredRepos = repositories.filter((repo) => repo.owner.username == "mitsimi");
-
-  const sortedRepos = useMemo(() => SortRepositories(filteredRepos, sort), [filteredRepos, sort]);
+  const { items, isLoading, pagination } = useUserRepositories(sort);
 
   return (
     <List
       isLoading={isLoading}
       searchBarAccessory={
-        <RepositoryDropdown repoFilter={RepositorySortTypes} onFilterChange={(newValue: string) => setSort(newValue)} />
+        <RepositoryDropdown
+          repoFilter={RepositorySortTypes}
+          onFilterChange={(v: string) => setSort(v as RepositorySortOption)}
+        />
       }
+      pagination={pagination}
       throttle
     >
-      <RepositoryMenu items={sortedRepos} currentFilter={sort} />
+      <RepositoryMenu items={items} currentFilter={sort} />
     </List>
   );
 }
