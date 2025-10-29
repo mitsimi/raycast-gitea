@@ -18,7 +18,7 @@ export function useRepositories(sort?: string, order?: "asc" | "desc") {
       listRepositories({ limit: LIMIT, page: p, sort: s, order: o }),
     [page, sort, order] as [number, string | undefined, "asc" | "desc" | undefined],
     {
-      initialData: [] as Repository[],
+      initialData: items as Repository[],
       onData: (data) => {
         const normalize = (input: Repository[] | SearchResults<Repository>): Repository[] => {
           if (Array.isArray(input)) return input as Repository[];
