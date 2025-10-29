@@ -12,10 +12,12 @@ export default function RepositoryMenu(props: { items: Repository[]; currentFilt
         title={item.full_name}
         subtitle={item.description}
         actions={<RepositoryActions item={item} />}
-        accessories={[
-          { text: { value: item.language, color: Color.PrimaryText } },
-          getAccessoryByFilter(item, props.currentFilter),
-        ]}
+        accessories={
+          [
+            ...(item.language ? [{ tag: { value: item.language, color: Color.PrimaryText } }] : []),
+            getAccessoryByFilter(item, props.currentFilter),
+          ] as List.Item.Accessory[]
+        }
       />
     );
   });
@@ -30,13 +32,13 @@ function getAccessoryByFilter(item: Repository, filter?: string): List.Item.Acce
     case "oldest":
       return {
         icon: Icon.Calendar,
-        text: { value: `${dayjs(item.created_at).format("DD/MM/YYYY")}`, color: Color.SecondaryText },
+        date: dayjs(item.created_at).toDate(),
       };
     case "recently":
     case "least recently":
       return {
         icon: Icon.Calendar,
-        text: { value: `${dayjs(item.updated_at).format("DD/MM/YYYY")}`, color: Color.SecondaryText },
+        date: dayjs(item.created_at).toDate(),
       };
   }
 
