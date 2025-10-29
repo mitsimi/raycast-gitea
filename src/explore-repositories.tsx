@@ -9,7 +9,7 @@ export default function Command() {
   const [sort, setSort] = useCachedState<RepositorySortOption>(RepositorySortOption.MostStars);
 
   const { giteaSort, giteaOrder } = useMemo(() => {
-    const mapped = mapRepositorySortToGitea(sort);
+    const mapped = mapRepositorySortToGitea(sort as RepositorySortOption);
     return { giteaSort: mapped.sort, giteaOrder: mapped.order } as {
       giteaSort: string | undefined;
       giteaOrder: "asc" | "desc" | undefined;
