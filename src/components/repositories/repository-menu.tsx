@@ -1,6 +1,7 @@
 import { Color, Icon, List } from "@raycast/api";
 import { Repository } from "../../types/repository";
 import RepositoryActions from "./repository-actions";
+import GitHubColors from "../../utils/colors";
 import dayjs from "dayjs";
 
 export default function RepositoryMenu(props: { items: Repository[]; currentFilter?: string }) {
@@ -14,7 +15,9 @@ export default function RepositoryMenu(props: { items: Repository[]; currentFilt
         actions={<RepositoryActions item={item} />}
         accessories={
           [
-            ...(item.language ? [{ tag: { value: item.language, color: Color.PrimaryText } }] : []),
+            ...(item.language
+              ? [{ tag: { value: item.language, color: GitHubColors.get(item.language, true)?.color } }]
+              : []),
             getAccessoryByFilter(item, props.currentFilter),
           ] as List.Item.Accessory[]
         }
