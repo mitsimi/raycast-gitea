@@ -1,5 +1,5 @@
 import { List } from "@raycast/api";
-import { CommonOptionType } from "../../types/common";
+import { CommonOptionType } from "../../types/sorts/common";
 
 export default function NotificationDropdown(props: {
   notifyFilter: CommonOptionType[];

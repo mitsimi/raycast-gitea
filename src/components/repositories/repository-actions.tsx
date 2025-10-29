@@ -1,5 +1,5 @@
 import { Action, ActionPanel } from "@raycast/api";
-import { Repository } from "../../interfaces/repository";
+import { Repository } from "../../types/repository";
 
 export default function RepositoryActions(props: { item: Repository }) {
   return (

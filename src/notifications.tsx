@@ -1,50 +1,33 @@
-import { List, Toast, Icon } from "@raycast/api";
-import { Notification } from "./interfaces/notification";
-import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
+import { List, Icon } from "@raycast/api";
 import { NotificationDropdown, NotificationMenu } from "./components/notifications";
-import { NotificationSortTypes } from "./types/notification-search";
-import { APIBuilder } from "./common/api";
-import { Fragment } from "react/jsx-runtime";
+import { NotificationSortTypes } from "./types/sorts/notification-search";
+import { Fragment, useState } from "react";
+import { useNotifications } from "./hooks";
 
 export default function Command() {
-  const [notifications, setNotifications] = useCachedState<Notification[]>("notifications", []);
-  const [filter, setFilter] = useCachedState<string>("notifications-filter", "unread");
-  const onFilterChange = (newValue: string) => {
-    setFilter(newValue);
-  };
-
-  const notifyUrl = new APIBuilder()
-    .setPath(`/notifications`)
-    .setQueryArg("limit", "20")
-    .setQueryArg("all", filter == "unread" ? "false" : "true")
-    .build();
-
-  const { isLoading, mutate } = useFetch(notifyUrl, {
-    initialData: [],
-    keepPreviousData: true,
-    onError() {
-      showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retreive notifications" });
-    },
-    onData(data) {
-      Array.isArray(data) ? setNotifications(data) : null;
-    },
-  });
+  const [filter, setFilter] = useState<"unread" | "all">("unread");
+  const { items, isLoading, mutate } = useNotifications(filter);
 
   return (
     <List
       isLoading={isLoading}
-      searchBarAccessory={<NotificationDropdown notifyFilter={NotificationSortTypes} onFilterChange={onFilterChange} />}
+      searchBarAccessory={
+        <NotificationDropdown
+          notifyFilter={NotificationSortTypes}
+          onFilterChange={(v) => setFilter(v as "unread" | "all")}
+        />
+      }
       throttle
     >
-      {notifications.length <= 0 ? (
+      {items.length <= 0 ? (
         <List.EmptyView icon={Icon.Tray} title="No unread notifications." />
       ) : (
         <Fragment>
           <List.Section>
-            <NotificationMenu items={notifications.filter((value) => value.pinned)} mutate={mutate} />
+            <NotificationMenu items={items.filter((v) => v.pinned)} mutate={mutate} />
           </List.Section>
           <List.Section>
-            <NotificationMenu items={notifications.filter((value) => !value.pinned)} mutate={mutate} />
+            <NotificationMenu items={items.filter((v) => !v.pinned)} mutate={mutate} />
           </List.Section>
         </Fragment>
       )}

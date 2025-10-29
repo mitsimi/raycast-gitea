@@ -1,41 +1,36 @@
-import { List, Toast } from "@raycast/api";
-import { showFailureToast, useCachedState, useFetch } from "@raycast/utils";
-import { Repository, RepositorySearchResponse } from "./interfaces/repository";
-import { APIBuilder } from "./common/api";
+import { List } from "@raycast/api";
 import { RepositoryMenu, RepositoryDropdown } from "./components/repositories";
-import { RepositorySortTypes, SortRepositories } from "./types/repository-search";
-import { useMemo, useState } from "react";
+import { RepositorySortTypes, RepositorySortOption, mapRepositorySortToGitea } from "./types/sorts/repository-search";
+import { useMemo } from "react";
+import { useRepositories } from "./hooks/useRepositories";
+import { useCachedState } from "@raycast/utils";
 
 export default function Command() {
-  const [repositories, setRepository] = useCachedState<Repository[]>("repositories", []);
-  const [sort, setSort] = useState<string>("most stars");
+  const [sort, setSort] = useCachedState<RepositorySortOption>(RepositorySortOption.MostStars);
 
-  const repoUrl = new APIBuilder().setPath(`/repos/search`).build();
-  const { isLoading } = useFetch(repoUrl, {
-    initialData: [],
-    keepPreviousData: true,
-    onError() {
-      showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retrieve repositories" });
-    },
-    onData(data) {
-      const resp = data as RepositorySearchResponse;
-      if (Array.isArray(resp.data)) {
-        setRepository(resp.data as Repository[]);
-      }
-    },
-  });
+  const { giteaSort, giteaOrder } = useMemo(() => {
+    const mapped = mapRepositorySortToGitea(sort);
+    return { giteaSort: mapped.sort, giteaOrder: mapped.order } as {
+      giteaSort: string | undefined;
+      giteaOrder: "asc" | "desc" | undefined;
+    };
+  }, [sort]);
 
-  const sortedRepos = useMemo(() => SortRepositories(repositories, sort), [repositories, sort]);
+  const { items, isLoading, pagination } = useRepositories(giteaSort, giteaOrder);
 
   return (
     <List
       isLoading={isLoading}
       searchBarAccessory={
-        <RepositoryDropdown repoFilter={RepositorySortTypes} onFilterChange={(newValue: string) => setSort(newValue)} />
+        <RepositoryDropdown
+          repoFilter={RepositorySortTypes}
+          onFilterChange={(newValue: string) => setSort(newValue as RepositorySortOption)}
+        />
       }
+      pagination={pagination}
       throttle
     >
-      <RepositoryMenu items={sortedRepos} currentFilter={sort} />
+      <RepositoryMenu items={items} currentFilter={sort} />
     </List>
   );
 }
