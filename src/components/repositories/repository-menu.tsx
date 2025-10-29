@@ -41,7 +41,7 @@ function getAccessoryByFilter(item: Repository, filter?: string): List.Item.Acce
     case "least recently":
       return {
         icon: Icon.Calendar,
-        date: dayjs(item.created_at).toDate(),
+        date: dayjs(item.updated_at).toDate(),
       };
   }
 
