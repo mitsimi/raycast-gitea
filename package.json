@@ -14,9 +14,9 @@
     {
       "name": "serverUrl",
       "title": "Gitea URL",
-      "description": "URL to your Gitea instance, eg. https://gitea.com.",
+      "description": "URL to your Gitea instance, eg. https://cloud.gitea.com.",
       "type": "textfield",
-      "placeholder": "https://gitea.com",
+      "placeholder": "https://cloud.gitea.com",
       "required": true
     },
     {
