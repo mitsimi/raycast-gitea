@@ -45,14 +45,20 @@ export default function NotificationActions(props: {
         <Action
           title={props.item.unread || props.item.pinned ? "Mark as Read" : "Mark as Unread"}
           icon={props.item.unread ? Icon.Eye : Icon.EyeDisabled}
-          shortcut={{ modifiers: ["ctrl"], key: "r" }}
+          shortcut={{
+            macOS: { modifiers: ["ctrl", "shift"], key: "r" },
+            windows: { modifiers: ["ctrl", "shift"], key: "r" },
+          }}
           onAction={markAsRead}
         />
         {!props.item.pinned ? (
           <Action
             title="Pin Notification"
             icon={Icon.Pin}
-            shortcut={{ modifiers: ["ctrl"], key: "p" }}
+            shortcut={{
+              macOS: { modifiers: ["ctrl", "shift"], key: "p" },
+              windows: { modifiers: ["ctrl", "shift"], key: "p" },
+            }}
             onAction={pinNotification}
           />
         ) : null}
