@@ -5,9 +5,9 @@ import { RepositorySortOption, RepositorySortTypes } from "./types/sorts/reposit
 import { useUserRepositories } from "./hooks/useUserRepositories";
 
 export default function Command() {
-  const [sort, setSort] = useCachedState<RepositorySortOption>(RepositorySortOption.MostStars);
+  const [sort, setSort] = useCachedState<RepositorySortOption>(RepositorySortOption.RecentlyUpdated);
 
-  const { items, isLoading, pagination } = useUserRepositories(sort);
+  const { items, isLoading } = useUserRepositories(sort);
 
   return (
     <List
@@ -18,7 +18,6 @@ export default function Command() {
           onFilterChange={(v: string) => setSort(v as RepositorySortOption)}
         />
       }
-      pagination={pagination}
       throttle
     >
       <RepositoryMenu items={items} currentFilter={sort} />

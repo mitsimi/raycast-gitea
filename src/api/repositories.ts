@@ -13,12 +13,7 @@ export async function listRepositories(params: ListRepositoriesParams = {}) {
   });
 }
 
-export type ListUserRepositoriesParams = { limit?: number; page?: number };
-export async function listUserRepositories(params: ListUserRepositoriesParams = {}) {
+export async function listUserRepositories() {
   const client = getClient();
-  const { limit = 20, page } = params;
-  return client.get<Repository[]>("/user/repos", {
-    limit,
-    ...(page ? { page } : {}),
-  });
+  return client.get<Repository[]>("/user/repos");
 }
