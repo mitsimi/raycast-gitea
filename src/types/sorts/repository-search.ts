@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Repository } from "../interfaces/repository";
+import { Repository } from "../repository";
 import { CommonOptionType } from "./common";
 
 export const RepositorySortTypes: CommonOptionType[] = [
@@ -35,5 +35,25 @@ export function SortRepositories(list: Repository[], sortType: string): Reposito
       );
     default:
       return list;
+  }
+}
+
+export type GiteaRepositorySort = { sort?: string; order?: "asc" | "desc" };
+export function mapRepositorySortToGitea(sortType: string): GiteaRepositorySort {
+  switch (sortType) {
+    case "most stars":
+      return { sort: "stars", order: "desc" };
+    case "fewest stars":
+      return { sort: "stars", order: "asc" };
+    case "newest":
+      return { sort: "created", order: "desc" };
+    case "oldest":
+      return { sort: "created", order: "asc" };
+    case "recently":
+      return { sort: "updated", order: "desc" };
+    case "least recently":
+      return { sort: "updated", order: "asc" };
+    default:
+      return {};
   }
 }
