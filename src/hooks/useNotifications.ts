@@ -9,7 +9,7 @@ export function useNotifications(filter: "unread" | "all") {
     [filter] as [typeof filter],
     {
       keepPreviousData: true,
-      initialData: [] as Notification[],
+      initialData: items,
       onData: (data) => {
         if (Array.isArray(data)) setItems(data as Notification[]);
       },
