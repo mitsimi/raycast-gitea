@@ -31,14 +31,55 @@
   "commands": [
     {
       "name": "issues",
-      "title": "Issues",
-      "description": "List all issues",
-      "mode": "view"
+      "title": "My Issues",
+      "description": "List issues created by you, assigned to you, or mentioning you",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "includeCreated",
+          "description": "Show issues you created",
+          "type": "checkbox",
+          "required": false,
+          "label": "Created",
+          "title": "Categories to Display",
+          "default": true
+        },
+        {
+          "name": "includeAssigned",
+          "description": "Show issues assigned to you",
+          "type": "checkbox",
+          "required": false,
+          "label": "Assigned",
+          "default": true
+        },
+        {
+          "name": "includeMentioned",
+          "description": "Show issues where you are mentioned",
+          "type": "checkbox",
+          "required": false,
+          "label": "Mentioned",
+          "default": true
+        },
+        {
+          "name": "includeRecentlyClosed",
+          "description": "Show recently closed issues",
+          "type": "checkbox",
+          "required": false,
+          "label": "Recently Closed",
+          "default": false
+        }
+      ]
     },
     {
       "name": "notifications",
       "title": "Notifications",
       "description": "List all unread notifications",
+      "mode": "view"
+    },
+    {
+      "name": "search-issues",
+      "title": "Search Issues",
+      "description": "Search issues across repositories",
       "mode": "view"
     },
     {

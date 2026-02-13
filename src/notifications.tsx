@@ -2,7 +2,7 @@ import { List, Icon } from "@raycast/api";
 import { NotificationDropdown, NotificationMenu } from "./components/notifications";
 import { NotificationSortTypes } from "./types/sorts/notification-search";
 import { Fragment, useState } from "react";
-import { useNotifications } from "./hooks";
+import { useNotifications } from "./hooks/useNotifications";
 
 export default function Command() {
   const [filter, setFilter] = useState<"unread" | "all">("unread");
