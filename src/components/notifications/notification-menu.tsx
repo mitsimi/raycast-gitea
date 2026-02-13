@@ -57,7 +57,7 @@ export function getIcon(notification: NotificationThread) {
             ? { source: "pr-draft.svg", tintColor: Color.SecondaryText }
             : { source: "pr-open.svg", tintColor: Color.Green };
         case IssueState.Closed:
-          return { source: "pr-open.svg", tintColor: Color.Red };
+          return { source: "pr-closed.svg", tintColor: Color.Red };
         case IssueState.Merged:
           return { source: "pr-merged.svg", tintColor: Color.Purple };
       }
