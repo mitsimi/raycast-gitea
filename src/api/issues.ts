@@ -28,6 +28,29 @@ export async function searchIssues(params: IssueListParams = {}): Promise<Issue[
   return data ?? [];
 }
 
+export type ListRepoIssuesParams = {
+  owner: string;
+  repo: string;
+  state?: "open" | "closed" | "all";
+  labels?: string;
+  milestones?: string;
+  q?: string;
+  since?: string;
+  before?: string;
+  page?: number;
+  limit?: number;
+};
+
+export async function listRepoIssues(params: ListRepoIssuesParams): Promise<Issue[]> {
+  const client = getClient();
+  const { owner, repo, ...query } = params;
+  const { data, error } = await client.GET("/repos/{owner}/{repo}/issues", {
+    params: { path: { owner, repo }, query },
+  });
+  if (error) throw new Error("Failed to fetch repository issues");
+  return data ?? [];
+}
+
 export type MyIssuesParams = {
   includeCreated: boolean;
   includeAssigned: boolean;
