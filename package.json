@@ -83,6 +83,12 @@
       "mode": "view"
     },
     {
+      "name": "create-issue",
+      "title": "Create Issue",
+      "description": "Create an issue in a repository",
+      "mode": "view"
+    },
+    {
       "name": "explore-repositories",
       "title": "Explore Repositories",
       "description": "Explore Repositories available to you",
