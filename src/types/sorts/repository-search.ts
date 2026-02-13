@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Repository } from "../repository";
+import type { Repository } from "../api";
 import { CommonOptionType } from "./common";
 
 export enum RepositorySortOption {
@@ -23,25 +23,33 @@ export const RepositorySortTypes: CommonOptionType[] = [
 export function SortRepositories(list: Repository[], sortType: RepositorySortOption | string): Repository[] {
   switch (sortType) {
     case RepositorySortOption.MostStars:
-      return list.toSorted((a: Repository, b: Repository) => b.stars_count - a.stars_count);
+      return list.toSorted((a: Repository, b: Repository) => (b.stars_count ?? 0) - (a.stars_count ?? 0));
     case RepositorySortOption.FewestStars:
-      return list.toSorted((a: Repository, b: Repository) => a.stars_count - b.stars_count);
+      return list.toSorted((a: Repository, b: Repository) => (a.stars_count ?? 0) - (b.stars_count ?? 0));
     case RepositorySortOption.Newest:
-      return list.toSorted((a: Repository, b: Repository) =>
-        dayjs(a.created_at).isBefore(dayjs(b.created_at)) ? 1 : -1,
-      );
+      return list.toSorted((a: Repository, b: Repository) => {
+        if (!a.created_at) return 1;
+        if (!b.created_at) return -1;
+        return dayjs(a.created_at).isBefore(dayjs(b.created_at)) ? 1 : -1;
+      });
     case RepositorySortOption.Oldest:
-      return list.toSorted((a: Repository, b: Repository) =>
-        dayjs(a.created_at).isAfter(dayjs(b.created_at)) ? 1 : -1,
-      );
+      return list.toSorted((a: Repository, b: Repository) => {
+        if (!a.created_at) return 1;
+        if (!b.created_at) return -1;
+        return dayjs(a.created_at).isAfter(dayjs(b.created_at)) ? 1 : -1;
+      });
     case RepositorySortOption.RecentlyUpdated:
-      return list.toSorted((a: Repository, b: Repository) =>
-        dayjs(a.updated_at).isBefore(dayjs(b.updated_at)) ? 1 : -1,
-      );
+      return list.toSorted((a: Repository, b: Repository) => {
+        if (!a.updated_at) return 1;
+        if (!b.updated_at) return -1;
+        return dayjs(a.updated_at).isBefore(dayjs(b.updated_at)) ? 1 : -1;
+      });
     case RepositorySortOption.LeastRecentlyUpdated:
-      return list.toSorted((a: Repository, b: Repository) =>
-        dayjs(a.updated_at).isAfter(dayjs(b.updated_at)) ? 1 : -1,
-      );
+      return list.toSorted((a: Repository, b: Repository) => {
+        if (!a.updated_at) return 1;
+        if (!b.updated_at) return -1;
+        return dayjs(a.updated_at).isAfter(dayjs(b.updated_at)) ? 1 : -1;
+      });
     default:
       return list;
   }

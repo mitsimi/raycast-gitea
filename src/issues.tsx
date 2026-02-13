@@ -1,6 +1,5 @@
-import { Action, ActionPanel, Color, Icon, List } from "@raycast/api";
+import { Action, ActionPanel, Color, List } from "@raycast/api";
 import { useIssues } from "./hooks/useIssues";
-
 export default function Command() {
   const { items, isLoading } = useIssues();
 
@@ -8,24 +7,26 @@ export default function Command() {
     <List isLoading={isLoading} searchBarPlaceholder="Search issues">
       {items.map((issue) => (
         <List.Item
-          key={issue.id}
-          title={issue.title}
-          subtitle={issue.state}
+          key={issue.id ?? issue.number ?? issue.title ?? "issue"}
+          title={issue.title ?? ""}
+          subtitle={issue.state ?? ""}
           icon={
             issue.state === "open"
-              ? { source: Icon.Circle, tintColor: Color.Green }
-              : { source: Icon.XMarkCircle, tintColor: Color.Red }
+              ? { source: "issue-open.svg", tintColor: Color.Green }
+              : { source: "issue-closed.svg", tintColor: Color.Red }
           }
           accessories={[
             {
-              text: `#${issue.number.toString()}`,
+              text: `#${issue.number ?? ""}`,
             },
           ]}
           actions={
             <ActionPanel>
               <ActionPanel.Section>
-                <Action.OpenInBrowser title="Open Repository" url={issue.html_url} />
-                <Action.CopyToClipboard title="Copy URL to Clipboard" content={issue.html_url} />
+                {issue.html_url ? <Action.OpenInBrowser title="Open Repository" url={issue.html_url} /> : null}
+                {issue.html_url ? (
+                  <Action.CopyToClipboard title="Copy URL to Clipboard" content={issue.html_url} />
+                ) : null}
               </ActionPanel.Section>
             </ActionPanel>
           }

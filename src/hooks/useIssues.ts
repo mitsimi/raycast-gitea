@@ -1,6 +1,6 @@
 import { useCachedState, useCachedPromise } from "@raycast/utils";
 import { getIssues } from "../api/issues";
-import { Issue } from "../types/issue";
+import type { Issue } from "../types/api";
 
 export function useIssues() {
   const [items, setItems] = useCachedState<Issue[]>("issues", []);
