@@ -5,10 +5,10 @@ import { createIssue, listRepoAssignees, listRepoLabels, listRepoMilestones } fr
 import { useUserRepositories } from "./hooks/useUserRepositories";
 import type { Label, Milestone, Repository, User } from "./types/api";
 
-export default function Command() {
+export default function Command(props: { initialRepo?: string }) {
   const { items: repositories, isLoading } = useUserRepositories();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedRepo, setSelectedRepo] = useState<string>("");
+  const [selectedRepo, setSelectedRepo] = useState<string>(props.initialRepo ?? "");
 
   const repoOptions = useMemo(
     () =>
@@ -69,6 +69,7 @@ export default function Command() {
         id="repository"
         title="Repository"
         isLoading={isLoading}
+        value={selectedRepo}
         onChange={(value) => setSelectedRepo(value)}
       >
         {repoOptions.map((repo) => (
