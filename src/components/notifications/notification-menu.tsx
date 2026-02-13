@@ -35,7 +35,7 @@ export default function NotificationMenu(props: {
 
 export function getIcon(notification: NotificationThread) {
   const subject = notification.subject;
-  if (!subject) return { source: Icon.Bug, tintColor: Color.Red };
+  if (!subject) return { source: Icon.Dot, tintColor: Color.SecondaryText };
 
   const subjectType = subject.type?.toLowerCase();
   const subjectState = subject.state?.toLowerCase();
@@ -64,5 +64,5 @@ export function getIcon(notification: NotificationThread) {
       break;
   }
 
-  return { source: Icon.Bug, tintColor: Color.Red };
+  return { source: Icon.Dot, tintColor: Color.SecondaryText };
 }
