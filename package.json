@@ -30,6 +30,12 @@
   ],
   "commands": [
     {
+      "name": "issues",
+      "title": "Issues",
+      "description": "List all issues",
+      "mode": "view"
+    },
+    {
       "name": "notifications",
       "title": "Notifications",
       "description": "List all unread notifications",
