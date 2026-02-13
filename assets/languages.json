@@ -74,6 +74,16 @@
     "ace_mode": "text",
     "language_id": 658971832
   },
+  "ALGOL": {
+    "type": "programming",
+    "color": "#D1E0DB",
+    "extensions": [".alg"],
+    "tm_scope": "source.algol60",
+    "ace_mode": "pascal",
+    "codemirror_mode": "pascal",
+    "codemirror_mime_type": "text/x-pascal",
+    "language_id": 79217948
+  },
   "AMPL": {
     "type": "programming",
     "color": "#E6EFBB",
@@ -310,16 +320,6 @@
     "ace_mode": "text",
     "language_id": 20
   },
-  "ArkTS": {
-    "type": "programming",
-    "color": "#0080ff",
-    "extensions": [".ets"],
-    "tm_scope": "source.ets",
-    "ace_mode": "typescript",
-    "codemirror_mode": "javascript",
-    "codemirror_mime_type": "application/typescript",
-    "language_id": 56341321
-  },
   "AsciiDoc": {
     "type": "prose",
     "color": "#73a0c5",
@@ -409,6 +409,14 @@
     "tm_scope": "source.awk",
     "ace_mode": "text",
     "language_id": 28
+  },
+  "B (Formal Method)": {
+    "type": "programming",
+    "color": "#8aa8c5",
+    "extensions": [".mch"],
+    "tm_scope": "source.b",
+    "ace_mode": "text",
+    "language_id": 700792152
   },
   "B4X": {
     "type": "programming",
@@ -793,6 +801,14 @@
     "codemirror_mime_type": "text/xml",
     "language_id": 49
   },
+  "CQL": {
+    "type": "programming",
+    "color": "#006091",
+    "extensions": [".cql"],
+    "tm_scope": "source.cql",
+    "ace_mode": "text",
+    "language_id": 71155397
+  },
   "CSON": {
     "type": "data",
     "color": "#244776",
@@ -817,7 +833,7 @@
     "type": "data",
     "color": "#237346",
     "ace_mode": "csv",
-    "tm_scope": "none",
+    "tm_scope": "source.csv",
     "extensions": [".csv"],
     "language_id": 51
   },
@@ -2296,6 +2312,7 @@
   },
   "Glimmer JS": {
     "type": "programming",
+    "aliases": ["gjs"],
     "extensions": [".gjs"],
     "ace_mode": "javascript",
     "color": "#F5835F",
@@ -2305,6 +2322,7 @@
   },
   "Glimmer TS": {
     "type": "programming",
+    "aliases": ["gts"],
     "extensions": [".gts"],
     "ace_mode": "typescript",
     "color": "#3178c6",
@@ -2366,6 +2384,16 @@
     "tm_scope": "go.mod",
     "ace_mode": "text",
     "language_id": 947461016
+  },
+  "Go Template": {
+    "type": "markup",
+    "color": "#00ADD8",
+    "aliases": ["gotmpl"],
+    "extensions": [".gohtml", ".gotmpl", ".html.tmpl", ".tmpl", ".tpl"],
+    "filenames": ["_helpers.tpl"],
+    "tm_scope": "source.go-template",
+    "ace_mode": "text",
+    "language_id": 247918769
   },
   "Go Workspace": {
     "type": "data",
@@ -2496,8 +2524,8 @@
   "HCL": {
     "type": "programming",
     "color": "#844FBA",
-    "extensions": [".hcl", ".nomad", ".tf", ".tfvars", ".workflow"],
-    "aliases": ["HashiCorp Configuration Language", "terraform"],
+    "extensions": [".hcl", ".nomad", ".tf", ".tfvars", ".tofu", ".workflow"],
+    "aliases": ["HashiCorp Configuration Language", "opentofu", "terraform"],
     "ace_mode": "terraform",
     "codemirror_mode": "ruby",
     "codemirror_mime_type": "text/x-ruby",
@@ -3031,7 +3059,8 @@
       ".sublime-theme",
       ".sublime-workspace",
       ".sublime_metrics",
-      ".sublime_session"
+      ".sublime_session",
+      ".tsconfig.json"
     ],
     "filenames": [
       ".babelrc",
@@ -3040,6 +3069,7 @@
       ".jscsrc",
       ".jshintrc",
       ".jslintrc",
+      ".oxlintrc.json",
       ".swcrc",
       "api-extractor.json",
       "devcontainer.json",
@@ -3079,6 +3109,14 @@
     "extensions": [".jq"],
     "tm_scope": "source.jsoniq",
     "language_id": 177
+  },
+  "Jac": {
+    "type": "programming",
+    "color": "#FC792D",
+    "extensions": [".jac"],
+    "tm_scope": "source.jac",
+    "ace_mode": "text",
+    "language_id": 235277043
   },
   "Jai": {
     "type": "programming",
@@ -3307,6 +3345,15 @@
     "ace_mode": "text",
     "language_id": 128447695
   },
+  "KCL": {
+    "type": "programming",
+    "color": "#7ABABF",
+    "tm_scope": "source.kcl",
+    "extensions": [".k"],
+    "filenames": ["kcl.mod", "kcl.mod.lock"],
+    "ace_mode": "text",
+    "language_id": 1052003890
+  },
   "KDL": {
     "type": "data",
     "color": "#ffb3b3",
@@ -3316,6 +3363,14 @@
     "codemirror_mode": "yacas",
     "codemirror_mime_type": "text/x-yacas",
     "language_id": 931123626
+  },
+  "KFramework": {
+    "type": "programming",
+    "color": "#4195c5",
+    "tm_scope": "text.k",
+    "extensions": [".k"],
+    "ace_mode": "text",
+    "language_id": 9479532
   },
   "KRL": {
     "type": "programming",
@@ -3486,6 +3541,22 @@
     "codemirror_mode": "xml",
     "codemirror_mime_type": "text/xml",
     "language_id": 194
+  },
+  "Lambdapi": {
+    "type": "programming",
+    "color": "#8027a3",
+    "extensions": [".lp"],
+    "tm_scope": "source.lp",
+    "ace_mode": "text",
+    "language_id": 759240513
+  },
+  "Langium": {
+    "type": "programming",
+    "color": "#2c8c87",
+    "extensions": [".langium"],
+    "tm_scope": "source.langium",
+    "ace_mode": "text",
+    "language_id": 548603830
   },
   "Lark": {
     "type": "data",
@@ -3711,7 +3782,7 @@
     "color": "#000080",
     "extensions": [".lua", ".fcgi", ".nse", ".p8", ".pd_lua", ".rbxs", ".rockspec", ".wlua"],
     "filenames": [".luacheckrc"],
-    "interpreters": ["lua"],
+    "interpreters": ["lua", "luajit"],
     "language_id": 213
   },
   "Luau": {
@@ -3923,6 +3994,14 @@
     "extensions": [".mask"],
     "tm_scope": "source.mask",
     "language_id": 223
+  },
+  "Mathematical Programming System": {
+    "type": "programming",
+    "color": "#0530ad",
+    "extensions": [".mps"],
+    "tm_scope": "text.source.mps",
+    "ace_mode": "text",
+    "language_id": 429002699
   },
   "Maven POM": {
     "type": "data",
@@ -4961,7 +5040,7 @@
   "Pip Requirements": {
     "type": "data",
     "color": "#FFD343",
-    "filenames": ["requirements-dev.txt", "requirements.lock.txt", "requirements.txt"],
+    "filenames": ["dev-requirements.txt", "requirements-dev.txt", "requirements.lock.txt", "requirements.txt"],
     "ace_mode": "text",
     "tm_scope": "source.pip-requirements",
     "language_id": 684385621
@@ -5321,7 +5400,7 @@
   "QuickBASIC": {
     "type": "programming",
     "color": "#008080",
-    "extensions": [".bas"],
+    "extensions": [".bas", ".bi"],
     "tm_scope": "source.QB64",
     "aliases": ["qb", "qbasic", "qb64", "classic qbasic", "classic quickbasic"],
     "ace_mode": "text",
@@ -5351,6 +5430,14 @@
     "color": "#77d9fb",
     "extensions": [".raml"],
     "language_id": 308
+  },
+  "RAScript": {
+    "type": "programming",
+    "ace_mode": "text",
+    "extensions": [".rascript"],
+    "tm_scope": "source.rascript",
+    "color": "#2C97FA",
+    "language_id": 601118790
   },
   "RBS": {
     "type": "data",
@@ -5916,7 +6003,7 @@
     "ace_mode": "sql",
     "codemirror_mode": "sql",
     "codemirror_mime_type": "text/x-sql",
-    "extensions": [".sql", ".cql", ".ddl", ".inc", ".mysql", ".prc", ".tab", ".udf", ".viw"],
+    "extensions": [".sql", ".ddl", ".inc", ".mysql", ".prc", ".tab", ".udf", ".viw"],
     "language_id": 333
   },
   "SQLPL": {
@@ -6104,7 +6191,9 @@
       ".command",
       ".fcgi",
       ".ksh",
+      ".sbatch",
       ".sh.in",
+      ".slurm",
       ".tmux",
       ".tool",
       ".trigger",
@@ -6455,6 +6544,15 @@
     "ace_mode": "text",
     "language_id": 361
   },
+  "SurrealQL": {
+    "type": "programming",
+    "color": "#ff00a0",
+    "aliases": ["surql"],
+    "extensions": [".surql"],
+    "ace_mode": "text",
+    "tm_scope": "source.surrealql",
+    "language_id": 735141027
+  },
   "Survex data": {
     "type": "data",
     "color": "#ffcc99",
@@ -6535,6 +6633,15 @@
     "ace_mode": "text",
     "language_id": 364
   },
+  "TMDL": {
+    "type": "data",
+    "color": "#f0c913",
+    "extensions": [".tmdl"],
+    "aliases": ["Tabular Model Definition Language"],
+    "tm_scope": "source.tmdl",
+    "ace_mode": "text",
+    "language_id": 769162295
+  },
   "TOML": {
     "type": "data",
     "color": "#9c4221",
@@ -6566,7 +6673,7 @@
     "type": "data",
     "color": "#237346",
     "ace_mode": "tsv",
-    "tm_scope": "source.generic-db",
+    "tm_scope": "source.tsv",
     "extensions": [".tsv", ".vcf"],
     "aliases": ["tab-seperated values"],
     "language_id": 1035892117
@@ -7098,7 +7205,7 @@
     "type": "markup",
     "color": "#41b883",
     "extensions": [".vue"],
-    "tm_scope": "source.vue",
+    "tm_scope": "text.html.vue",
     "ace_mode": "vue",
     "codemirror_mode": "vue",
     "codemirror_mime_type": "text/x-vue",
@@ -7413,6 +7520,7 @@
       ".ps1xml",
       ".psc1",
       ".pt",
+      ".pubxml",
       ".qhelp",
       ".rdf",
       ".res",

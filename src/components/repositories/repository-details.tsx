@@ -1,13 +1,14 @@
 import { Icon, List } from "@raycast/api";
 import dayjs from "dayjs";
-import GitHubColors from "../../utils/colors";
+
 import { Repository } from "../../types/repository";
+import { getLanguageColor } from "../../utils/languages";
 
 export default function RepositoryDetails(props: { repo: Repository }) {
   const repo = props.repo;
 
   const ownerName = repo.owner?.username || repo.owner?.login || "Unknown";
-  const languageColor = GitHubColors.get(repo.language, true)?.color;
+  const languageColor = getLanguageColor(repo.language);
   const created = safeFormatDate(repo.created_at);
   const updated = safeFormatDate(repo.updated_at);
   const description = repo.description || "No description provided.";

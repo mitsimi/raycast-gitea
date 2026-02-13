@@ -6,9 +6,9 @@ import { useUserRepositories } from "./hooks/useUserRepositories";
 import dayjs from "dayjs";
 import { Repository } from "./types/repository";
 
-import GitHubColors from "./utils/colors";
 import RepositoryDetails from "./components/repositories/repository-details";
 import { useState } from "react";
+import { getLanguageColor } from "./utils/languages";
 
 export default function Command() {
   const [sort, setSort] = useCachedState<RepositorySortOption>(RepositorySortOption.RecentlyUpdated);
@@ -42,7 +42,7 @@ export default function Command() {
                 icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
                 shortcut={{
                   macOS: { modifiers: ["cmd", "shift"], key: "x" },
-                  windows: { modifiers: ["ctrl", "shift"], key: "x" },
+                  Windows: { modifiers: ["ctrl", "shift"], key: "x" },
                 }}
                 onAction={() => setShowDetails(!showDetails)}
               />
@@ -53,7 +53,7 @@ export default function Command() {
               ? []
               : ([
                   ...(item.language
-                    ? [{ tag: { value: item.language, color: GitHubColors.get(item.language, true)?.color } }]
+                    ? [{ tag: { value: item.language, color: getLanguageColor(item.language, true) } }]
                     : []),
                   getAccessoryByFilter(item, sort),
                 ] as List.Item.Accessory[])
