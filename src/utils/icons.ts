@@ -1,40 +1,44 @@
 import { Color, Icon } from "@raycast/api";
 import { IssueState, NotificationSubjectType } from "../types/api";
-import type { NotificationThread } from "../types/api";
+import type { NotificationThread, PullRequestMeta } from "../types/api";
 
 type IconResult = { source: string | Icon; tintColor?: Color };
 
+const fallback: IconResult = { source: Icon.Dot, tintColor: Color.SecondaryText };
+
+const issue_open: IconResult = { source: "issue-open.svg", tintColor: Color.Green };
+const issue_closed: IconResult = { source: "issue-closed.svg", tintColor: Color.Red };
 export function getIssueIcon(state?: string): IconResult {
   const normalized = state?.toLowerCase();
   switch (normalized) {
     case IssueState.Open:
-      return { source: "issue-open.svg", tintColor: Color.Green };
+      return issue_open;
     case IssueState.Closed:
-      return { source: "issue-closed.svg", tintColor: Color.Red };
+      return issue_closed;
     default:
-      return { source: Icon.Dot, tintColor: Color.SecondaryText };
+      return fallback;
   }
 }
 
-export function getPullRequestIcon(state?: string, title?: string): IconResult {
+const pr_open: IconResult = { source: "pr-open.svg", tintColor: Color.Green };
+const pr_closed: IconResult = { source: "pr-closed.svg", tintColor: Color.Red };
+const pr_draft: IconResult = { source: "pr-draft.svg", tintColor: Color.SecondaryText };
+const pr_merged: IconResult = { source: "pr-merged.svg", tintColor: Color.Purple };
+export function getPullRequestIcon(state?: string, title?: string, meta?: PullRequestMeta): IconResult {
   const normalized = state?.toLowerCase();
   switch (normalized) {
     case IssueState.Open:
-      return isDraftTitle(title)
-        ? { source: "pr-draft.svg", tintColor: Color.SecondaryText }
-        : { source: "pr-open.svg", tintColor: Color.Green };
+      return meta?.draft ? pr_draft : pr_open;
     case IssueState.Closed:
-      return { source: "pr-closed.svg", tintColor: Color.Red };
-    case IssueState.Merged:
-      return { source: "pr-merged.svg", tintColor: Color.Purple };
+      return meta?.merged ? pr_merged : pr_closed;
     default:
-      return { source: Icon.Dot, tintColor: Color.SecondaryText };
+      return fallback;
   }
 }
 
 export function getNotificationIcon(notification: NotificationThread): IconResult {
   const subject = notification.subject;
-  if (!subject) return { source: Icon.Dot, tintColor: Color.SecondaryText };
+  if (!subject) return fallback;
 
   const subjectType = subject.type?.toLowerCase();
   const subjectState = subject.state?.toLowerCase();
@@ -43,13 +47,8 @@ export function getNotificationIcon(notification: NotificationThread): IconResul
     case NotificationSubjectType.Issue:
       return getIssueIcon(subjectState);
     case NotificationSubjectType.Pull:
-      return getPullRequestIcon(subjectState, subject.title);
+      return getPullRequestIcon(subjectState, subject.title, undefined);
     default:
-      return { source: Icon.Dot, tintColor: Color.SecondaryText };
+      return fallback;
   }
-}
-
-function isDraftTitle(title?: string) {
-  if (!title) return false;
-  return /^\s*(\[\s*wip\s*\]|wip\b|draft\b)/i.test(title);
 }

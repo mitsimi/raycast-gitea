@@ -64,7 +64,7 @@ export default function Command() {
             key={pr.id ?? pr.number ?? pr.title ?? "pull-request"}
             title={pr.title ?? ""}
             subtitle={pr.repository?.full_name}
-            icon={getPullRequestIcon(pr.state, pr.title)}
+            icon={getPullRequestIcon(pr.state, pr.title, pr.pull_request)}
             accessories={[{ text: `#${pr.number ?? ""}` }]}
             actions={
               <ActionPanel>
