@@ -1,9 +1,10 @@
-import { Action, ActionPanel, Color, Icon, List, Toast } from "@raycast/api";
+import { Action, ActionPanel, Icon, List, Toast } from "@raycast/api";
 import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
 import { searchIssues } from "./api/issues";
 import type { Issue } from "./types/api";
 import CreateIssue from "./create-issue";
+import { getIssueIcon } from "./utils/icons";
 
 type IssueSearchState = "open" | "closed" | "all";
 
@@ -55,11 +56,7 @@ export default function Command() {
             key={issue.id ?? issue.number ?? issue.title ?? "issue"}
             title={issue.title ?? ""}
             subtitle={issue.repository?.full_name}
-            icon={
-              issue.state === "open"
-                ? { source: "issue-open.svg", tintColor: Color.Green }
-                : { source: "issue-closed.svg", tintColor: Color.Red }
-            }
+            icon={getIssueIcon(issue.state)}
             accessories={[{ text: `#${issue.number ?? ""}` }]}
             actions={
               <ActionPanel>

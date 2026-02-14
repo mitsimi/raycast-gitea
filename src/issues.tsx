@@ -1,7 +1,8 @@
-import { Action, ActionPanel, Color, List, Icon, getPreferenceValues } from "@raycast/api";
+import { Action, ActionPanel, List, Icon, getPreferenceValues } from "@raycast/api";
 import { useIssues } from "./hooks/useIssues";
 import { useMemo, useState } from "react";
 import CreateIssue from "./create-issue";
+import { getIssueIcon } from "./utils/icons";
 
 type IssueCommandPreferences = {
   includeCreated: boolean;
@@ -50,11 +51,7 @@ export default function Command() {
             key={issue.id ?? issue.number ?? issue.title ?? "issue"}
             title={issue.title ?? ""}
             subtitle={issue.repository?.full_name}
-            icon={
-              issue.state === "open"
-                ? { source: "issue-open.svg", tintColor: Color.Green }
-                : { source: "issue-closed.svg", tintColor: Color.Red }
-            }
+            icon={getIssueIcon(issue.state)}
             accessories={[
               {
                 text: `#${issue.number ?? ""}`,

@@ -128,6 +128,18 @@ export type MyIssuesParams = {
   limit?: number;
 };
 
+export type MyPullRequestsParams = {
+  includeCreated: boolean;
+  includeAssigned: boolean;
+  includeMentioned: boolean;
+  includeReviewRequested: boolean;
+  includeReviewed: boolean;
+  includeRecentlyClosed: boolean;
+  query?: string;
+  page?: number;
+  limit?: number;
+};
+
 export async function getMyIssues(params: MyIssuesParams): Promise<Issue[]> {
   const baseQuery = {
     type: "issues",
@@ -156,6 +168,43 @@ export async function getMyIssues(params: MyIssuesParams): Promise<Issue[]> {
   const deduped = new Map<number, Issue>();
   for (const issue of merged) {
     if (issue.id != null) deduped.set(issue.id, issue);
+  }
+
+  return Array.from(deduped.values());
+}
+
+export async function getMyPullRequests(params: MyPullRequestsParams): Promise<Issue[]> {
+  const baseQuery = {
+    type: "pulls",
+    q: params.query,
+    page: params.page,
+    limit: params.limit,
+  } satisfies IssueListParams;
+
+  if (
+    !params.includeCreated &&
+    !params.includeAssigned &&
+    !params.includeMentioned &&
+    !params.includeReviewRequested &&
+    !params.includeReviewed
+  ) {
+    return [];
+  }
+
+  const state = params.includeRecentlyClosed ? "all" : "open";
+
+  const [created, assigned, mentioned, reviewRequested, reviewed] = await Promise.all([
+    params.includeCreated ? searchIssues({ ...baseQuery, state, created: true }) : Promise.resolve([]),
+    params.includeAssigned ? searchIssues({ ...baseQuery, state, assigned: true }) : Promise.resolve([]),
+    params.includeMentioned ? searchIssues({ ...baseQuery, state, mentioned: true }) : Promise.resolve([]),
+    params.includeReviewRequested ? searchIssues({ ...baseQuery, state, review_requested: true }) : Promise.resolve([]),
+    params.includeReviewed ? searchIssues({ ...baseQuery, state, reviewed: true }) : Promise.resolve([]),
+  ]);
+
+  const merged = [...created, ...assigned, ...mentioned, ...reviewRequested, ...reviewed];
+  const deduped = new Map<number, Issue>();
+  for (const pr of merged) {
+    if (pr.id != null) deduped.set(pr.id, pr);
   }
 
   return Array.from(deduped.values());
