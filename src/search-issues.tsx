@@ -3,6 +3,7 @@ import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/uti
 import { useMemo, useState } from "react";
 import { searchIssues } from "./api/issues";
 import type { Issue } from "./types/api";
+import CreateIssue from "./create-issue";
 
 type IssueSearchState = "open" | "closed" | "all";
 
@@ -69,6 +70,13 @@ export default function Command() {
                   ) : null}
                   {issue.number != null ? (
                     <Action.CopyToClipboard title="Copy Issue Number" content={`#${issue.number}`} />
+                  ) : null}
+                  {issue.repository?.full_name ? (
+                    <Action.Push
+                      title="Create Issue"
+                      icon={Icon.Plus}
+                      target={<CreateIssue initialRepo={issue.repository.full_name} />}
+                    />
                   ) : null}
                 </ActionPanel.Section>
               </ActionPanel>

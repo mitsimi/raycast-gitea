@@ -1,6 +1,7 @@
 import { Action, ActionPanel, Color, List, Icon, getPreferenceValues } from "@raycast/api";
 import { useIssues } from "./hooks/useIssues";
 import { useMemo, useState } from "react";
+import CreateIssue from "./create-issue";
 
 type IssueCommandPreferences = {
   includeCreated: boolean;
@@ -32,7 +33,17 @@ export default function Command() {
       throttle
     >
       {items.length === 0 ? (
-        <List.EmptyView icon={Icon.BulletPoints} title="No issues found" />
+        <List.EmptyView
+          icon={Icon.BulletPoints}
+          title="No issues found"
+          actions={
+            <ActionPanel>
+              <ActionPanel.Section>
+                <Action.Push title="Create Issue" icon={Icon.Plus} target={<CreateIssue />} />
+              </ActionPanel.Section>
+            </ActionPanel>
+          }
+        />
       ) : (
         items.map((issue) => (
           <List.Item
@@ -56,6 +67,13 @@ export default function Command() {
                   {issue.html_url && <Action.CopyToClipboard title="Copy URL to Clipboard" content={issue.html_url} />}
                   {issue.number != null && (
                     <Action.CopyToClipboard title="Copy Issue Number" content={`#${issue.number}`} />
+                  )}
+                  {issue.repository?.full_name && (
+                    <Action.Push
+                      title="Create Issue"
+                      icon={Icon.Plus}
+                      target={<CreateIssue initialRepo={issue.repository.full_name} />}
+                    />
                   )}
                 </ActionPanel.Section>
               </ActionPanel>
