@@ -37,6 +37,17 @@ export default function Command() {
   const [searchText, setSearchText] = useState<string>("");
   const { items, isLoading, pagination } = usePullRequests({ ...filters, query: searchText });
 
+  const sortedItems = useMemo(() => {
+    const stateRank = (state?: string) => (state?.toLowerCase() === "open" ? 0 : 1);
+    const timeValue = (value?: string) => (value ? new Date(value).getTime() : 0);
+
+    return [...items].sort((a, b) => {
+      const byState = stateRank(a.state) - stateRank(b.state);
+      if (byState !== 0) return byState;
+      return timeValue(a.updated_at) - timeValue(b.updated_at);
+    });
+  }, [items]);
+
   return (
     <List
       isLoading={isLoading}
@@ -48,7 +59,7 @@ export default function Command() {
       {items.length === 0 ? (
         <List.EmptyView icon={Icon.Code} title="No pull requests found" />
       ) : (
-        items.map((pr) => (
+        sortedItems.map((pr) => (
           <List.Item
             key={pr.id ?? pr.number ?? pr.title ?? "pull-request"}
             title={pr.title ?? ""}
