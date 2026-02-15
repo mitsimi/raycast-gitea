@@ -26,11 +26,16 @@ const pr_draft: IconResult = { source: "pr-draft.svg", tintColor: Color.Secondar
 const pr_merged: IconResult = { source: "pr-merged.svg", tintColor: Color.Purple };
 export function getPullRequestIcon(state?: string, title?: string, meta?: PullRequestMeta): IconResult {
   const normalized = state?.toLowerCase();
+  if (state == IssueState.Merged && meta?.merged) {
+    console.log(title, state, meta);
+  }
   switch (normalized) {
     case IssueState.Open:
       return meta?.draft ? pr_draft : pr_open;
     case IssueState.Closed:
       return meta?.merged ? pr_merged : pr_closed;
+    case IssueState.Merged:
+      return pr_merged;
     default:
       return fallback;
   }
