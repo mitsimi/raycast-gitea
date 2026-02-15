@@ -4,7 +4,7 @@ import { useCachedState } from "@raycast/utils";
 import { RepositorySortOption, RepositorySortTypes } from "./types/sorts/repository-search";
 import { useUserRepositories } from "./hooks/useUserRepositories";
 import dayjs from "dayjs";
-import { Repository } from "./types/repository";
+import type { Repository } from "./types/api";
 
 import RepositoryDetails from "./components/repositories/repository-details";
 import { useState } from "react";
@@ -30,10 +30,10 @@ export default function Command() {
     >
       {items.map((item) => (
         <List.Item
-          key={item.id}
+          key={item.id ?? item.full_name ?? "repo"}
           icon={item.avatar_url ? { source: item.avatar_url } : { source: "repo.svg", tintColor: Color.PrimaryText }}
-          title={item.full_name}
-          subtitle={item.description}
+          title={item.full_name ?? ""}
+          subtitle={item.description ?? ""}
           detail={<RepositoryDetails repo={item} />}
           actions={
             <RepositoryActions item={item}>
@@ -42,7 +42,7 @@ export default function Command() {
                 icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
                 shortcut={{
                   macOS: { modifiers: ["cmd", "shift"], key: "x" },
-                  Windows: { modifiers: ["ctrl", "shift"], key: "x" },
+                  windows: { modifiers: ["ctrl", "shift"], key: "x" },
                 }}
                 onAction={() => setShowDetails(!showDetails)}
               />
@@ -68,19 +68,13 @@ function getAccessoryByFilter(item: Repository, filter?: string): List.Item.Acce
   switch (filter) {
     case "most stars":
     case "fewest stars":
-      return { icon: Icon.Star, text: { value: `${item.stars_count}`, color: Color.SecondaryText } };
+      return { icon: Icon.Star, text: { value: `${item.stars_count ?? 0}`, color: Color.SecondaryText } };
     case "newest":
     case "oldest":
-      return {
-        icon: Icon.Calendar,
-        date: dayjs(item.created_at).toDate(),
-      };
+      return item.created_at ? { icon: Icon.Calendar, date: dayjs(item.created_at).toDate() } : { icon: Icon.Calendar };
     case "recently":
     case "least recently":
-      return {
-        icon: Icon.Calendar,
-        date: dayjs(item.updated_at).toDate(),
-      };
+      return item.updated_at ? { icon: Icon.Calendar, date: dayjs(item.updated_at).toDate() } : { icon: Icon.Calendar };
   }
 
   return {};

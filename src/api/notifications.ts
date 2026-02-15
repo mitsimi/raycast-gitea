@@ -1,11 +1,15 @@
 import { getClient } from "./client";
-import type { Notification } from "../types/notification";
+import type { NotificationThread } from "../types/api";
 
 export type ListNotificationParams = { limit?: number; all?: boolean; page?: number };
-export async function listNotifications(params: ListNotificationParams = {}) {
+export async function listNotifications(params: ListNotificationParams = {}): Promise<NotificationThread[]> {
   const client = getClient();
   const { limit = 20, all = false, page } = params;
-  return client.get<Notification[]>("/notifications", { limit, all, ...(page ? { page } : {}) });
+  const { data, error } = await client.GET("/notifications", {
+    params: { query: { limit, all, ...(page ? { page } : {}) } },
+  });
+  if (error) throw new Error("Failed to fetch notifications");
+  return data ?? [];
 }
 
 export enum StatusType {
@@ -14,11 +18,15 @@ export enum StatusType {
   Pinned = "pinned",
 }
 export type UpdateNotificationsParams = { id: string; toStatus: StatusType };
-export async function updateNotificationStatus(params: UpdateNotificationsParams) {
+export async function updateNotificationStatus(
+  params: UpdateNotificationsParams,
+): Promise<NotificationThread | undefined> {
   const client = getClient();
-  return client.patch<Notification>(
-    `/notifications/threads/${params.id}?${new URLSearchParams({ "to-status": params.toStatus })}`,
-  );
+  const { data, error } = await client.PATCH("/notifications/threads/{id}", {
+    params: { path: { id: params.id }, query: { "to-status": params.toStatus } },
+  });
+  if (error) throw new Error("Failed to update notification status");
+  return data;
 }
 
 /**
@@ -27,8 +35,14 @@ export async function updateNotificationStatus(params: UpdateNotificationsParams
  */
 export async function readAllNotificationStatus(...statusTypes: StatusType[]) {
   const client = getClient();
-  return client.put<Notification[]>("/notifications", {
-    "to-status": "read",
-    ...(statusTypes.length > 0 ? { "status-type": statusTypes } : {}),
+  const { data, error } = await client.PUT("/notifications", {
+    params: {
+      query: {
+        "to-status": "read",
+        ...(statusTypes.length > 0 ? { "status-types": statusTypes } : {}),
+      },
+    },
   });
+  if (error) throw new Error("Failed to update notifications");
+  return data ?? [];
 }

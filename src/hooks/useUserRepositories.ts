@@ -1,5 +1,5 @@
 import { useCachedState, useCachedPromise, showFailureToast } from "@raycast/utils";
-import { Repository } from "../types/repository";
+import type { Repository } from "../types/api";
 import { Toast } from "@raycast/api";
 import { listUserRepositories } from "../api/repositories";
 import { RepositorySortOption, SortRepositories } from "../types/sorts/repository-search";
@@ -20,7 +20,10 @@ export function useUserRepositories(sort?: RepositorySortOption) {
         if (!Array.isArray(data)) return;
         const next = data as Repository[];
         const prev = items;
-        if (prev.length === next.length && prev.every((r, i) => r.id === next[i].id)) {
+        if (
+          prev.length === next.length &&
+          prev.every((r, i) => (r.id ?? r.full_name ?? "") === (next[i]?.id ?? next[i]?.full_name ?? ""))
+        ) {
           return;
         }
         setItems(next);

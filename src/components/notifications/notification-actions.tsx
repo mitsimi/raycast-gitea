@@ -1,19 +1,21 @@
 import { Action, ActionPanel, Icon, showToast, Toast } from "@raycast/api";
-import { Notification } from "../../types/notification";
 import { readAllNotificationStatus, updateNotificationStatus, StatusType } from "../../api/notifications";
 import { MutatePromise } from "@raycast/utils";
+import { NotificationThread } from "../../types/api";
 
 export default function NotificationActions(props: {
-  item: Notification;
-  mutate?: MutatePromise<Notification[], Notification[]>;
+  item: NotificationThread;
+  mutate?: MutatePromise<NotificationThread[], NotificationThread[]>;
 }) {
+  const subjectUrl = props.item.subject?.html_url;
+
   const markAsRead = async () => {
     let toStatus: StatusType = props.item.unread ? StatusType.Read : StatusType.Unread;
     if (props.item.pinned) toStatus = StatusType.Read;
 
     const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
     try {
-      await props.mutate?.(updateNotificationStatus({ id: props.item.id, toStatus: toStatus }), {
+      await props.mutate?.(updateNotificationStatus({ id: String(props.item.id), toStatus: toStatus }), {
         shouldRevalidateAfter: true,
       });
       toast.style = Toast.Style.Success;
@@ -41,7 +43,7 @@ export default function NotificationActions(props: {
   const pinNotification = async () => {
     const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
     try {
-      await props.mutate?.(updateNotificationStatus({ id: props.item.id, toStatus: StatusType.Pinned }), {
+      await props.mutate?.(updateNotificationStatus({ id: String(props.item.id), toStatus: StatusType.Pinned }), {
         shouldRevalidateAfter: true,
       });
       toast.style = Toast.Style.Success;
@@ -56,8 +58,8 @@ export default function NotificationActions(props: {
   return (
     <ActionPanel>
       <ActionPanel.Section>
-        <Action.OpenInBrowser title="Open Repository" url={props.item.subject.html_url} />
-        <Action.CopyToClipboard title="Copy URL to Clipboard" content={props.item.subject.html_url} />
+        {subjectUrl ? <Action.OpenInBrowser title="Open Repository" url={subjectUrl} /> : null}
+        {subjectUrl ? <Action.CopyToClipboard title="Copy URL to Clipboard" content={subjectUrl} /> : null}
       </ActionPanel.Section>
       <ActionPanel.Section>
         <Action title="Mark All as Read" icon={Icon.Eye} onAction={markAllAsRead} />

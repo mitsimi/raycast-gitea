@@ -1,6 +1,6 @@
 import { useCachedState, useCachedPromise, showFailureToast } from "@raycast/utils";
 import { listRepositories } from "../api/repositories";
-import { Repository } from "../types/repository";
+import type { Repository } from "../types/api";
 import { Toast } from "@raycast/api";
 import { useEffect } from "react";
 
@@ -11,31 +11,18 @@ export function useRepositories(sort?: string, order?: "asc" | "desc") {
 
   const LIMIT = 20;
 
-  type SearchResults<T> = { data?: T[]; ok?: boolean };
-
   const { isLoading, revalidate, mutate } = useCachedPromise(
-    async (p: number, s?: string, o?: "asc" | "desc"): Promise<Repository[] | SearchResults<Repository>> =>
+    async (p: number, s?: string, o?: "asc" | "desc"): Promise<Repository[]> =>
       listRepositories({ limit: LIMIT, page: p, sort: s, order: o }),
     [page, sort, order] as [number, string | undefined, "asc" | "desc" | undefined],
     {
       initialData: items as Repository[],
       onData: (data) => {
-        const normalize = (input: Repository[] | SearchResults<Repository>): Repository[] => {
-          if (Array.isArray(input)) return input as Repository[];
-          const maybe = input as SearchResults<Repository>;
-          if (maybe.ok === false) {
-            showFailureToast({ style: Toast.Style.Failure, title: "Search failed for repositories" });
-            return [] as Repository[];
-          }
-          return (maybe.data ?? []) as Repository[];
-        };
-
-        const current = normalize(data);
-        setHasMore(current.length === LIMIT);
+        setHasMore(data.length === LIMIT);
         if (page === 1) {
-          setItems(current);
-        } else if (current.length > 0) {
-          setItems((prev) => [...prev, ...current]);
+          setItems(data);
+        } else if (data.length > 0) {
+          setItems((prev) => [...prev, ...data]);
         }
       },
       onError() {

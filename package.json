@@ -30,9 +30,119 @@
   ],
   "commands": [
     {
+      "name": "issues",
+      "title": "My Issues",
+      "description": "List issues created by you, assigned to you, or mentioning you",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "includeCreated",
+          "description": "Show issues you created",
+          "type": "checkbox",
+          "required": false,
+          "label": "Created",
+          "title": "Categories to Display",
+          "default": true
+        },
+        {
+          "name": "includeAssigned",
+          "description": "Show issues assigned to you",
+          "type": "checkbox",
+          "required": false,
+          "label": "Assigned",
+          "default": true
+        },
+        {
+          "name": "includeMentioned",
+          "description": "Show issues where you are mentioned",
+          "type": "checkbox",
+          "required": false,
+          "label": "Mentioned",
+          "default": true
+        },
+        {
+          "name": "includeRecentlyClosed",
+          "description": "Show recently closed issues",
+          "type": "checkbox",
+          "required": false,
+          "label": "Recently Closed",
+          "default": false
+        }
+      ]
+    },
+    {
       "name": "notifications",
       "title": "Notifications",
       "description": "List all unread notifications",
+      "mode": "view"
+    },
+    {
+      "name": "pull-requests",
+      "title": "My Pull Requests",
+      "description": "List pull requests created by you, assigned to you, or mentioning you",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "includeCreated",
+          "description": "Show pull requests you created",
+          "type": "checkbox",
+          "required": false,
+          "label": "Created",
+          "title": "Categories to Display",
+          "default": true
+        },
+        {
+          "name": "includeAssigned",
+          "description": "Show pull requests assigned to you",
+          "type": "checkbox",
+          "required": false,
+          "label": "Assigned",
+          "default": true
+        },
+        {
+          "name": "includeMentioned",
+          "description": "Show pull requests where you are mentioned",
+          "type": "checkbox",
+          "required": false,
+          "label": "Mentioned",
+          "default": true
+        },
+        {
+          "name": "includeReviewRequested",
+          "description": "Show pull requests where you are requested to review",
+          "type": "checkbox",
+          "required": false,
+          "label": "Review Requests",
+          "default": true
+        },
+        {
+          "name": "includeReviewed",
+          "description": "Show pull requests you reviewed",
+          "type": "checkbox",
+          "required": false,
+          "label": "Reviewed",
+          "default": false
+        },
+        {
+          "name": "includeRecentlyClosed",
+          "description": "Show recently closed pull requests",
+          "type": "checkbox",
+          "required": false,
+          "label": "Recently Closed",
+          "default": false
+        }
+      ]
+    },
+    {
+      "name": "search-issues",
+      "title": "Search Issues",
+      "description": "Search issues across repositories",
+      "mode": "view"
+    },
+    {
+      "name": "create-issue",
+      "title": "Create Issue",
+      "description": "Create an issue in a repository",
       "mode": "view"
     },
     {
@@ -52,7 +162,7 @@
     "@raycast/api": "^1.103.5",
     "@raycast/utils": "^1.17.0",
     "dayjs": "^1.11.13",
-    "node-fetch": "^3.3.2"
+    "openapi-fetch": "^0.17.0"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^2.0.4",
@@ -61,15 +171,18 @@
     "@types/react": "19.0.10",
     "eslint": "^9.22.0",
     "js-yaml": "^4.1.1",
+    "openapi-typescript": "^7.13.0",
     "prettier": "^3.5.3",
+    "swagger2openapi": "^7.0.8",
     "tsx": "^4.21.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "build": "ray build",
     "dev": "ray develop",
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
+    "type-check": "tsc --noEmit",
     "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
     "publish": "npx @raycast/api@latest publish",
     "gen:langs": "tsx scripts/fetch-langs.ts"

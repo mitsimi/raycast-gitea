@@ -1,24 +1,24 @@
 import { Icon, List } from "@raycast/api";
 import dayjs from "dayjs";
 
-import { Repository } from "../../types/repository";
+import type { Repository } from "../../types/api";
 import { getLanguageColor } from "../../utils/languages";
 
 export default function RepositoryDetails(props: { repo: Repository }) {
   const repo = props.repo;
 
-  const ownerName = repo.owner?.username || repo.owner?.login || "Unknown";
-  const languageColor = getLanguageColor(repo.language);
+  const ownerName = repo.owner?.login || "Unknown";
+  const languageColor = getLanguageColor(repo.language ?? "");
   const created = safeFormatDate(repo.created_at);
   const updated = safeFormatDate(repo.updated_at);
   const description = repo.description || "No description provided.";
 
   return (
     <List.Item.Detail
-      key={repo.id}
+      key={repo.id ?? repo.full_name ?? "repo"}
       metadata={
         <List.Item.Detail.Metadata>
-          <List.Item.Detail.Metadata.Label title="Name" text={repo.full_name} />
+          <List.Item.Detail.Metadata.Label title="Name" text={repo.full_name ?? ""} />
           <List.Item.Detail.Metadata.Label title="Description" text={description} />
 
           <List.Item.Detail.Metadata.Separator />
@@ -31,8 +31,8 @@ export default function RepositoryDetails(props: { repo: Repository }) {
             </List.Item.Detail.Metadata.TagList>
           ) : null}
 
-          <List.Item.Detail.Metadata.Label title="Stars" icon={Icon.Star} text={`${repo.stars_count}`} />
-          <List.Item.Detail.Metadata.Label title="Forks" text={`${repo.forks_count}`} />
+          <List.Item.Detail.Metadata.Label title="Stars" icon={Icon.Star} text={`${repo.stars_count ?? 0}`} />
+          <List.Item.Detail.Metadata.Label title="Forks" text={`${repo.forks_count ?? 0}`} />
 
           <List.Item.Detail.Metadata.Separator />
 
