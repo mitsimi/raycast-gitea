@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Icon } from "@raycast/api";
+import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
 import type { Repository } from "../../types/api";
 import { ReactNode } from "react";
 import CreateIssue from "../../create-issue";
@@ -7,14 +7,29 @@ export default function RepositoryActions(props: { item: Repository; children?: 
   return (
     <ActionPanel>
       <ActionPanel.Section>
-        {props.item.html_url ? <Action.OpenInBrowser title="Open Repository" url={props.item.html_url} /> : null}
         {props.item.html_url ? (
-          <Action.CopyToClipboard title="Copy URL to Clipboard" content={props.item.html_url} />
+          <Action.OpenInBrowser
+            title="Open Repository"
+            url={props.item.html_url}
+            shortcut={Keyboard.Shortcut.Common.Open}
+          />
         ) : null}
+      </ActionPanel.Section>
+      <ActionPanel.Section title="Copy">
+        {props.item.html_url ? (
+          <Action.CopyToClipboard
+            title="Copy URL"
+            content={props.item.html_url}
+            shortcut={Keyboard.Shortcut.Common.Copy}
+          />
+        ) : null}
+      </ActionPanel.Section>
+      <ActionPanel.Section>
         {props.item.full_name ? (
           <Action.Push
             title="Create Issue"
             icon={Icon.Plus}
+            shortcut={Keyboard.Shortcut.Common.New}
             target={<CreateIssue initialRepo={props.item.full_name} />}
           />
         ) : null}

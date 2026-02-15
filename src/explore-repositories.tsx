@@ -50,8 +50,8 @@ export default function Command() {
                 title={showDetails ? "Hide Details" : "Show Details"}
                 icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
                 shortcut={{
-                  macOS: { modifiers: ["cmd"], key: "d" },
-                  windows: { modifiers: ["ctrl"], key: "d" },
+                  macOS: { modifiers: ["cmd", "shift"], key: "d" },
+                  windows: { modifiers: ["ctrl", "shift"], key: "d" },
                 }}
                 onAction={() => setShowDetails(!showDetails)}
               />

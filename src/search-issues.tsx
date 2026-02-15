@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Icon, List, Toast } from "@raycast/api";
+import { Action, ActionPanel, Icon, Keyboard, List, Toast } from "@raycast/api";
 import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
 import { searchIssues } from "./api/issues";
@@ -61,17 +61,32 @@ export default function Command() {
             actions={
               <ActionPanel>
                 <ActionPanel.Section>
-                  {issue.html_url ? <Action.OpenInBrowser title="Open Issue" url={issue.html_url} /> : null}
                   {issue.html_url ? (
-                    <Action.CopyToClipboard title="Copy URL to Clipboard" content={issue.html_url} />
+                    <Action.OpenInBrowser
+                      title="Open Issue"
+                      url={issue.html_url}
+                      shortcut={Keyboard.Shortcut.Common.Open}
+                    />
+                  ) : null}
+                </ActionPanel.Section>
+                <ActionPanel.Section title="Copy">
+                  {issue.html_url ? (
+                    <Action.CopyToClipboard
+                      title="Copy URL"
+                      content={issue.html_url}
+                      shortcut={Keyboard.Shortcut.Common.Copy}
+                    />
                   ) : null}
                   {issue.number != null ? (
                     <Action.CopyToClipboard title="Copy Issue Number" content={`#${issue.number}`} />
                   ) : null}
+                </ActionPanel.Section>
+                <ActionPanel.Section>
                   {issue.repository?.full_name ? (
                     <Action.Push
                       title="Create Issue"
                       icon={Icon.Plus}
+                      shortcut={Keyboard.Shortcut.Common.New}
                       target={<CreateIssue initialRepo={issue.repository.full_name} />}
                     />
                   ) : null}

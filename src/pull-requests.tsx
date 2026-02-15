@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Icon, List, getPreferenceValues } from "@raycast/api";
+import { Action, ActionPanel, Icon, Keyboard, List, getPreferenceValues } from "@raycast/api";
 import { useMemo, useState } from "react";
 import { usePullRequests } from "./hooks/usePullRequests";
 import CreateIssue from "./create-issue";
@@ -69,15 +69,32 @@ export default function Command() {
             actions={
               <ActionPanel>
                 <ActionPanel.Section>
-                  {pr.html_url && <Action.OpenInBrowser title="Open Pull Request" url={pr.html_url} />}
-                  {pr.html_url && <Action.CopyToClipboard title="Copy URL to Clipboard" content={pr.html_url} />}
+                  {pr.html_url && (
+                    <Action.OpenInBrowser
+                      title="Open Pull Request"
+                      url={pr.html_url}
+                      shortcut={Keyboard.Shortcut.Common.Open}
+                    />
+                  )}
+                </ActionPanel.Section>
+                <ActionPanel.Section title="Copy">
+                  {pr.html_url && (
+                    <Action.CopyToClipboard
+                      title="Copy URL"
+                      content={pr.html_url}
+                      shortcut={Keyboard.Shortcut.Common.Copy}
+                    />
+                  )}
                   {pr.number != null && (
                     <Action.CopyToClipboard title="Copy Pull Request Number" content={`#${pr.number}`} />
                   )}
+                </ActionPanel.Section>
+                <ActionPanel.Section>
                   {pr.repository?.full_name && (
                     <Action.Push
                       title="Create Issue"
                       icon={Icon.Plus}
+                      shortcut={Keyboard.Shortcut.Common.New}
                       target={<CreateIssue initialRepo={pr.repository.full_name} />}
                     />
                   )}

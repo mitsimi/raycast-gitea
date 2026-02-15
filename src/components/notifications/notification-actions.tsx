@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Icon, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { readAllNotificationStatus, updateNotificationStatus, StatusType } from "../../api/notifications";
 import { MutatePromise } from "@raycast/utils";
 import { NotificationThread } from "../../types/api";
@@ -58,16 +58,22 @@ export default function NotificationActions(props: {
   return (
     <ActionPanel>
       <ActionPanel.Section>
-        {subjectUrl ? <Action.OpenInBrowser title="Open Repository" url={subjectUrl} /> : null}
-        {subjectUrl ? <Action.CopyToClipboard title="Copy URL to Clipboard" content={subjectUrl} /> : null}
+        {subjectUrl ? (
+          <Action.OpenInBrowser title="Open Notification" url={subjectUrl} shortcut={Keyboard.Shortcut.Common.Open} />
+        ) : null}
       </ActionPanel.Section>
-      <ActionPanel.Section>
+      <ActionPanel.Section title="Copy">
+        {subjectUrl ? (
+          <Action.CopyToClipboard title="Copy URL" content={subjectUrl} shortcut={Keyboard.Shortcut.Common.Copy} />
+        ) : null}
+      </ActionPanel.Section>
+      <ActionPanel.Section title="Actions">
         <Action title="Mark All as Read" icon={Icon.Eye} onAction={markAllAsRead} />
         <Action
           title={props.item.unread || props.item.pinned ? "Mark as Read" : "Mark as Unread"}
           icon={props.item.unread ? Icon.Eye : Icon.EyeDisabled}
           shortcut={{
-            macOS: { modifiers: ["ctrl", "shift"], key: "r" },
+            macOS: { modifiers: ["cmd", "shift"], key: "r" },
             windows: { modifiers: ["ctrl", "shift"], key: "r" },
           }}
           onAction={markAsRead}
@@ -76,10 +82,7 @@ export default function NotificationActions(props: {
           <Action
             title="Pin Notification"
             icon={Icon.Pin}
-            shortcut={{
-              macOS: { modifiers: ["ctrl", "shift"], key: "p" },
-              windows: { modifiers: ["ctrl"], key: "." },
-            }}
+            shortcut={Keyboard.Shortcut.Common.Pin}
             onAction={pinNotification}
           />
         ) : null}
