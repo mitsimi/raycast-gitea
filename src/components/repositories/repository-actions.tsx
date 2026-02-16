@@ -23,6 +23,13 @@ export default function RepositoryActions(props: { item: Repository; children?: 
             shortcut={Keyboard.Shortcut.Common.Copy}
           />
         ) : null}
+        {props.item.ssh_url ? (
+          <Action.CopyToClipboard
+            title="Copy SSH URL"
+            content={props.item.ssh_url}
+            shortcut={{ modifiers: ["cmd", "shift"], key: "c" }}
+          />
+        ) : null}
       </ActionPanel.Section>
       <ActionPanel.Section>
         {props.item.full_name ? (
