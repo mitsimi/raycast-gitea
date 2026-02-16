@@ -1,4 +1,5 @@
 import { Action, ActionPanel, Icon, Keyboard, List, getPreferenceValues } from "@raycast/api";
+import { useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
 import { usePullRequests } from "./hooks/usePullRequests";
 import CreateIssue from "./create-issue";
@@ -13,29 +14,54 @@ type PullRequestCommandPreferences = {
   includeRecentlyClosed: boolean;
 };
 
+enum PullRequestCategory {
+  All = "all",
+  Created = "created",
+  Assigned = "assigned",
+  Mentioned = "mentioned",
+  ReviewRequested = "review_requested",
+  Reviewed = "reviewed",
+}
+
+const categoryOptions = [
+  { title: "All", value: PullRequestCategory.All },
+  { title: "Created", value: PullRequestCategory.Created },
+  { title: "Assigned", value: PullRequestCategory.Assigned },
+  { title: "Mentioned", value: PullRequestCategory.Mentioned },
+  { title: "Review Requested", value: PullRequestCategory.ReviewRequested },
+  { title: "Reviewed", value: PullRequestCategory.Reviewed },
+];
+
 export default function Command() {
   const prefs = getPreferenceValues<PullRequestCommandPreferences>();
-  const filters = useMemo(
-    () => ({
-      includeCreated: prefs.includeCreated ?? true,
-      includeAssigned: prefs.includeAssigned ?? true,
-      includeMentioned: prefs.includeMentioned ?? true,
-      includeReviewRequested: prefs.includeReviewRequested ?? true,
-      includeReviewed: prefs.includeReviewed ?? false,
-      includeRecentlyClosed: prefs.includeRecentlyClosed ?? false,
-    }),
-    [
-      prefs.includeCreated,
-      prefs.includeAssigned,
-      prefs.includeMentioned,
-      prefs.includeReviewRequested,
-      prefs.includeReviewed,
-      prefs.includeRecentlyClosed,
-    ],
+  const [selectedCategory, setSelectedCategory] = useCachedState<string>(
+    "pull-requests-category-filter",
+    PullRequestCategory.All,
   );
 
+  const effectiveFilters = useMemo(() => {
+    if (selectedCategory === PullRequestCategory.All) {
+      return {
+        includeCreated: prefs.includeCreated ?? true,
+        includeAssigned: prefs.includeAssigned ?? true,
+        includeMentioned: prefs.includeMentioned ?? true,
+        includeReviewRequested: prefs.includeReviewRequested ?? true,
+        includeReviewed: prefs.includeReviewed ?? false,
+        includeRecentlyClosed: prefs.includeRecentlyClosed ?? false,
+      };
+    }
+    return {
+      includeCreated: selectedCategory === PullRequestCategory.Created,
+      includeAssigned: selectedCategory === PullRequestCategory.Assigned,
+      includeMentioned: selectedCategory === PullRequestCategory.Mentioned,
+      includeReviewRequested: selectedCategory === PullRequestCategory.ReviewRequested,
+      includeReviewed: selectedCategory === PullRequestCategory.Reviewed,
+      includeRecentlyClosed: prefs.includeRecentlyClosed ?? false,
+    };
+  }, [selectedCategory, prefs]);
+
   const [searchText, setSearchText] = useState<string>("");
-  const { items, isLoading, pagination } = usePullRequests({ ...filters, query: searchText });
+  const { items, isLoading, pagination } = usePullRequests({ ...effectiveFilters, query: searchText });
 
   const sortedItems = useMemo(() => {
     const stateRank = (state?: string) => (state?.toLowerCase() === "open" ? 0 : 1);
@@ -52,6 +78,17 @@ export default function Command() {
     <List
       isLoading={isLoading}
       searchBarPlaceholder="Search pull requests"
+      searchBarAccessory={
+        <List.Dropdown
+          tooltip="Filter by category"
+          value={selectedCategory}
+          onChange={(value) => setSelectedCategory(value)}
+        >
+          {categoryOptions.map((option) => (
+            <List.Dropdown.Item key={option.value} title={option.title} value={option.value} />
+          ))}
+        </List.Dropdown>
+      }
       pagination={pagination}
       onSearchTextChange={setSearchText}
       throttle

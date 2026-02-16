@@ -1,4 +1,5 @@
 import { Action, ActionPanel, List, Icon, Keyboard, getPreferenceValues } from "@raycast/api";
+import { useCachedState } from "@raycast/utils";
 import { useIssues } from "./hooks/useIssues";
 import { useMemo, useState } from "react";
 import CreateIssue from "./create-issue";
@@ -10,25 +11,60 @@ type IssueCommandPreferences = {
   includeMentioned: boolean;
   includeRecentlyClosed: boolean;
 };
+
+enum IssueCategory {
+  All = "all",
+  Created = "created",
+  Assigned = "assigned",
+  Mentioned = "mentioned",
+}
+
+const categoryOptions = [
+  { title: "All", value: IssueCategory.All },
+  { title: "Created", value: IssueCategory.Created },
+  { title: "Assigned", value: IssueCategory.Assigned },
+  { title: "Mentioned", value: IssueCategory.Mentioned },
+];
+
 export default function Command() {
   const prefs = getPreferenceValues<IssueCommandPreferences>();
-  const filters = useMemo(
-    () => ({
-      includeCreated: prefs.includeCreated ?? true,
-      includeAssigned: prefs.includeAssigned ?? true,
-      includeMentioned: prefs.includeMentioned ?? true,
+  const [selectedCategory, setSelectedCategory] = useCachedState<string>("issues-category-filter", IssueCategory.All);
+
+  const effectiveFilters = useMemo(() => {
+    if (selectedCategory === IssueCategory.All) {
+      return {
+        includeCreated: prefs.includeCreated ?? true,
+        includeAssigned: prefs.includeAssigned ?? true,
+        includeMentioned: prefs.includeMentioned ?? true,
+        includeRecentlyClosed: prefs.includeRecentlyClosed ?? false,
+      };
+    }
+    return {
+      includeCreated: selectedCategory === IssueCategory.Created,
+      includeAssigned: selectedCategory === IssueCategory.Assigned,
+      includeMentioned: selectedCategory === IssueCategory.Mentioned,
       includeRecentlyClosed: prefs.includeRecentlyClosed ?? false,
-    }),
-    [prefs.includeCreated, prefs.includeAssigned, prefs.includeMentioned, prefs.includeRecentlyClosed],
-  );
+    };
+  }, [selectedCategory, prefs]);
 
   const [searchText, setSearchText] = useState<string>("");
-  const { items, isLoading, pagination } = useIssues({ ...filters, query: searchText });
+  const { items, isLoading, pagination } = useIssues({ ...effectiveFilters, query: searchText });
 
   return (
     <List
       isLoading={isLoading}
       searchBarPlaceholder="Search issues"
+      searchBarAccessory={
+        <List.Dropdown
+          tooltip="Filter by category"
+          value={selectedCategory}
+          onChange={(value) => setSelectedCategory(value)}
+        >
+          {categoryOptions.map((option) => (
+            <List.Dropdown.Item key={option.value} title={option.title} value={option.value} />
+          ))}
+        </List.Dropdown>
+      }
       pagination={pagination}
       onSearchTextChange={setSearchText}
       throttle
