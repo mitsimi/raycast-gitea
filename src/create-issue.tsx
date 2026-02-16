@@ -5,6 +5,72 @@ import { createIssue, listRepoAssignees, listRepoLabels, listRepoMilestones } fr
 import { useUserRepositories } from "./hooks/useUserRepositories";
 import type { Label, Milestone, Repository, User } from "./types/api";
 
+function LabelPicker({ labels, selectedRepo }: { labels: Label[]; selectedRepo: boolean }) {
+  const [regularLabels, setRegularLabels] = useState<string[]>([]);
+  const [exclusiveSelections, setExclusiveSelections] = useState<Record<string, string>>({});
+
+  const grouped = useMemo(() => {
+    return labels.reduce(
+      (acc, label) => {
+        if (label.exclusive) {
+          const prefix = label.name?.split("/")[0] || "";
+          acc.exclusive[prefix] = [...(acc.exclusive[prefix] || []), label];
+        } else {
+          acc.regular.push(label);
+        }
+        return acc;
+      },
+      { regular: [] as Label[], exclusive: {} as Record<string, Label[]> },
+    );
+  }, [labels]);
+
+  if (!selectedRepo || labels.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {grouped.regular.length > 0 && (
+        <Form.TagPicker
+          id="labels"
+          title="Labels"
+          placeholder="Select labels"
+          value={regularLabels.filter((id) => grouped.regular.some((l) => l.id === parseInt(id)))}
+          onChange={(selected) => setRegularLabels(selected)}
+        >
+          {grouped.regular.map((label) => (
+            <Form.TagPicker.Item
+              key={label.id}
+              value={String(label.id)}
+              title={label.name ?? ""}
+              icon={{ source: Icon.Circle, tintColor: label.color }}
+            />
+          ))}
+        </Form.TagPicker>
+      )}
+      {Object.entries(grouped.exclusive).map(([prefix, exclusiveLabels]) => (
+        <Form.Dropdown
+          key={prefix}
+          id={`label.${prefix}`}
+          title={prefix}
+          value={exclusiveSelections[prefix] ?? ""}
+          onChange={(value) => setExclusiveSelections((prev) => ({ ...prev, [prefix]: value }))}
+        >
+          <Form.Dropdown.Item key="none" title="None" value="" />
+          {exclusiveLabels.map((label) => (
+            <Form.Dropdown.Item
+              key={label.id}
+              value={String(label.id)}
+              title={label.name?.replace(`${prefix}/`, "") ?? label.name ?? ""}
+              icon={{ source: Icon.Circle, tintColor: label.color }}
+            />
+          ))}
+        </Form.Dropdown>
+      ))}
+    </>
+  );
+}
+
 export default function Command(props: { initialRepo?: string }) {
   const { items: repositories, isLoading } = useUserRepositories();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,6 +122,8 @@ export default function Command(props: { initialRepo?: string }) {
     },
   );
 
+  const isRepoSelected = Boolean(selectedRepo);
+
   return (
     <Form
       isLoading={isLoading || isSubmitting}
@@ -71,7 +139,11 @@ export default function Command(props: { initialRepo?: string }) {
         isLoading={isLoading}
         value={selectedRepo}
         onChange={(value) => setSelectedRepo(value)}
+        placeholder="Select a repository"
       >
+        <Form.Dropdown.Section>
+          <Form.Dropdown.Item title="Select a repository" value="" />
+        </Form.Dropdown.Section>
         {repoOptions.map((repo) => (
           <Form.Dropdown.Item
             key={repo.id ?? repo.full_name ?? repo.name ?? "repo"}
@@ -81,46 +153,34 @@ export default function Command(props: { initialRepo?: string }) {
           />
         ))}
       </Form.Dropdown>
-      <Form.TextField id="title" title="Title" placeholder="Issue title" />
-      <Form.TextArea id="body" title="Description" placeholder="Describe the issue" />
-      <Form.TagPicker
-        id="labels"
-        title="Labels"
-        placeholder={selectedRepo ? "Select labels" : "Select a repository first"}
-      >
-        {(labels ?? []).map((label) => (
-          <Form.TagPicker.Item
-            key={label.id ?? label.name ?? "label"}
-            value={String(label.id ?? "")}
-            title={label.name ?? ""}
-            icon={{ source: Icon.Dot, tintColor: label.color }}
-          />
-        ))}
-      </Form.TagPicker>
-      <Form.TagPicker
-        id="assignees"
-        title="Assignees"
-        placeholder={selectedRepo ? "Select assignees" : "Select a repository first"}
-      >
-        {(assignees ?? []).map((user) => (
-          <Form.TagPicker.Item
-            key={user.login ?? user.id ?? "user"}
-            value={user.login ?? ""}
-            title={user.login ?? ""}
-            icon={{ source: user.avatar_url ?? Icon.Person }}
-          />
-        ))}
-      </Form.TagPicker>
-      <Form.Dropdown id="milestone" title="Milestone" placeholder="Select a milestone">
-        <Form.Dropdown.Item value="" title="No milestone" />
-        {(milestones ?? []).map((milestone) => (
-          <Form.Dropdown.Item
-            key={milestone.id ?? milestone.title ?? "milestone"}
-            value={String(milestone.id ?? "")}
-            title={milestone.title ?? ""}
-          />
-        ))}
-      </Form.Dropdown>
+      {isRepoSelected && (
+        <>
+          <Form.TextField id="title" title="Title" placeholder="Issue title" />
+          <Form.TextArea id="body" title="Description" placeholder="Describe the issue" />
+          <LabelPicker labels={labels ?? []} selectedRepo={isRepoSelected} />
+          <Form.TagPicker id="assignees" title="Assignees" placeholder="Select assignees">
+            {(assignees ?? []).map((user) => (
+              <Form.TagPicker.Item
+                key={user.login ?? user.id ?? "user"}
+                value={user.login ?? ""}
+                title={user.login ?? ""}
+                icon={{ source: user.avatar_url ?? Icon.Person }}
+              />
+            ))}
+          </Form.TagPicker>
+          <Form.Dropdown id="milestone" title="Milestone" placeholder="Select a milestone">
+            <Form.Dropdown.Item value="" title="No milestone" />
+            {(milestones ?? []).map((milestone) => (
+              <Form.Dropdown.Item
+                key={milestone.id ?? milestone.title ?? "milestone"}
+                value={String(milestone.id ?? "")}
+                title={milestone.title ?? ""}
+              />
+            ))}
+          </Form.Dropdown>
+          <Form.DatePicker id="dueDate" title="Due Date" />
+        </>
+      )}
     </Form>
   );
 }
@@ -133,6 +193,7 @@ type FormValues = {
   assignees?: string[];
   milestone?: string;
   dueDate?: string;
+  [key: string]: unknown;
 };
 
 function parseRepo(fullName?: string) {
@@ -156,7 +217,15 @@ async function handleSubmit(values: Form.Values, setIsSubmitting: (v: boolean) =
 
   setIsSubmitting(true);
   try {
-    const labels = (formValues.labels ?? []).map((v) => parseInt(v, 10)).filter((v) => Number.isFinite(v));
+    const regularLabels = (formValues.labels ?? []).map((v) => parseInt(v, 10)).filter((v) => Number.isFinite(v));
+    const exclusiveLabels = Object.keys(formValues)
+      .filter((key) => key.startsWith("label."))
+      .map((key) => formValues[key as keyof FormValues])
+      .filter((v) => v)
+      .map((v) => parseInt(v as string, 10))
+      .filter((v) => Number.isFinite(v));
+    const labels = [...regularLabels, ...exclusiveLabels];
+
     const assignees = (formValues.assignees ?? []).map((v) => v.trim()).filter(Boolean);
     const milestone = formValues.milestone ? parseInt(formValues.milestone, 10) : undefined;
     const due_date = formValues.dueDate ? new Date(formValues.dueDate).toISOString() : undefined;
