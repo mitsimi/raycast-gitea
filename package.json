@@ -163,6 +163,13 @@
       "subtitle": "Gitea",
       "description": "Shows your repositories",
       "mode": "view"
+    },
+    {
+      "name": "search-organizations",
+      "title": "Search Organizations",
+      "subtitle": "Gitea",
+      "description": "Browse organizations on your Gitea instance",
+      "mode": "view"
     }
   ],
   "dependencies": {

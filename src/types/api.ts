@@ -5,6 +5,7 @@ export type Issue = components["schemas"]["Issue"];
 export type User = components["schemas"]["User"];
 export type Label = components["schemas"]["Label"];
 export type Milestone = components["schemas"]["Milestone"];
+export type Organization = components["schemas"]["Organization"];
 export type NotificationThread = components["schemas"]["NotificationThread"];
 export type NotificationSubject = components["schemas"]["NotificationSubject"];
 export type PullRequestMeta = components["schemas"]["PullRequestMeta"];
