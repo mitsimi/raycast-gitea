@@ -107,6 +107,7 @@ export default function Command(props: { initialRepo?: string }) {
             key={user.login ?? user.id ?? "user"}
             value={user.login ?? ""}
             title={user.login ?? ""}
+            icon={{ source: user.avatar_url ?? Icon.Person }}
           />
         ))}
       </Form.TagPicker>
