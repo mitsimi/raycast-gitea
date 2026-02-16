@@ -1,19 +1,6 @@
-# Gitea Raycast Extension
+# Gitea
 
 Check your notifications, explore repositories, and manage issues and pull requests.
-
-## Installation
-
-Currently, you need to clone this repo and install it locally in developer mode.
-
-You will need to have [Node.js](https://nodejs.org) installed.
-
-### Steps
-
-1. Clone this repo `git clone https://github.com/mitsimi/raycast-gitea.git`
-2. Go to the folder `cd raycast-gitea`
-3. Install dependencies `npm install`
-4. Go to Raycast, run `Import Extension` and select the folder
 
 ## Configuration
 
@@ -38,8 +25,3 @@ To use this extension to its fullest potential, you need to set following scopes
 | notification | read and write |
 | repository   | read and write |
 | user         | read and write |
-
-## Language Colors
-
-This extension uses [`assets/colors.json`](assets/colors.json), a file derived from the [GitHub Linguist project](https://github.com/github-linguist/linguist).  
-It contains metadata and color mappings for over 8,000 programming languages, markup languages, and data formats.

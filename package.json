@@ -32,6 +32,7 @@
     {
       "name": "issues",
       "title": "My Issues",
+      "subtitle": "Gitea",
       "description": "List issues created by you, assigned to you, or mentioning you",
       "mode": "view",
       "preferences": [
@@ -73,12 +74,14 @@
     {
       "name": "notifications",
       "title": "Notifications",
+      "subtitle": "Gitea",
       "description": "List all unread notifications",
       "mode": "view"
     },
     {
       "name": "pull-requests",
       "title": "My Pull Requests",
+      "subtitle": "Gitea",
       "description": "List pull requests created by you, assigned to you, or mentioning you",
       "mode": "view",
       "preferences": [
@@ -136,24 +139,28 @@
     {
       "name": "search-issues",
       "title": "Search Issues",
+      "subtitle": "Gitea",
       "description": "Search issues across repositories",
       "mode": "view"
     },
     {
       "name": "create-issue",
       "title": "Create Issue",
+      "subtitle": "Gitea",
       "description": "Create an issue in a repository",
       "mode": "view"
     },
     {
       "name": "explore-repositories",
       "title": "Explore Repositories",
+      "subtitle": "Gitea",
       "description": "Explore Repositories available to you",
       "mode": "view"
     },
     {
       "name": "my-repositories",
       "title": "My Repositories",
+      "subtitle": "Gitea",
       "description": "Shows your repositories",
       "mode": "view"
     }
