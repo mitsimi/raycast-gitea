@@ -74,7 +74,7 @@ export default function NotificationActions(props: {
           icon={props.item.unread ? Icon.Eye : Icon.EyeDisabled}
           shortcut={{
             macOS: { modifiers: ["cmd", "shift"], key: "r" },
-            windows: { modifiers: ["ctrl", "shift"], key: "r" },
+            Windows: { modifiers: ["ctrl", "shift"], key: "r" },
           }}
           onAction={markAsRead}
         />
