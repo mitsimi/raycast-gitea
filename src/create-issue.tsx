@@ -142,9 +142,6 @@ export default function Command(props: { initialRepo?: string }) {
         onChange={(value) => setSelectedRepo(value)}
         placeholder="Select a repository"
       >
-        <Form.Dropdown.Section>
-          <Form.Dropdown.Item title="Select a repository" value="" />
-        </Form.Dropdown.Section>
         {repoOptions.map((repo) => (
           <Form.Dropdown.Item
             key={repo.id ?? repo.full_name ?? repo.name ?? "repo"}
@@ -156,6 +153,7 @@ export default function Command(props: { initialRepo?: string }) {
       </Form.Dropdown>
       {isRepoSelected && (
         <>
+          <Form.Separator />
           <Form.TextField id="title" title="Title" placeholder="Issue title" />
           <Form.TextArea id="body" title="Description" placeholder="Describe the issue" />
           <LabelPicker labels={labels ?? []} selectedRepo={isRepoSelected} />
