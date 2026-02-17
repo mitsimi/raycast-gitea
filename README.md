@@ -22,6 +22,8 @@ To use this extension to its fullest potential, you need to set following scopes
 
 | Scope        | Permissions    |
 | ------------ | -------------- |
+| issue        | read and write |
+| organization | read           |
 | notification | read and write |
 | repository   | read and write |
 | user         | read and write |
