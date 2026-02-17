@@ -1,22 +1,24 @@
 import { MenuBarExtra, Icon, showToast, Toast, Color, open, launchCommand, LaunchType } from "@raycast/api";
-import { useCachedPromise } from "@raycast/utils";
+import { useCachedPromise, useCachedState } from "@raycast/utils";
 import { listNotifications, readAllNotificationStatus } from "./api/notifications";
 import { NotificationThread } from "./types/api";
 import { getNotificationIcon } from "./utils/icons";
 
 export default function MenuBarCommand() {
-  const {
-    data: notifications,
-    isLoading,
-    revalidate,
-  } = useCachedPromise(() => listNotifications({ limit: 20, all: false }), []);
+  const cacheKey = "notifications-unread";
+  const [notifications, setNotifications] = useCachedState<NotificationThread[]>(cacheKey, []);
+  const { isLoading } = useCachedPromise(() => listNotifications({ limit: 20, all: false }), [], {
+    onData: (data) => {
+      if (Array.isArray(data)) setNotifications(data as NotificationThread[]);
+    },
+  });
 
   const unreadCount = notifications?.length ?? 0;
 
   const handleMarkAllAsRead = async () => {
     try {
       await readAllNotificationStatus();
-      revalidate();
+      await launchCommand({ name: "notifications", type: LaunchType.Background });
     } catch {
       showToast({ style: Toast.Style.Failure, title: "Failed to mark all as read" });
     }
@@ -31,7 +33,7 @@ export default function MenuBarCommand() {
   return (
     <MenuBarExtra
       icon={{
-        source: "gitea-icon.png",
+        source: "logo/gitea.png",
         tintColor: unreadCount > 0 ? Color.PrimaryText : Color.SecondaryText,
       }}
       isLoading={isLoading}
@@ -43,7 +45,7 @@ export default function MenuBarCommand() {
       ) : (
         <>
           <MenuBarExtra.Section>
-            {notifications?.map((item) => (
+            {notifications?.slice(0, 20).map((item) => (
               <MenuBarExtra.Item
                 key={item.id}
                 title={item.subject?.title ?? "(no title)"}
