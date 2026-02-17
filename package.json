@@ -3,7 +3,7 @@
   "name": "gitea",
   "title": "Gitea",
   "description": "Check your notifications and manage issues and pull requests.",
-  "icon": "gitea-icon.png",
+  "icon": "icons/gitea.png",
   "author": "mitsimi",
   "platforms": [
     "macOS",
@@ -26,6 +26,60 @@
       "type": "password",
       "placeholder": "Enter your Access Token here",
       "required": true
+    },
+    {
+      "name": "editorVSCode",
+      "title": "Clone Editors",
+      "description": "Show Visual Studio Code in clone actions",
+      "type": "checkbox",
+      "label": "Visual Studio Code",
+      "default": true,
+      "required": false
+    },
+    {
+      "name": "editorCursor",
+      "title": "",
+      "description": "Show Cursor in clone actions",
+      "type": "checkbox",
+      "label": "Cursor",
+      "default": true,
+      "required": false
+    },
+    {
+      "name": "editorZed",
+      "title": "",
+      "description": "Show Zed in clone actions",
+      "type": "checkbox",
+      "label": "Zed",
+      "default": true,
+      "required": false
+    },
+    {
+      "name": "editorIntelliJ",
+      "title": "",
+      "description": "Show IntelliJ IDEA in clone actions",
+      "type": "checkbox",
+      "label": "IntelliJ IDEA",
+      "default": true,
+      "required": false
+    },
+    {
+      "name": "editorWebStorm",
+      "title": "",
+      "description": "Show WebStorm in clone actions",
+      "type": "checkbox",
+      "label": "WebStorm",
+      "default": true,
+      "required": false
+    },
+    {
+      "name": "editorPyCharm",
+      "title": "",
+      "description": "Show PyCharm in clone actions",
+      "type": "checkbox",
+      "label": "PyCharm",
+      "default": true,
+      "required": false
     }
   ],
   "commands": [
@@ -77,6 +131,14 @@
       "subtitle": "Gitea",
       "description": "List all unread notifications",
       "mode": "view"
+    },
+    {
+      "name": "notifications-menu-bar",
+      "title": "Notifications",
+      "subtitle": "Gitea",
+      "description": "Show unread notification count in menu bar",
+      "mode": "menu-bar",
+      "interval": "1m"
     },
     {
       "name": "pull-requests",

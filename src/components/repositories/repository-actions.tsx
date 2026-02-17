@@ -2,8 +2,37 @@ import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
 import type { Repository } from "../../types/api";
 import { ReactNode } from "react";
 import CreateIssue from "../../create-issue";
+import { useInstalledEditors, getEditorUrlScheme } from "../../hooks/useInstalledEditors";
+
+function CloneActions({ cloneUrl }: { cloneUrl: string }) {
+  const { installedEditors } = useInstalledEditors();
+
+  if (installedEditors.length === 0) {
+    return null;
+  }
+
+  return (
+    <ActionPanel.Section title="Clone with Editor">
+      {installedEditors.map((editor, index) => (
+        <Action.OpenInBrowser
+          key={editor.bundleId}
+          title={`Clone with ${editor.name}`}
+          icon={{ source: editor.icon }}
+          url={getEditorUrlScheme(editor.id, cloneUrl)}
+          shortcut={
+            index === 0
+              ? { modifiers: ["cmd", "shift"], key: "c" }
+              : { modifiers: ["cmd", "shift"], key: (index + 1).toString() as "1" | "2" | "3" | "4" | "5" | "6" }
+          }
+        />
+      ))}
+    </ActionPanel.Section>
+  );
+}
 
 export default function RepositoryActions(props: { item: Repository; children?: ReactNode }) {
+  const cloneUrl = props.item.ssh_url || props.item.clone_url;
+
   return (
     <ActionPanel>
       <ActionPanel.Section>
@@ -15,6 +44,7 @@ export default function RepositoryActions(props: { item: Repository; children?: 
           />
         ) : null}
       </ActionPanel.Section>
+      {cloneUrl ? <CloneActions cloneUrl={cloneUrl} /> : null}
       <ActionPanel.Section title="Copy">
         {props.item.html_url ? (
           <Action.CopyToClipboard
@@ -27,7 +57,7 @@ export default function RepositoryActions(props: { item: Repository; children?: 
           <Action.CopyToClipboard
             title="Copy SSH URL"
             content={props.item.ssh_url}
-            shortcut={{ modifiers: ["cmd", "shift"], key: "c" }}
+            shortcut={{ modifiers: ["cmd", "shift"], key: "s" }}
           />
         ) : null}
       </ActionPanel.Section>
