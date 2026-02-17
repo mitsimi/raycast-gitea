@@ -3,7 +3,7 @@
   "name": "gitea",
   "title": "Gitea",
   "description": "Check your notifications and manage issues and pull requests.",
-  "icon": "icons/gitea.png",
+  "icon": "logo/gitea.png",
   "author": "mitsimi",
   "platforms": [
     "macOS",

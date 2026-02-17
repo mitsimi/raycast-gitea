@@ -40,7 +40,9 @@ export default function Command() {
       {items.map((item) => (
         <List.Item
           key={item.id ?? item.full_name ?? "repo"}
-          icon={item.avatar_url ? { source: item.avatar_url } : { source: "repo.svg", tintColor: Color.PrimaryText }}
+          icon={
+            item.avatar_url ? { source: item.avatar_url } : { source: "icon/repo.svg", tintColor: Color.PrimaryText }
+          }
           title={item.full_name ?? ""}
           subtitle={item.description ?? ""}
           detail={<RepositoryDetails repo={item} />}
