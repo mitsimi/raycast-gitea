@@ -19,11 +19,16 @@ function CloneActions({ cloneUrl }: { cloneUrl: string }) {
           title={`Clone with ${editor.name}`}
           icon={{ source: editor.icon }}
           url={getEditorUrlScheme(editor.id, cloneUrl)}
-          shortcut={
-            index === 0
-              ? { modifiers: ["cmd", "shift"], key: "c" }
-              : { modifiers: ["cmd", "shift"], key: (index + 1).toString() as "1" | "2" | "3" | "4" | "5" | "6" }
-          }
+          shortcut={{
+            macOS:
+              index === 0
+                ? { modifiers: ["cmd", "shift"], key: "c" }
+                : { modifiers: ["cmd", "shift"], key: (index + 1).toString() as "1" | "2" | "3" | "4" | "5" | "6" },
+            Windows:
+              index === 0
+                ? { modifiers: ["ctrl", "shift"], key: "c" }
+                : { modifiers: ["ctrl", "shift"], key: (index + 1).toString() as "1" | "2" | "3" | "4" | "5" | "6" },
+          }}
         />
       ))}
     </ActionPanel.Section>
@@ -57,7 +62,10 @@ export default function RepositoryActions(props: { item: Repository; children?: 
           <Action.CopyToClipboard
             title="Copy SSH URL"
             content={props.item.ssh_url}
-            shortcut={{ modifiers: ["cmd", "shift"], key: "s" }}
+            shortcut={{
+              macOS: { modifiers: ["cmd", "shift"], key: "s" },
+              Windows: { modifiers: ["ctrl", "shift"], key: "s" },
+            }}
           />
         ) : null}
       </ActionPanel.Section>
