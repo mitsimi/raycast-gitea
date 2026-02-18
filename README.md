@@ -16,6 +16,14 @@ You need to configure your personal access token and server URL to use this exte
 6. Copy the token and paste it into the "Access Token" field.
 7. Add your server url to the "Gitea URL" field.
 
+### Forgejo Support
+
+This extension is designed for Gitea but may be used with [Forgejo](https://forgejo.org/), a fork of Gitea. However, note that:
+
+- This extension is not officially tested or supported with Forgejo
+- Some features may not work as expected
+- Bug fixes and compatibility updates are not guaranteed
+
 ### Recommended Scopes
 
 To use this extension to its fullest potential, you need to set following scopes while creating your access token:
