@@ -137,7 +137,7 @@
     },
     {
       "name": "notifications-menu-bar",
-      "title": "Notifications",
+      "title": "Notifications Menu Bar",
       "subtitle": "Gitea",
       "description": "Show unread notification count in menu bar",
       "mode": "menu-bar",
