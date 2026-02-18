@@ -1,4 +1,4 @@
-import { Icon, List } from "@raycast/api";
+import { Color, Icon, List } from "@raycast/api";
 import dayjs from "dayjs";
 
 import type { Repository } from "../../types/api";
@@ -37,20 +37,21 @@ export default function RepositoryDetails({ repo }: { repo: Repository }) {
           <List.Item.Detail.Metadata.Label title="Watchers" icon={Icon.Eye} text={`${repo.watchers_count ?? 0}`} />
           <List.Item.Detail.Metadata.Label title="Size" text={size} />
 
-          <List.Item.Detail.Metadata.Separator />
-
           {hasStatusFlags && (
-            <List.Item.Detail.Metadata.TagList title="Status">
-              {repo.private && <List.Item.Detail.Metadata.TagList.Item text="Private" color="#E6B450" />}
-              {repo.archived && <List.Item.Detail.Metadata.TagList.Item text="Archived" color="#8B949E" />}
-              {repo.fork && <List.Item.Detail.Metadata.TagList.Item text="Fork" color="#58A6FF" />}
-            </List.Item.Detail.Metadata.TagList>
+            <>
+              <List.Item.Detail.Metadata.Separator />
+              <List.Item.Detail.Metadata.TagList title="Status">
+                {repo.private && <List.Item.Detail.Metadata.TagList.Item text="Private" color={Color.Red} />}
+                {repo.archived && <List.Item.Detail.Metadata.TagList.Item text="Archived" color={Color.Orange} />}
+                {repo.fork && <List.Item.Detail.Metadata.TagList.Item text="Fork" color={Color.Blue} />}
+              </List.Item.Detail.Metadata.TagList>
+            </>
           )}
 
           {hasTopics && (
             <List.Item.Detail.Metadata.TagList title="Topics">
               {repo.topics!.map((topic) => (
-                <List.Item.Detail.Metadata.TagList.Item key={topic} text={topic} color="#238636" />
+                <List.Item.Detail.Metadata.TagList.Item key={topic} text={topic} color={Color.SecondaryText} />
               ))}
             </List.Item.Detail.Metadata.TagList>
           )}

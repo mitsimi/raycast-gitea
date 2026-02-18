@@ -37,19 +37,7 @@ export default function Command() {
           title={item.full_name ?? ""}
           subtitle={item.description ?? ""}
           detail={<RepositoryDetails repo={item} />}
-          actions={
-            <RepositoryActions item={item}>
-              <Action
-                title={showDetails ? "Hide Details" : "Show Details"}
-                icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
-                shortcut={{
-                  macOS: { modifiers: ["cmd", "shift"], key: "d" },
-                  Windows: { modifiers: ["ctrl", "shift"], key: "d" },
-                }}
-                onAction={() => setShowDetails(!showDetails)}
-              />
-            </RepositoryActions>
-          }
+          actions={<RepositoryActions item={item} showDetails={showDetails} setShowDetails={setShowDetails} />}
           accessories={
             showDetails
               ? []

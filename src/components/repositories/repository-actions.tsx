@@ -11,6 +11,8 @@ function CloneActions({ cloneUrl }: { cloneUrl: string }) {
     return null;
   }
 
+  const shortcut_keys = (i: number) => (i + 1).toString() as "1" | "2" | "3" | "4" | "5" | "6";
+
   return (
     <ActionPanel.Section title="Clone with Editor">
       {installedEditors.map((editor, index) => (
@@ -20,14 +22,11 @@ function CloneActions({ cloneUrl }: { cloneUrl: string }) {
           icon={{ source: editor.icon }}
           url={getEditorUrlScheme(editor.id, cloneUrl)}
           shortcut={{
-            macOS:
-              index === 0
-                ? { modifiers: ["cmd", "shift"], key: "c" }
-                : { modifiers: ["cmd", "shift"], key: (index + 1).toString() as "1" | "2" | "3" | "4" | "5" | "6" },
-            Windows:
-              index === 0
-                ? { modifiers: ["ctrl", "shift"], key: "c" }
-                : { modifiers: ["ctrl", "shift"], key: (index + 1).toString() as "1" | "2" | "3" | "4" | "5" | "6" },
+            macOS: { modifiers: ["cmd", "shift"], key: shortcut_keys(index) },
+            Windows: {
+              modifiers: ["ctrl", "shift"],
+              key: shortcut_keys(index),
+            },
           }}
         />
       ))}
@@ -35,7 +34,12 @@ function CloneActions({ cloneUrl }: { cloneUrl: string }) {
   );
 }
 
-export default function RepositoryActions(props: { item: Repository; children?: ReactNode }) {
+export default function RepositoryActions(props: {
+  item: Repository;
+  showDetails: boolean;
+  setShowDetails: React.Dispatch<React.SetStateAction<boolean>>;
+  children?: ReactNode;
+}) {
   const cloneUrl = props.item.ssh_url || props.item.clone_url;
 
   return (
@@ -48,8 +52,27 @@ export default function RepositoryActions(props: { item: Repository; children?: 
             shortcut={Keyboard.Shortcut.Common.Open}
           />
         ) : null}
+
+        <Action
+          title={props.showDetails ? "Hide Details" : "Show Details"}
+          icon={props.showDetails ? Icon.EyeDisabled : Icon.Eye}
+          shortcut={{
+            macOS: { modifiers: ["cmd", "shift"], key: "d" },
+            Windows: { modifiers: ["ctrl", "shift"], key: "d" },
+          }}
+          onAction={() => props.setShowDetails(!props.showDetails)}
+        />
+
+        {props.item.full_name ? (
+          <Action.Push
+            title="Create Issue"
+            icon={Icon.Plus}
+            shortcut={Keyboard.Shortcut.Common.New}
+            target={<CreateIssue initialRepo={props.item.full_name} />}
+          />
+        ) : null}
       </ActionPanel.Section>
-      {cloneUrl ? <CloneActions cloneUrl={cloneUrl} /> : null}
+
       <ActionPanel.Section title="Copy">
         {props.item.html_url ? (
           <Action.CopyToClipboard
@@ -69,16 +92,9 @@ export default function RepositoryActions(props: { item: Repository; children?: 
           />
         ) : null}
       </ActionPanel.Section>
-      <ActionPanel.Section>
-        {props.item.full_name ? (
-          <Action.Push
-            title="Create Issue"
-            icon={Icon.Plus}
-            shortcut={Keyboard.Shortcut.Common.New}
-            target={<CreateIssue initialRepo={props.item.full_name} />}
-          />
-        ) : null}
-      </ActionPanel.Section>
+
+      {cloneUrl ? <CloneActions cloneUrl={cloneUrl} /> : null}
+
       {props.children && (
         <ActionPanel.Section>
           {/* @ts-expect-error - React 19 types are incompatible with Raycast's bundled React types */}
