@@ -1,4 +1,4 @@
-import { Action, Color, Icon, List } from "@raycast/api";
+import { Color, Icon, List } from "@raycast/api";
 import { RepositoryDropdown, RepositoryActions } from "./components/repositories";
 import { RepositorySortTypes, RepositorySortOption, mapRepositorySortToGitea } from "./types/sorts/repository-search";
 import { useMemo, useState } from "react";

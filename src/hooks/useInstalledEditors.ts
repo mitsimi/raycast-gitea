@@ -1,5 +1,5 @@
 import { useCachedPromise } from "@raycast/utils";
-import { Application, getApplications, getPreferenceValues } from "@raycast/api";
+import { getApplications, getPreferenceValues } from "@raycast/api";
 
 export type EditorId = "vscode" | "cursor" | "zed" | "intellij" | "webstorm" | "pycharm";
 
