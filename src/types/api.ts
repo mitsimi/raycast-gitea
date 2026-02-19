@@ -1,18 +1,20 @@
 import type { components } from "./gitea";
 
-export type Repository = components["schemas"]["Repository"];
-export type Issue = components["schemas"]["Issue"];
-export type User = components["schemas"]["User"];
-export type Label = components["schemas"]["Label"];
-export type Milestone = components["schemas"]["Milestone"];
-export type Organization = components["schemas"]["Organization"];
-export type NotificationThread = components["schemas"]["NotificationThread"];
-export type NotificationSubject = components["schemas"]["NotificationSubject"];
-export type PullRequestMeta = components["schemas"]["PullRequestMeta"];
-export type RepositoryMeta = components["schemas"]["RepositoryMeta"];
-export type SearchResults = components["schemas"]["SearchResults"];
-export type StateType = components["schemas"]["StateType"];
-export type NotifySubjectType = components["schemas"]["NotifySubjectType"];
+export type Schemas = components["schemas"];
+
+export type Repository = Schemas["Repository"];
+export type Issue = Schemas["Issue"];
+export type User = Schemas["User"];
+export type Label = Schemas["Label"];
+export type Milestone = Schemas["Milestone"];
+export type Organization = Schemas["Organization"];
+export type NotificationThread = Schemas["NotificationThread"];
+export type NotificationSubject = Schemas["NotificationSubject"];
+export type PullRequestMeta = Schemas["PullRequestMeta"];
+export type RepositoryMeta = Schemas["RepositoryMeta"];
+export type SearchResults = Schemas["SearchResults"];
+export type StateType = Schemas["StateType"];
+export type NotifySubjectType = Schemas["NotifySubjectType"];
 
 export const IssueState = {
   Open: "open",
