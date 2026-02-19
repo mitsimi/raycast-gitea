@@ -68,7 +68,7 @@ export default function RepositoryActions(props: {
             title="Create Issue"
             icon={Icon.Plus}
             shortcut={Keyboard.Shortcut.Common.New}
-            target={<CreateIssue initialRepo={props.item.full_name} />}
+            target={<CreateIssue initialRepo={props.item} />}
           />
         ) : null}
       </ActionPanel.Section>

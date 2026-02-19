@@ -71,18 +71,16 @@ function LabelPicker({ labels, selectedRepo }: { labels: Label[]; selectedRepo: 
   );
 }
 
-export default function Command(props: { initialRepo?: string }) {
+export default function Command(props: { initialRepo?: Repository }) {
   const { items: repositories, isLoading } = useUserRepositories();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedRepo, setSelectedRepo] = useState<string>(props.initialRepo ?? "");
+  const [selectedRepo, setSelectedRepo] = useState<string>(props.initialRepo?.full_name ?? "");
 
-  const repoOptions = useMemo(
-    () =>
-      repositories
-        .filter((repo): repo is Repository => Boolean(repo.owner?.login && repo.name))
-        .sort((a, b) => (b.updated_at ?? "").localeCompare(a.updated_at ?? "")),
-    [repositories],
-  );
+  const repoOptions = useMemo(() => {
+    return repositories
+      .filter((repo): repo is Repository => Boolean(repo.owner?.login && repo.name))
+      .sort((a, b) => (b.updated_at ?? "").localeCompare(a.updated_at ?? ""));
+  }, [repositories]);
 
   const { owner, repo } = useMemo(() => parseRepo(selectedRepo), [selectedRepo]);
 
@@ -124,6 +122,8 @@ export default function Command(props: { initialRepo?: string }) {
 
   const isRepoSelected = Boolean(selectedRepo);
 
+  const initialRepo = props.initialRepo;
+
   return (
     <Form
       isLoading={isLoading || isSubmitting}
@@ -142,14 +142,26 @@ export default function Command(props: { initialRepo?: string }) {
         onChange={(value) => setSelectedRepo(value)}
         placeholder="Select a repository"
       >
-        {repoOptions.map((repo) => (
-          <Form.Dropdown.Item
-            key={repo.id ?? repo.full_name ?? repo.name ?? "repo"}
-            title={repo.full_name ?? repo.name ?? ""}
-            icon={{ source: repo.avatar_url || repo.owner?.avatar_url || "" }}
-            value={repo.full_name ?? ""}
-          />
-        ))}
+        {initialRepo ? (
+          <Form.Dropdown.Section>
+            <Form.Dropdown.Item
+              key={initialRepo.id ?? initialRepo.full_name ?? initialRepo.name ?? "repo"}
+              title={initialRepo.full_name ?? initialRepo.name ?? ""}
+              icon={{ source: initialRepo.avatar_url || initialRepo.owner?.avatar_url || "" }}
+              value={initialRepo.full_name ?? ""}
+            />
+          </Form.Dropdown.Section>
+        ) : null}
+        {repoOptions
+          .filter((repo) => !(initialRepo && repo.full_name === initialRepo.full_name))
+          .map((repo) => (
+            <Form.Dropdown.Item
+              key={repo.id ?? repo.full_name ?? repo.name ?? "repo"}
+              title={repo.full_name ?? repo.name ?? ""}
+              icon={{ source: repo.avatar_url || repo.owner?.avatar_url || "" }}
+              value={repo.full_name ?? ""}
+            />
+          ))}
       </Form.Dropdown>
       {isRepoSelected && (
         <>

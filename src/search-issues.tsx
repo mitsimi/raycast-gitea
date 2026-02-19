@@ -2,7 +2,7 @@ import { Action, ActionPanel, Icon, Keyboard, List, Toast } from "@raycast/api";
 import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
 import { searchIssues } from "./api/issues";
-import type { Issue } from "./types/api";
+import type { Issue, Repository } from "./types/api";
 import CreateIssue from "./create-issue";
 import { getIssueIcon } from "./utils/icons";
 
@@ -87,7 +87,7 @@ export default function Command() {
                       title="Create Issue"
                       icon={Icon.Plus}
                       shortcut={Keyboard.Shortcut.Common.New}
-                      target={<CreateIssue initialRepo={issue.repository.full_name} />}
+                      target={<CreateIssue initialRepo={issue.repository as Repository} />}
                     />
                   ) : null}
                 </ActionPanel.Section>

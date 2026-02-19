@@ -4,6 +4,7 @@ import { useIssues } from "./hooks/useIssues";
 import { useMemo, useState } from "react";
 import CreateIssue from "./create-issue";
 import { getIssueIcon } from "./utils/icons";
+import type { Repository } from "./types/api";
 
 type IssueCommandPreferences = {
   includeCreated: boolean;
@@ -127,7 +128,7 @@ export default function Command() {
                       title="Create Issue"
                       icon={Icon.Plus}
                       shortcut={Keyboard.Shortcut.Common.New}
-                      target={<CreateIssue initialRepo={issue.repository.full_name} />}
+                      target={<CreateIssue initialRepo={issue.repository as Repository} />}
                     />
                   )}
                 </ActionPanel.Section>

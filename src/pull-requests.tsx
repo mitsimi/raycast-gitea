@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { usePullRequests } from "./hooks/usePullRequests";
 import CreateIssue from "./create-issue";
 import { getPullRequestIcon } from "./utils/icons";
+import type { Repository } from "./types/api";
 
 type PullRequestCommandPreferences = {
   includeCreated: boolean;
@@ -132,7 +133,7 @@ export default function Command() {
                       title="Create Issue"
                       icon={Icon.Plus}
                       shortcut={Keyboard.Shortcut.Common.New}
-                      target={<CreateIssue initialRepo={pr.repository.full_name} />}
+                      target={<CreateIssue initialRepo={pr.repository as Repository} />}
                     />
                   )}
                 </ActionPanel.Section>
