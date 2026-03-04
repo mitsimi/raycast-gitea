@@ -76,9 +76,22 @@ export default function RepositoryActions(props: {
       <ActionPanel.Section title="Copy">
         {props.item.html_url ? (
           <Action.CopyToClipboard
-            title="Copy URL"
+            title="Copy HTML URL"
             content={props.item.html_url}
-            shortcut={Keyboard.Shortcut.Common.Copy}
+            shortcut={{
+              macOS: { modifiers: ["cmd", "shift"], key: "h" },
+              Windows: { modifiers: ["ctrl", "shift"], key: "h" },
+            }}
+          />
+        ) : null}
+        {props.item.clone_url ? (
+          <Action.CopyToClipboard
+            title="Copy Clone URL"
+            content={props.item.clone_url}
+            shortcut={{
+              macOS: { modifiers: ["cmd", "shift"], key: "c" },
+              Windows: { modifiers: ["ctrl", "shift"], key: "c" },
+            }}
           />
         ) : null}
         {props.item.ssh_url ? (
