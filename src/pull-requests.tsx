@@ -2,6 +2,7 @@ import { Action, ActionPanel, Icon, Keyboard, List, getPreferenceValues } from "
 import { useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
 import { usePullRequests } from "./hooks/usePullRequests";
+import { useCurrentUser } from "./hooks/useCurrentUser";
 import CreateIssue from "./create-issue";
 import { getPullRequestIcon } from "./utils/icons";
 import type { Repository } from "./types/api";
@@ -13,6 +14,7 @@ type PullRequestCommandPreferences = {
   includeReviewRequested: boolean;
   includeReviewed: boolean;
   includeRecentlyClosed: boolean;
+  includeOwnedRepositories: boolean;
 };
 
 enum PullRequestCategory {
@@ -22,6 +24,7 @@ enum PullRequestCategory {
   Mentioned = "mentioned",
   ReviewRequested = "review_requested",
   Reviewed = "reviewed",
+  OwnedRepositories = "owned_repositories",
 }
 
 const categoryOptions = [
@@ -31,6 +34,7 @@ const categoryOptions = [
   { title: "Mentioning you", value: PullRequestCategory.Mentioned },
   { title: "Review requested", value: PullRequestCategory.ReviewRequested },
   { title: "Reviewed by you", value: PullRequestCategory.Reviewed },
+  { title: "Repositories you own", value: PullRequestCategory.OwnedRepositories },
 ];
 
 export default function Command() {
@@ -47,6 +51,7 @@ export default function Command() {
         includeAssigned: prefs.includeAssigned ?? true,
         includeMentioned: prefs.includeMentioned ?? true,
         includeReviewRequested: prefs.includeReviewRequested ?? true,
+        includeOwnedRepositories: prefs.includeOwnedRepositories ?? true,
         includeReviewed: prefs.includeReviewed ?? false,
         includeRecentlyClosed: prefs.includeRecentlyClosed ?? false,
       };
@@ -57,12 +62,18 @@ export default function Command() {
       includeMentioned: selectedCategory === PullRequestCategory.Mentioned,
       includeReviewRequested: selectedCategory === PullRequestCategory.ReviewRequested,
       includeReviewed: selectedCategory === PullRequestCategory.Reviewed,
+      includeOwnedRepositories: selectedCategory === PullRequestCategory.OwnedRepositories,
       includeRecentlyClosed: prefs.includeRecentlyClosed ?? false,
     };
   }, [selectedCategory, prefs]);
 
   const [searchText, setSearchText] = useState<string>("");
-  const { items, isLoading, pagination } = usePullRequests({ ...effectiveFilters, query: searchText });
+  const { user, isLoading: isLoadingUser } = useCurrentUser(effectiveFilters.includeOwnedRepositories);
+  const { items, isLoading, pagination } = usePullRequests({
+    ...effectiveFilters,
+    owner: user?.login,
+    query: searchText,
+  });
 
   const sortedItems = useMemo(() => {
     const stateRank = (state?: string) => (state?.toLowerCase() === "open" ? 0 : 1);
@@ -77,7 +88,7 @@ export default function Command() {
 
   return (
     <List
-      isLoading={isLoading}
+      isLoading={isLoading || isLoadingUser}
       searchBarPlaceholder="Search pull requests"
       searchBarAccessory={
         <List.Dropdown

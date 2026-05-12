@@ -108,12 +108,7 @@ export default function RepositoryActions(props: {
 
       {cloneUrl ? <CloneActions cloneUrl={cloneUrl} /> : null}
 
-      {props.children && (
-        <ActionPanel.Section>
-          {/* @ts-expect-error - React 19 types are incompatible with Raycast's bundled React types */}
-          {props.children}
-        </ActionPanel.Section>
-      )}
+      {props.children && <ActionPanel.Section>{props.children}</ActionPanel.Section>}
     </ActionPanel>
   );
 }

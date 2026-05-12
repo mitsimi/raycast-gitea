@@ -1,0 +1,28 @@
+import { Toast } from "@raycast/api";
+import { useCachedPromise, useCachedState, showFailureToast } from "@raycast/utils";
+import { getCurrentUser } from "../api/user";
+import type { User } from "../types/api";
+
+export function useCurrentUser(enabled = true) {
+  const [user, setUser] = useCachedState<User | undefined>("current-user");
+
+  const { data, isLoading, revalidate, mutate } = useCachedPromise(
+    async (shouldFetch: boolean) => {
+      if (!shouldFetch) return undefined;
+      return getCurrentUser();
+    },
+    [enabled] as [boolean],
+    {
+      keepPreviousData: true,
+      initialData: user,
+      onData(data) {
+        if (data) setUser(data);
+      },
+      onError() {
+        showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retrieve current user" });
+      },
+    },
+  );
+
+  return { user: data ?? user, isLoading, revalidate, mutate };
+}

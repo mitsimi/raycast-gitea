@@ -198,6 +198,14 @@
           "required": false,
           "label": "Recently Closed",
           "default": false
+        },
+        {
+          "name": "includeOwnedRepositories",
+          "description": "Show pull requests in repositories you own",
+          "type": "checkbox",
+          "required": false,
+          "label": "Owned Repositories",
+          "default": true
         }
       ]
     },
