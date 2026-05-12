@@ -26,11 +26,11 @@ enum PullRequestCategory {
 
 const categoryOptions = [
   { title: "All", value: PullRequestCategory.All },
-  { title: "Created", value: PullRequestCategory.Created },
-  { title: "Assigned", value: PullRequestCategory.Assigned },
-  { title: "Mentioned", value: PullRequestCategory.Mentioned },
-  { title: "Review Requested", value: PullRequestCategory.ReviewRequested },
-  { title: "Reviewed", value: PullRequestCategory.Reviewed },
+  { title: "Created by you", value: PullRequestCategory.Created },
+  { title: "Assigned to you", value: PullRequestCategory.Assigned },
+  { title: "Mentioning you", value: PullRequestCategory.Mentioned },
+  { title: "Review requested", value: PullRequestCategory.ReviewRequested },
+  { title: "Reviewed by you", value: PullRequestCategory.Reviewed },
 ];
 
 export default function Command() {
