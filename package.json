@@ -246,10 +246,10 @@
     }
   ],
   "dependencies": {
+    "@go-gitea/sdk.js": "^0.2.1",
     "@raycast/api": "^1.104.6",
     "@raycast/utils": "^2.2.2",
-    "dayjs": "^1.11.19",
-    "openapi-fetch": "^0.17.0"
+    "dayjs": "^1.11.19"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^2.1.1",
@@ -258,9 +258,7 @@
     "@types/react": "19.2.14",
     "eslint": "^10.0.0",
     "js-yaml": "^4.1.1",
-    "openapi-typescript": "^7.13.0",
     "prettier": "^3.8.1",
-    "swagger2openapi": "^7.0.8",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
@@ -272,8 +270,6 @@
     "type-check": "tsc --noEmit",
     "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
     "publish": "npx @raycast/api@latest publish",
-    "gen:langs": "tsx scripts/fetch-langs.ts",
-    "gen:swagger": "swagger2openapi swagger.json -o openapi.json",
-    "gen:types": "openapi-typescript openapi.json -o src/types/gitea.d.ts"
+    "gen:langs": "tsx scripts/fetch-langs.ts"
   }
 }
