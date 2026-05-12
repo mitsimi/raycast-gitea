@@ -53,8 +53,8 @@ export default function Command() {
       ) : (
         items.map((issue) => (
           <List.Item
-            key={issue.id ?? issue.number ?? issue.title ?? "issue"}
-            title={issue.title ?? ""}
+            key={issue.id || issue.number || issue.title || "issue"}
+            title={issue.title || "[No Title]"}
             subtitle={issue.repository?.full_name}
             icon={getIssueIcon(issue.state)}
             accessories={[{ text: `#${issue.number ?? ""}` }]}

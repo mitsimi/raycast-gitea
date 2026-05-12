@@ -99,9 +99,9 @@ export default function Command() {
       ) : (
         sortedItems.map((pr) => (
           <List.Item
-            key={pr.id ?? pr.number ?? pr.title ?? "pull-request"}
-            title={pr.title ?? ""}
-            subtitle={pr.repository?.full_name}
+            key={pr.id || pr.number || pr.title || "pull-request"}
+            title={pr.title || "[No Title]"}
+            subtitle={pr.repository?.full_name || "[No Repository]"}
             icon={getPullRequestIcon(pr.state, pr.title, pr.pull_request)}
             accessories={[{ text: `#${pr.number ?? ""}` }]}
             actions={
