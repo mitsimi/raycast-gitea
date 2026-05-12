@@ -37,7 +37,7 @@ function CloneActions({ cloneUrl }: { cloneUrl: string }) {
 export default function RepositoryActions(props: {
   item: Repository;
   showDetails: boolean;
-  setShowDetails: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowDetails: (show: boolean) => void;
   children?: ReactNode;
 }) {
   const cloneUrl = props.item.ssh_url || props.item.clone_url;
