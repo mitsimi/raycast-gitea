@@ -1,6 +1,5 @@
 import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
 import type { Repository } from "../../types/api";
-import { ReactNode } from "react";
 import CreateIssue from "../../create-issue";
 import { useInstalledEditors, getEditorUrlScheme } from "../../hooks/useInstalledEditors";
 
@@ -38,7 +37,7 @@ export default function RepositoryActions(props: {
   item: Repository;
   showDetails: boolean;
   setShowDetails: (show: boolean) => void;
-  children?: ReactNode;
+  children?: ActionPanel.Section.Children;
 }) {
   const cloneUrl = props.item.ssh_url || props.item.clone_url;
 
@@ -108,7 +107,7 @@ export default function RepositoryActions(props: {
 
       {cloneUrl ? <CloneActions cloneUrl={cloneUrl} /> : null}
 
-      {props.children && <ActionPanel.Section>{props.children}</ActionPanel.Section>}
+      {props.children ? <ActionPanel.Section>{props.children}</ActionPanel.Section> : null}
     </ActionPanel>
   );
 }

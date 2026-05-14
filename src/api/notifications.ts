@@ -5,11 +5,8 @@ export type ListNotificationParams = { limit?: number; all?: boolean; page?: num
 export async function listNotifications(params: ListNotificationParams = {}): Promise<NotificationThread[]> {
   const client = getClient();
   const { limit = 20, all = false, page } = params;
-  const { data, error } = await client.GET("/notifications", {
-    params: { query: { limit, all, ...(page ? { page } : {}) } },
-  });
-  if (error) throw new Error("Failed to fetch notifications");
-  return data ?? [];
+  const { data } = await client.rest.notification.notifyGetList({ limit, all, ...(page ? { page } : {}) });
+  return data;
 }
 
 export enum StatusType {
@@ -22,11 +19,8 @@ export async function updateNotificationStatus(
   params: UpdateNotificationsParams,
 ): Promise<NotificationThread | undefined> {
   const client = getClient();
-  const { data, error } = await client.PATCH("/notifications/threads/{id}", {
-    params: { path: { id: params.id }, query: { "to-status": params.toStatus } },
-  });
-  if (error) throw new Error("Failed to update notification status");
-  return data;
+  await client.rest.notification.notifyReadThread({ id: params.id, "to-status": params.toStatus });
+  return undefined;
 }
 
 /**
@@ -35,14 +29,9 @@ export async function updateNotificationStatus(
  */
 export async function readAllNotificationStatus(...statusTypes: StatusType[]) {
   const client = getClient();
-  const { data, error } = await client.PUT("/notifications", {
-    params: {
-      query: {
-        "to-status": "read",
-        ...(statusTypes.length > 0 ? { "status-types": statusTypes } : {}),
-      },
-    },
+  await client.rest.notification.notifyReadList({
+    "to-status": "read",
+    ...(statusTypes.length > 0 ? { "status-types": statusTypes } : {}),
   });
-  if (error) throw new Error("Failed to update notifications");
-  return data ?? [];
+  return [];
 }
