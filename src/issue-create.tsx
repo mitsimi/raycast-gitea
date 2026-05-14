@@ -147,7 +147,9 @@ export default function Command(props: { initialRepo?: Repository }) {
             <Form.Dropdown.Item
               key={initialRepo.id ?? initialRepo.full_name ?? initialRepo.name ?? "repo"}
               title={initialRepo.full_name ?? initialRepo.name ?? ""}
-              icon={{ source: initialRepo.avatar_url || initialRepo.owner?.avatar_url || "" }}
+              icon={{
+                source: initialRepo.avatar_url || initialRepo.owner?.avatar_url || "icon/repo.svg",
+              }}
               value={initialRepo.full_name ?? ""}
             />
           </Form.Dropdown.Section>
