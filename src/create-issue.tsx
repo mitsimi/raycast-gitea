@@ -127,7 +127,7 @@ export default function Command(props: { initialRepo?: Repository }) {
   return (
     <Form
       isLoading={isLoading || isSubmitting}
-      enableDrafts={true}
+      enableDrafts={initialRepo === undefined}
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Create Issue" onSubmit={(values) => handleSubmit(values, setIsSubmitting)} />
