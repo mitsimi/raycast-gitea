@@ -94,12 +94,12 @@ export type CreateIssueParams = {
 
 export async function createIssue(params: CreateIssueParams): Promise<Issue> {
   const client = getClient();
-  const { owner, repo, ...body } = params;
+  const { owner, repo, ...issue } = params;
   const { data } = await client.rest.issue.issueCreateIssue({
     owner,
     repo,
-    body,
-  });
+    ...issue,
+  } as unknown as Parameters<typeof client.rest.issue.issueCreateIssue>[0]);
   return data;
 }
 
