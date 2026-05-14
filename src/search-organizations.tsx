@@ -23,8 +23,8 @@ export default function Command() {
           }
           return (
             <List.Item
-              key={org.id ?? org.name ?? "org"}
-              title={org.full_name ?? org.name ?? ""}
+              key={org.id || org.name || "org"}
+              title={org.full_name || org.name || ""}
               subtitle={org.description}
               icon={org.avatar_url ? { source: org.avatar_url } : Icon.Building}
               accessories={accessories}

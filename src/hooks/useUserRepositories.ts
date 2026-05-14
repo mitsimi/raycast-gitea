@@ -1,6 +1,6 @@
 import { useCachedState, useCachedPromise, showFailureToast } from "@raycast/utils";
 import type { Repository } from "../types/api";
-import { Toast } from "@raycast/api";
+
 import { listUserRepositories } from "../api/repositories";
 import { RepositorySortOption, SortRepositories } from "../types/sorts/repository-search";
 
@@ -28,8 +28,8 @@ export function useUserRepositories(sort?: RepositorySortOption) {
         }
         setItems(next);
       },
-      onError() {
-        showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retrieve repositories" });
+      onError(error) {
+        showFailureToast(error, { title: "Couldn't retrieve repositories" });
       },
     },
   );

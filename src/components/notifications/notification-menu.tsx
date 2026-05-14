@@ -13,10 +13,10 @@ export default function NotificationMenu(props: {
   return props.items.map((item) => {
     return (
       <List.Item
-        key={item.id ?? item.updated_at ?? "notification"}
+        key={item.id || item.updated_at || "notification"}
         icon={getNotificationIcon(item)}
-        title={item.subject?.title ?? "(no title)"}
-        subtitle={item.repository?.full_name ?? ""}
+        title={item.subject?.title || "[No Title]"}
+        subtitle={item.repository?.full_name || "[No Repository]"}
         accessories={[
           ...(item.pinned ? [{ icon: Icon.Tack } as const] : []),
           { text: { value: item.subject?.type ?? "", color: Color.PrimaryText } },

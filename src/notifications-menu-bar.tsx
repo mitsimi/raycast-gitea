@@ -48,8 +48,8 @@ export default function MenuBarCommand() {
             {notifications?.slice(0, 20).map((item) => (
               <MenuBarExtra.Item
                 key={item.id}
-                title={item.subject?.title ?? "(no title)"}
-                subtitle={item.repository?.full_name}
+                title={item.subject?.title || "[No Title]"}
+                subtitle={item.repository?.full_name || "[No Repository]"}
                 icon={getNotificationIcon(item)}
                 onAction={() => handleOpenNotification(item)}
               />

@@ -1,6 +1,6 @@
 import { useCachedState, useCachedPromise, showFailureToast } from "@raycast/utils";
 import type { Issue } from "../types/api";
-import { Toast } from "@raycast/api";
+
 import { useEffect } from "react";
 import { getMyPullRequests } from "../api/issues";
 
@@ -10,7 +10,9 @@ type UsePullRequestsOptions = {
   includeMentioned: boolean;
   includeReviewRequested: boolean;
   includeReviewed: boolean;
+  includeOwnedRepositories: boolean;
   includeRecentlyClosed: boolean;
+  owner?: string;
   query?: string;
 };
 
@@ -28,7 +30,9 @@ export function usePullRequests(options: UsePullRequestsOptions) {
       includeMentioned: boolean,
       includeReviewRequested: boolean,
       includeReviewed: boolean,
+      includeOwnedRepositories: boolean,
       includeRecentlyClosed: boolean,
+      owner?: string,
       query?: string,
     ): Promise<Issue[]> =>
       getMyPullRequests({
@@ -37,7 +41,9 @@ export function usePullRequests(options: UsePullRequestsOptions) {
         includeMentioned,
         includeReviewRequested,
         includeReviewed,
+        includeOwnedRepositories,
         includeRecentlyClosed,
+        owner,
         query,
         page: p,
         limit: LIMIT,
@@ -49,9 +55,22 @@ export function usePullRequests(options: UsePullRequestsOptions) {
       options.includeMentioned,
       options.includeReviewRequested,
       options.includeReviewed,
+      options.includeOwnedRepositories,
       options.includeRecentlyClosed,
+      options.owner,
       options.query,
-    ] as [number, boolean, boolean, boolean, boolean, boolean, boolean, string | undefined],
+    ] as [
+      number,
+      boolean,
+      boolean,
+      boolean,
+      boolean,
+      boolean,
+      boolean,
+      boolean,
+      string | undefined,
+      string | undefined,
+    ],
     {
       keepPreviousData: true,
       initialData: items,
@@ -63,8 +82,8 @@ export function usePullRequests(options: UsePullRequestsOptions) {
           setItems((prev) => [...prev, ...data]);
         }
       },
-      onError() {
-        showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retrieve pull requests" });
+      onError(error) {
+        showFailureToast(error, { title: "Couldn't retrieve pull requests" });
       },
     },
   );
@@ -78,7 +97,9 @@ export function usePullRequests(options: UsePullRequestsOptions) {
     options.includeMentioned,
     options.includeReviewRequested,
     options.includeReviewed,
+    options.includeOwnedRepositories,
     options.includeRecentlyClosed,
+    options.owner,
     options.query,
   ]);
 

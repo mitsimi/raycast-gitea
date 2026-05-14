@@ -1,7 +1,7 @@
 import { useCachedState, useCachedPromise, showFailureToast } from "@raycast/utils";
 import { listRepositories } from "../api/repositories";
 import type { Repository } from "../types/api";
-import { Toast } from "@raycast/api";
+
 import { useEffect } from "react";
 
 export function useRepositories(sort?: string, order?: "asc" | "desc") {
@@ -25,8 +25,8 @@ export function useRepositories(sort?: string, order?: "asc" | "desc") {
           setItems((prev) => [...prev, ...data]);
         }
       },
-      onError() {
-        showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retrieve repositories" });
+      onError(error) {
+        showFailureToast(error, { title: "Couldn't retrieve repositories" });
       },
     },
   );

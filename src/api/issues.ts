@@ -134,7 +134,9 @@ export type MyPullRequestsParams = {
   includeMentioned: boolean;
   includeReviewRequested: boolean;
   includeReviewed: boolean;
+  includeOwnedRepositories: boolean;
   includeRecentlyClosed: boolean;
+  owner?: string;
   query?: string;
   page?: number;
   limit?: number;
@@ -186,22 +188,26 @@ export async function getMyPullRequests(params: MyPullRequestsParams): Promise<I
     !params.includeAssigned &&
     !params.includeMentioned &&
     !params.includeReviewRequested &&
-    !params.includeReviewed
+    !params.includeReviewed &&
+    !params.includeOwnedRepositories
   ) {
     return [];
   }
 
   const state = params.includeRecentlyClosed ? "all" : "open";
 
-  const [created, assigned, mentioned, reviewRequested, reviewed] = await Promise.all([
+  const [created, assigned, mentioned, reviewRequested, reviewed, ownedRepositories] = await Promise.all([
     params.includeCreated ? searchIssues({ ...baseQuery, state, created: true }) : Promise.resolve([]),
     params.includeAssigned ? searchIssues({ ...baseQuery, state, assigned: true }) : Promise.resolve([]),
     params.includeMentioned ? searchIssues({ ...baseQuery, state, mentioned: true }) : Promise.resolve([]),
     params.includeReviewRequested ? searchIssues({ ...baseQuery, state, review_requested: true }) : Promise.resolve([]),
     params.includeReviewed ? searchIssues({ ...baseQuery, state, reviewed: true }) : Promise.resolve([]),
+    params.includeOwnedRepositories && params.owner
+      ? searchIssues({ ...baseQuery, state, owner: params.owner })
+      : Promise.resolve([]),
   ]);
 
-  const merged = [...created, ...assigned, ...mentioned, ...reviewRequested, ...reviewed];
+  const merged = [...created, ...assigned, ...mentioned, ...reviewRequested, ...reviewed, ...ownedRepositories];
   const deduped = new Map<number, Issue>();
   for (const pr of merged) {
     if (pr.id != null) deduped.set(pr.id, pr);

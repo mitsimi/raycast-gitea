@@ -1,7 +1,7 @@
 import { useCachedState, useCachedPromise, showFailureToast } from "@raycast/utils";
 import { getMyIssues } from "../api/issues";
 import type { Issue } from "../types/api";
-import { Toast } from "@raycast/api";
+
 import { useEffect } from "react";
 
 type UseIssuesOptions = {
@@ -55,8 +55,8 @@ export function useIssues(options: UseIssuesOptions) {
           setItems((prev) => [...prev, ...data]);
         }
       },
-      onError() {
-        showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retrieve issues" });
+      onError(error) {
+        showFailureToast(error, { title: "Couldn't retrieve issues" });
       },
     },
   );

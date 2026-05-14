@@ -37,7 +37,7 @@ function CloneActions({ cloneUrl }: { cloneUrl: string }) {
 export default function RepositoryActions(props: {
   item: Repository;
   showDetails: boolean;
-  setShowDetails: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowDetails: (show: boolean) => void;
   children?: ReactNode;
 }) {
   const cloneUrl = props.item.ssh_url || props.item.clone_url;
@@ -108,12 +108,7 @@ export default function RepositoryActions(props: {
 
       {cloneUrl ? <CloneActions cloneUrl={cloneUrl} /> : null}
 
-      {props.children && (
-        <ActionPanel.Section>
-          {/* @ts-expect-error - React 19 types are incompatible with Raycast's bundled React types */}
-          {props.children}
-        </ActionPanel.Section>
-      )}
+      {props.children && <ActionPanel.Section>{props.children}</ActionPanel.Section>}
     </ActionPanel>
   );
 }
