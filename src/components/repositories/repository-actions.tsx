@@ -1,6 +1,6 @@
 import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
 import type { Repository } from "../../types/api";
-import CreateIssue from "../../create-issue";
+import CreateIssue from "../../issue-create";
 import { useInstalledEditors, getEditorUrlScheme } from "../../hooks/useInstalledEditors";
 
 function CloneActions({ cloneUrl }: { cloneUrl: string }) {

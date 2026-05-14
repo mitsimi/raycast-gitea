@@ -87,7 +87,7 @@
   ],
   "commands": [
     {
-      "name": "issues",
+      "name": "issue-mine",
       "title": "My Issues",
       "subtitle": "Gitea",
       "description": "List issues created by you, assigned to you, or mentioning you",
@@ -144,7 +144,7 @@
       "interval": "1m"
     },
     {
-      "name": "pull-requests",
+      "name": "my-pull-requests",
       "title": "My Pull Requests",
       "subtitle": "Gitea",
       "description": "List pull requests created by you, assigned to you, or mentioning you",
@@ -210,35 +210,35 @@
       ]
     },
     {
-      "name": "search-issues",
+      "name": "issue-search",
       "title": "Search Issues",
       "subtitle": "Gitea",
       "description": "Search issues across repositories",
       "mode": "view"
     },
     {
-      "name": "create-issue",
+      "name": "issue-create",
       "title": "Create Issue",
       "subtitle": "Gitea",
       "description": "Create an issue in a repository",
       "mode": "view"
     },
     {
-      "name": "explore-repositories",
+      "name": "repository-explore",
       "title": "Explore Repositories",
       "subtitle": "Gitea",
       "description": "Explore Repositories available to you",
       "mode": "view"
     },
     {
-      "name": "my-repositories",
+      "name": "repository-mine",
       "title": "My Repositories",
       "subtitle": "Gitea",
       "description": "Shows your repositories",
       "mode": "view"
     },
     {
-      "name": "search-organizations",
+      "name": "organization-search",
       "title": "Search Organizations",
       "subtitle": "Gitea",
       "description": "Browse organizations on your Gitea instance",

@@ -3,7 +3,7 @@ import { useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
 import { usePullRequests } from "./hooks/usePullRequests";
 import { useCurrentUser } from "./hooks/useCurrentUser";
-import CreateIssue from "./create-issue";
+import CreateIssue from "./issue-create";
 import { getPullRequestIcon } from "./utils/icons";
 import type { Repository } from "./types/api";
 

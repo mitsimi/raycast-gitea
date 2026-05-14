@@ -2,7 +2,7 @@ import { Action, ActionPanel, List, Icon, Keyboard, getPreferenceValues } from "
 import { useCachedState } from "@raycast/utils";
 import { useIssues } from "./hooks/useIssues";
 import { useMemo, useState } from "react";
-import CreateIssue from "./create-issue";
+import CreateIssue from "./issue-create";
 import { getIssueIcon } from "./utils/icons";
 import type { Repository } from "./types/api";
 

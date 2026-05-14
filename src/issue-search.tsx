@@ -3,7 +3,7 @@ import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/uti
 import { useMemo, useState } from "react";
 import { searchIssues } from "./api/issues";
 import type { Issue, Repository } from "./types/api";
-import CreateIssue from "./create-issue";
+import CreateIssue from "./issue-create";
 import { getIssueIcon } from "./utils/icons";
 
 type IssueSearchState = "open" | "closed" | "all";
