@@ -43,7 +43,7 @@ function LabelPicker({ labels, selectedRepo }: { labels: Label[]; selectedRepo: 
               key={label.id}
               value={String(label.id)}
               title={label.name ?? ""}
-              icon={{ source: Icon.Circle, tintColor: label.color }}
+              icon={{ source: Icon.Circle, tintColor: `#${label.color}` }}
             />
           ))}
         </Form.TagPicker>
@@ -62,7 +62,7 @@ function LabelPicker({ labels, selectedRepo }: { labels: Label[]; selectedRepo: 
               key={label.id}
               value={String(label.id)}
               title={label.name?.replace(`${prefix}/`, "") ?? label.name ?? ""}
-              icon={{ source: Icon.Circle, tintColor: label.color }}
+              icon={{ source: Icon.Circle, tintColor: `#${label.color}` }}
             />
           ))}
         </Form.Dropdown>
