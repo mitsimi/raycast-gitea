@@ -1,6 +1,6 @@
 import { useCachedState, useCachedPromise, showFailureToast } from "@raycast/utils";
 import type { Issue } from "../types/api";
-import { Toast } from "@raycast/api";
+
 import { useEffect } from "react";
 import { getMyPullRequests } from "../api/issues";
 
@@ -82,8 +82,8 @@ export function usePullRequests(options: UsePullRequestsOptions) {
           setItems((prev) => [...prev, ...data]);
         }
       },
-      onError() {
-        showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retrieve pull requests" });
+      onError(error) {
+        showFailureToast(error, { title: "Couldn't retrieve pull requests" });
       },
     },
   );

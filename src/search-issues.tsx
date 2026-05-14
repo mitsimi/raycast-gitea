@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Icon, Keyboard, List, Toast } from "@raycast/api";
+import { Action, ActionPanel, Icon, Keyboard, List } from "@raycast/api";
 import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
 import { searchIssues } from "./api/issues";
@@ -132,8 +132,8 @@ function useSearchIssues(params: UseSearchIssuesParams) {
       keepPreviousData: true,
       initialData: items,
       onData: (data) => setItems(data),
-      onError() {
-        showFailureToast({ style: Toast.Style.Failure, title: "Couldn't search issues" });
+      onError(error) {
+        showFailureToast(error, { title: "Couldn't search issues" });
       },
     },
   );

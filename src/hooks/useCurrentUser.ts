@@ -1,4 +1,3 @@
-import { Toast } from "@raycast/api";
 import { useCachedPromise, useCachedState, showFailureToast } from "@raycast/utils";
 import { getCurrentUser } from "../api/user";
 import type { User } from "../types/api";
@@ -18,8 +17,8 @@ export function useCurrentUser(enabled = true) {
       onData(data) {
         if (data) setUser(data);
       },
-      onError() {
-        showFailureToast({ style: Toast.Style.Failure, title: "Couldn't retrieve current user" });
+      onError(error) {
+        showFailureToast(error, { title: "Couldn't retrieve current user" });
       },
     },
   );
