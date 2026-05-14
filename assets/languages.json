@@ -304,7 +304,7 @@
   },
   "AppleScript": {
     "type": "programming",
-    "aliases": ["osascript"],
+    "aliases": ["apples", "osascript"],
     "extensions": [".applescript", ".scpt"],
     "interpreters": ["osascript"],
     "tm_scope": "source.applescript",
@@ -1753,7 +1753,7 @@
     "type": "programming",
     "tm_scope": "source.emacs.lisp",
     "color": "#c065db",
-    "aliases": ["elisp", "emacs"],
+    "aliases": ["cask", "eask", "elisp", "emacs"],
     "filenames": [
       ".abbrev_defs",
       ".emacs",
@@ -1762,6 +1762,7 @@
       ".spacemacs",
       ".viper",
       "Cask",
+      "Eask",
       "Project.ede",
       "_emacs",
       "abbrev_defs"
@@ -1909,6 +1910,14 @@
     "tm_scope": "none",
     "ace_mode": "text",
     "language_id": 112
+  },
+  "FlatBuffers": {
+    "type": "data",
+    "color": "#ed284a",
+    "extensions": [".fbs"],
+    "tm_scope": "source.flatbuffers",
+    "ace_mode": "text",
+    "language_id": 577640576
   },
   "Flix": {
     "type": "programming",
@@ -3689,6 +3698,14 @@
     "ace_mode": "liquid",
     "language_id": 204
   },
+  "Liquidsoap": {
+    "type": "programming",
+    "color": "#990066",
+    "extensions": [".liq"],
+    "tm_scope": "source.liquidsoap",
+    "ace_mode": "text",
+    "language_id": 614641732
+  },
   "Literate Agda": {
     "type": "programming",
     "color": "#315665",
@@ -4023,6 +4040,14 @@
     "codemirror_mode": "javascript",
     "codemirror_mime_type": "application/json",
     "language_id": 227
+  },
+  "MeTTa": {
+    "type": "programming",
+    "color": "#6a5acd",
+    "extensions": [".metta"],
+    "tm_scope": "source.metta",
+    "ace_mode": "text",
+    "language_id": 1037612668
   },
   "Mercury": {
     "type": "programming",
@@ -5228,7 +5253,7 @@
   "Protocol Buffer Text Format": {
     "type": "data",
     "aliases": ["text proto", "protobuf text format"],
-    "extensions": [".textproto", ".pbt", ".pbtxt"],
+    "extensions": [".textproto", ".pbt", ".pbtxt", ".txtpb"],
     "tm_scope": "source.textproto",
     "ace_mode": "text",
     "language_id": 436568854
@@ -5324,7 +5349,7 @@
     ],
     "filenames": [".gclient", "DEPS", "SConscript", "SConstruct", "wscript"],
     "interpreters": ["python", "python2", "python3", "py", "pypy", "pypy3", "uv"],
-    "aliases": ["python3", "rusthon"],
+    "aliases": ["py", "py3", "python3", "rusthon"],
     "language_id": 303
   },
   "Python console": {
@@ -6434,6 +6459,14 @@
     "ace_mode": "text",
     "language_id": 354
   },
+  "SpiceDB Schema": {
+    "type": "data",
+    "color": "#a5318a",
+    "extensions": [".zed"],
+    "tm_scope": "source.spicedb",
+    "ace_mode": "text",
+    "language_id": 864005057
+  },
   "Spline Font Database": {
     "type": "data",
     "extensions": [".sfd"],
@@ -6646,7 +6679,17 @@
     "type": "data",
     "color": "#9c4221",
     "extensions": [".toml", ".toml.example"],
-    "filenames": ["Cargo.lock", "Cargo.toml.orig", "Gopkg.lock", "Pipfile", "pdm.lock", "poetry.lock", "uv.lock"],
+    "filenames": [
+      "Cargo.lock",
+      "Cargo.toml.orig",
+      "Gopkg.lock",
+      "Pipfile",
+      "mise.local.lock",
+      "mise.lock",
+      "pdm.lock",
+      "poetry.lock",
+      "uv.lock"
+    ],
     "tm_scope": "source.toml",
     "ace_mode": "toml",
     "codemirror_mode": "toml",
@@ -6682,6 +6725,7 @@
     "type": "programming",
     "color": "#3178c6",
     "group": "TypeScript",
+    "aliases": ["typescriptreact"],
     "extensions": [".tsx"],
     "tm_scope": "source.tsx",
     "ace_mode": "tsx",
@@ -7494,6 +7538,7 @@
       ".grxml",
       ".gst",
       ".hzp",
+      ".icls",
       ".iml",
       ".ivy",
       ".jelly",
