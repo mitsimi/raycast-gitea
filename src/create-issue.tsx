@@ -171,9 +171,12 @@ export default function Command(props: { initialRepo?: Repository }) {
 
           <Form.Separator />
 
-          <LabelPicker labels={labels ?? []} selectedRepo={isRepoSelected} />
-
-          <Form.Separator />
+          {!!labels?.length && (
+            <>
+              <LabelPicker labels={labels} selectedRepo={isRepoSelected} />
+              <Form.Separator />
+            </>
+          )}
 
           <Form.TagPicker id="assignees" title="Assignees" placeholder="Select assignees">
             {(assignees ?? []).map((user) => (
