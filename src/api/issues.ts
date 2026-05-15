@@ -1,5 +1,6 @@
 import { getClient } from "./client";
 import type { Issue, Label, Milestone, User } from "../types/api";
+import { PaginatedResult } from "./common";
 
 export type IssueListParams = {
   state?: "open" | "closed" | "all";
@@ -94,12 +95,12 @@ export type CreateIssueParams = {
 
 export async function createIssue(params: CreateIssueParams): Promise<Issue> {
   const client = getClient();
-  const { owner, repo, ...issue } = params;
+  const { owner, repo, ...body } = params;
   const { data } = await client.rest.issue.issueCreateIssue({
     owner,
     repo,
-    ...issue,
-  } as unknown as Parameters<typeof client.rest.issue.issueCreateIssue>[0]);
+    body,
+  });
   return data;
 }
 
@@ -127,7 +128,12 @@ export type MyPullRequestsParams = {
   limit?: number;
 };
 
-export async function getMyIssues(params: MyIssuesParams): Promise<Issue[]> {
+type IssueSearchRequest = {
+  enabled: boolean;
+  params: IssueListParams;
+};
+
+export async function getMyIssues(params: MyIssuesParams): Promise<PaginatedResult<Issue>> {
   const baseQuery = {
     type: "issues",
     q: params.query,
@@ -136,31 +142,21 @@ export async function getMyIssues(params: MyIssuesParams): Promise<Issue[]> {
   } satisfies IssueListParams;
 
   if (!params.includeCreated && !params.includeAssigned && !params.includeMentioned) {
-    return [];
+    return { items: [], hasMore: false };
   }
 
-  const [created, assigned, mentioned] = await Promise.all([
-    params.includeCreated
-      ? searchIssues({ ...baseQuery, state: params.includeRecentlyClosed ? "all" : "open", created: true })
-      : Promise.resolve([]),
-    params.includeAssigned
-      ? searchIssues({ ...baseQuery, state: params.includeRecentlyClosed ? "all" : "open", assigned: true })
-      : Promise.resolve([]),
-    params.includeMentioned
-      ? searchIssues({ ...baseQuery, state: params.includeRecentlyClosed ? "all" : "open", mentioned: true })
-      : Promise.resolve([]),
-  ]);
-
-  const merged = [...created, ...assigned, ...mentioned];
-  const deduped = new Map<number, Issue>();
-  for (const issue of merged) {
-    if (issue.id != null) deduped.set(issue.id, issue);
-  }
-
-  return Array.from(deduped.values());
+  const state = params.includeRecentlyClosed ? "all" : "open";
+  return searchEnabledRequests(
+    [
+      { enabled: params.includeCreated, params: { ...baseQuery, state, created: true } },
+      { enabled: params.includeAssigned, params: { ...baseQuery, state, assigned: true } },
+      { enabled: params.includeMentioned, params: { ...baseQuery, state, mentioned: true } },
+    ],
+    params.limit,
+  );
 }
 
-export async function getMyPullRequests(params: MyPullRequestsParams): Promise<Issue[]> {
+export async function getMyPullRequests(params: MyPullRequestsParams): Promise<PaginatedResult<Issue>> {
   const baseQuery = {
     type: "pulls",
     q: params.query,
@@ -176,27 +172,54 @@ export async function getMyPullRequests(params: MyPullRequestsParams): Promise<I
     !params.includeReviewed &&
     !params.includeOwnedRepositories
   ) {
-    return [];
+    return { items: [], hasMore: false };
   }
 
   const state = params.includeRecentlyClosed ? "all" : "open";
+  return searchEnabledRequests(
+    [
+      { enabled: params.includeCreated, params: { ...baseQuery, state, created: true } },
+      { enabled: params.includeAssigned, params: { ...baseQuery, state, assigned: true } },
+      { enabled: params.includeMentioned, params: { ...baseQuery, state, mentioned: true } },
+      { enabled: params.includeReviewRequested, params: { ...baseQuery, state, review_requested: true } },
+      { enabled: params.includeReviewed, params: { ...baseQuery, state, reviewed: true } },
+      {
+        enabled: params.includeOwnedRepositories && Boolean(params.owner),
+        params: { ...baseQuery, state, owner: params.owner },
+      },
+    ],
+    params.limit,
+  );
+}
 
-  const [created, assigned, mentioned, reviewRequested, reviewed, ownedRepositories] = await Promise.all([
-    params.includeCreated ? searchIssues({ ...baseQuery, state, created: true }) : Promise.resolve([]),
-    params.includeAssigned ? searchIssues({ ...baseQuery, state, assigned: true }) : Promise.resolve([]),
-    params.includeMentioned ? searchIssues({ ...baseQuery, state, mentioned: true }) : Promise.resolve([]),
-    params.includeReviewRequested ? searchIssues({ ...baseQuery, state, review_requested: true }) : Promise.resolve([]),
-    params.includeReviewed ? searchIssues({ ...baseQuery, state, reviewed: true }) : Promise.resolve([]),
-    params.includeOwnedRepositories && params.owner
-      ? searchIssues({ ...baseQuery, state, owner: params.owner })
-      : Promise.resolve([]),
-  ]);
+// ================================================================
+// Utility functions
+// ================================================================
 
-  const merged = [...created, ...assigned, ...mentioned, ...reviewRequested, ...reviewed, ...ownedRepositories];
+function dedupeIssuesById(items: Issue[]): Issue[] {
   const deduped = new Map<number, Issue>();
-  for (const pr of merged) {
-    if (pr.id != null) deduped.set(pr.id, pr);
+  const withoutId: Issue[] = [];
+
+  for (const issue of items) {
+    if (issue.id == null) {
+      withoutId.push(issue);
+      continue;
+    }
+    deduped.set(issue.id, issue);
   }
 
-  return Array.from(deduped.values());
+  return [...deduped.values(), ...withoutId];
+}
+
+async function searchEnabledRequests(requests: IssueSearchRequest[], limit?: number): Promise<PaginatedResult<Issue>> {
+  const enabledRequests = requests.filter((request) => request.enabled);
+  if (enabledRequests.length === 0) {
+    return { items: [], hasMore: false };
+  }
+
+  const pages = await Promise.all(enabledRequests.map((request) => searchIssues(request.params)));
+  return {
+    items: dedupeIssuesById(pages.flat()),
+    hasMore: limit != null && pages.some((page) => page.length === limit),
+  };
 }
