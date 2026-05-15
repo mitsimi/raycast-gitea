@@ -6,11 +6,12 @@ import { useNotifications } from "./hooks/useNotifications";
 
 export default function Command() {
   const [filter, setFilter] = useState<NotificationStatusFilter>(NotificationStatusFilter.Unread);
-  const { items, isLoading, mutate } = useNotifications(filter);
+  const { items, isLoading, mutate, pagination } = useNotifications(filter);
 
   return (
     <List
       isLoading={isLoading}
+      pagination={pagination}
       searchBarAccessory={
         <NotificationDropdown
           notifyFilter={NotificationSortTypes}

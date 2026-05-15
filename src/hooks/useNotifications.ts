@@ -1,18 +1,19 @@
-import { useCachedPromise } from "@raycast/utils";
-import { listNotifications } from "../api/notifications";
-import type { NotificationThread } from "../types/api";
+import { getNotifications } from "../api/notifications";
+import { CacheKey, DEFAULT_PAGE_SIZE } from "../constants";
 import { NotificationStatusFilter } from "../types/sorts/notification-search";
+import { usePaginatedCachedPromise } from "./usePaginatedCachedPromise";
 
 export function useNotifications(filter: NotificationStatusFilter) {
-  const { data, isLoading, revalidate, mutate } = useCachedPromise(
-    (f: NotificationStatusFilter): Promise<NotificationThread[]> => {
-      return listNotifications({ all: f === NotificationStatusFilter.All });
-    },
-    [filter] as [NotificationStatusFilter],
-    {
-      initialData: [],
-    },
-  );
-
-  return { items: data ?? [], isLoading, revalidate, mutate };
+  return usePaginatedCachedPromise({
+    cacheKey: CacheKey.Notifications,
+    errorTitle: "Couldn't retrieve notifications",
+    pageSize: DEFAULT_PAGE_SIZE,
+    args: [filter] as [NotificationStatusFilter],
+    fetchPage: (page, f) =>
+      getNotifications({
+        all: f === NotificationStatusFilter.All,
+        page,
+        limit: DEFAULT_PAGE_SIZE,
+      }),
+  });
 }

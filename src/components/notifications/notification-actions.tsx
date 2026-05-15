@@ -1,11 +1,11 @@
 import { Action, ActionPanel, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { readAllNotificationStatus, updateNotificationStatus, StatusType } from "../../api/notifications";
-import { MutatePromise } from "@raycast/utils";
+import type { PaginatedCachedPromiseMutate } from "../../hooks/usePaginatedCachedPromise";
 import { NotificationThread } from "../../types/api";
 
 export default function NotificationActions(props: {
   item: NotificationThread;
-  mutate?: MutatePromise<NotificationThread[], NotificationThread[]>;
+  mutate?: PaginatedCachedPromiseMutate<NotificationThread>;
 }) {
   const subjectUrl = props.item.subject?.html_url;
   const isPinned = Boolean(props.item.pinned);

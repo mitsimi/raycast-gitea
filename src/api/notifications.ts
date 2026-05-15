@@ -1,3 +1,4 @@
+import type { PaginatedResult } from "./common";
 import { getClient } from "./client";
 import type { NotificationThread } from "../types/api";
 
@@ -18,6 +19,13 @@ export async function listNotifications(params: ListNotificationParams = {}): Pr
 
   const { data } = await client.rest.notification.notifyGetList(requestParams);
   return data;
+}
+
+export async function getNotifications(
+  params: ListNotificationParams = {},
+): Promise<PaginatedResult<NotificationThread>> {
+  const items = await listNotifications(params);
+  return { items, hasMore: typeof params.limit === "number" && items.length === params.limit };
 }
 
 export const StatusType = {
