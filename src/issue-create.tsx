@@ -4,24 +4,14 @@ import { useMemo, useState } from "react";
 import { createIssue, listRepoAssignees, listRepoLabels, listRepoMilestones } from "./api/issues";
 import { useUserRepositories } from "./hooks/useUserRepositories";
 import type { Label, Milestone, Repository, User } from "./types/api";
+import { buildCreateIssueParams, groupLabels, parseRepo } from "./utils/create-issue";
 
 function LabelPicker({ labels, selectedRepo }: { labels: Label[]; selectedRepo: boolean }) {
   const [regularLabels, setRegularLabels] = useState<string[]>([]);
   const [exclusiveSelections, setExclusiveSelections] = useState<Record<string, string>>({});
 
   const grouped = useMemo(() => {
-    return labels.reduce(
-      (acc, label) => {
-        if (label.exclusive) {
-          const prefix = label.name?.split("/")[0] || "";
-          acc.exclusive[prefix] = [...(acc.exclusive[prefix] || []), label];
-        } else {
-          acc.regular.push(label);
-        }
-        return acc;
-      },
-      { regular: [] as Label[], exclusive: {} as Record<string, Label[]> },
-    );
+    return groupLabels(labels);
   }, [labels]);
 
   if (!selectedRepo || labels.length === 0) {
@@ -218,12 +208,6 @@ type FormValues = {
   [key: string]: unknown;
 };
 
-function parseRepo(fullName?: string) {
-  if (!fullName) return { owner: undefined, repo: undefined };
-  const [owner, repo] = fullName.split("/");
-  return { owner, repo };
-}
-
 async function handleSubmit(values: Form.Values, setIsSubmitting: (v: boolean) => void) {
   const formValues = values as unknown as FormValues;
   if (!formValues.repository || !formValues.title?.trim()) {
@@ -231,37 +215,15 @@ async function handleSubmit(values: Form.Values, setIsSubmitting: (v: boolean) =
     return;
   }
 
-  const { owner, repo } = parseRepo(formValues.repository);
-  if (!owner || !repo) {
+  const params = buildCreateIssueParams(formValues);
+  if (!params) {
     await showToast({ style: Toast.Style.Failure, title: "Invalid repository selection" });
     return;
   }
 
   setIsSubmitting(true);
   try {
-    const regularLabels = (formValues.labels ?? []).map((v) => parseInt(v, 10)).filter((v) => Number.isFinite(v));
-    const exclusiveLabels = Object.keys(formValues)
-      .filter((key) => key.startsWith("label."))
-      .map((key) => formValues[key as keyof FormValues])
-      .filter((v) => v)
-      .map((v) => parseInt(v as string, 10))
-      .filter((v) => Number.isFinite(v));
-    const labels = [...regularLabels, ...exclusiveLabels];
-
-    const assignees = (formValues.assignees ?? []).map((v) => v.trim()).filter(Boolean);
-    const milestone = formValues.milestone ? parseInt(formValues.milestone, 10) : undefined;
-    const due_date = formValues.dueDate ? new Date(formValues.dueDate).toISOString() : undefined;
-
-    await createIssue({
-      owner,
-      repo,
-      title: formValues.title.trim(),
-      body: formValues.body?.trim() || undefined,
-      labels: labels.length > 0 ? labels : undefined,
-      milestone: Number.isFinite(milestone) ? milestone : undefined,
-      assignees: assignees.length > 0 ? assignees : undefined,
-      due_date,
-    });
+    await createIssue(params);
 
     await showToast({ style: Toast.Style.Success, title: "Issue created" });
   } catch (error) {
