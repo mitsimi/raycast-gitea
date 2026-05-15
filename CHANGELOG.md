@@ -1,3 +1,5 @@
 # Gitea Changelog
 
-## [Initial Version] - {PR_MERGE_DATE}
+## [Added Gitea] - {PR_MERGE_DATE}
+
+Initial release of the Gitea extension for Raycast.
