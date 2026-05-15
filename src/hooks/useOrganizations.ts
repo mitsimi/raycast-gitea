@@ -1,17 +1,17 @@
-import { useCachedPromise } from "@raycast/utils";
-import { listOrganizations } from "../api/organizations";
-import type { Organization } from "../types/api";
+import { getOrganizations } from "../api/organizations";
+import { CacheKey, DEFAULT_PAGE_SIZE } from "../constants";
+import { usePaginatedCachedPromise } from "./usePaginatedCachedPromise";
 
 export function useOrganizations() {
-  const { data, isLoading, error } = useCachedPromise(
-    async (): Promise<Organization[]> => {
-      return listOrganizations({ limit: 1000 });
-    },
-    [],
-    {
-      initialData: [],
-    },
-  );
-
-  return { items: data ?? [], isLoading, error };
+  return usePaginatedCachedPromise({
+    cacheKey: CacheKey.Organizations,
+    errorTitle: "Couldn't retrieve organizations",
+    pageSize: DEFAULT_PAGE_SIZE,
+    args: [] as const,
+    fetchPage: (page) =>
+      getOrganizations({
+        page,
+        limit: DEFAULT_PAGE_SIZE,
+      }),
+  });
 }

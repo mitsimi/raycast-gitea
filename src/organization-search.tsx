@@ -7,12 +7,12 @@ type Preferences = {
 
 export default function Command() {
   const preferences = getPreferenceValues<Preferences>();
-  const { items, isLoading } = useOrganizations();
+  const { items, isLoading, pagination } = useOrganizations();
 
   const baseUrl = preferences.serverUrl.replace(/\/+$/, "");
 
   return (
-    <List searchBarPlaceholder="Search organizations" isLoading={isLoading}>
+    <List searchBarPlaceholder="Search organizations" isLoading={isLoading} pagination={pagination}>
       {items.length === 0 ? (
         <List.EmptyView icon={Icon.Building} title="No organizations found" />
       ) : (

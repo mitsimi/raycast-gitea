@@ -5,6 +5,7 @@ export const CacheKey = {
   Notifications: "notifications",
   Repositories: "repositories",
   UserRepositories: "user-repositories",
+  Organizations: "organizations",
   Issues: "issues",
   PullRequests: "pull-requests",
   IssueSearch: "issues-search",
