@@ -1,8 +1,8 @@
 import { List, Icon } from "@raycast/api";
 import { NotificationDropdown, NotificationMenu } from "./components/notifications";
-import { NotificationSortTypes } from "./types/sorts/notification-search";
+import { NotificationSortTypes, NotificationStatusFilter } from "./types/sorts/notification-search";
 import { useState } from "react";
-import { NotificationStatusFilter, useNotifications } from "./hooks/useNotifications";
+import { useNotifications } from "./hooks/useNotifications";
 
 export default function Command() {
   const [filter, setFilter] = useState<NotificationStatusFilter>(NotificationStatusFilter.Unread);

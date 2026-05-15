@@ -1,15 +1,16 @@
 import dayjs from "dayjs";
 import type { Repository } from "../api";
-import { CommonOptionType } from "./common";
+import { CommonOptionType, SortOrder } from "./common";
 
-export enum RepositorySortOption {
-  MostStars = "most stars",
-  FewestStars = "fewest stars",
-  Newest = "newest",
-  Oldest = "oldest",
-  RecentlyUpdated = "recently",
-  LeastRecentlyUpdated = "least recently",
-}
+export const RepositorySortOption = {
+  MostStars: "most stars",
+  FewestStars: "fewest stars",
+  Newest: "newest",
+  Oldest: "oldest",
+  RecentlyUpdated: "recently",
+  LeastRecentlyUpdated: "least recently",
+} as const;
+export type RepositorySortOption = (typeof RepositorySortOption)[keyof typeof RepositorySortOption];
 
 export const RepositorySortTypes: CommonOptionType[] = [
   { id: "1", name: "Most stars", value: RepositorySortOption.MostStars },
@@ -18,7 +19,7 @@ export const RepositorySortTypes: CommonOptionType[] = [
   { id: "4", name: "Oldest", value: RepositorySortOption.Oldest },
   { id: "5", name: "Recently updated", value: RepositorySortOption.RecentlyUpdated },
   { id: "6", name: "Least recently updated", value: RepositorySortOption.LeastRecentlyUpdated },
-];
+] as const;
 
 export function SortRepositories(list: Repository[], sortType: RepositorySortOption | string): Repository[] {
   switch (sortType) {
@@ -55,21 +56,21 @@ export function SortRepositories(list: Repository[], sortType: RepositorySortOpt
   }
 }
 
-export type GiteaRepositorySort = { sort?: string; order?: "asc" | "desc" };
+export type GiteaRepositorySort = { sort?: string; order?: SortOrder };
 export function mapRepositorySortToGitea(sortType: RepositorySortOption | string): GiteaRepositorySort {
   switch (sortType) {
     case RepositorySortOption.MostStars:
-      return { sort: "stars", order: "desc" };
+      return { sort: "stars", order: SortOrder.Descending };
     case RepositorySortOption.FewestStars:
-      return { sort: "stars", order: "asc" };
+      return { sort: "stars", order: SortOrder.Ascending };
     case RepositorySortOption.Newest:
-      return { sort: "created", order: "desc" };
+      return { sort: "created", order: SortOrder.Descending };
     case RepositorySortOption.Oldest:
-      return { sort: "created", order: "asc" };
+      return { sort: "created", order: SortOrder.Ascending };
     case RepositorySortOption.RecentlyUpdated:
-      return { sort: "updated", order: "desc" };
+      return { sort: "updated", order: SortOrder.Descending };
     case RepositorySortOption.LeastRecentlyUpdated:
-      return { sort: "updated", order: "asc" };
+      return { sort: "updated", order: SortOrder.Ascending };
     default:
       return {};
   }

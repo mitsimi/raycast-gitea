@@ -20,11 +20,12 @@ export async function listNotifications(params: ListNotificationParams = {}): Pr
   return data;
 }
 
-export enum StatusType {
-  Read = "read",
-  Unread = "unread",
-  Pinned = "pinned",
-}
+export const StatusType = {
+  Read: "read",
+  Unread: "unread",
+  Pinned: "pinned",
+} as const;
+export type StatusType = (typeof StatusType)[keyof typeof StatusType];
 export type UpdateNotificationsParams = { id: string; toStatus: StatusType };
 export async function updateNotificationStatus(params: UpdateNotificationsParams): Promise<void> {
   const client = getClient();

@@ -1,13 +1,22 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getApplications, getPreferenceValues } from "@raycast/api";
 
-export type EditorId = "vscode" | "cursor" | "zed" | "intellij" | "webstorm" | "pycharm";
+export const editorIds = {
+  vscode: "vscode",
+  cursor: "cursor",
+  zed: "zed",
+  intellij: "intellij",
+  webstorm: "webstorm",
+  pycharm: "pycharm",
+} as const;
+
+export type EditorId = (typeof editorIds)[keyof typeof editorIds];
 
 export interface EditorInfo {
   id: EditorId;
   name: string;
   icon: string;
-  prefKey: string;
+  prefKey: keyof EditorPreferences & string;
   bundleId: string;
   namePatterns: RegExp[];
   windowsPathPatterns?: RegExp[];
@@ -24,7 +33,7 @@ interface EditorPreferences {
 
 const EDITORS: EditorInfo[] = [
   {
-    id: "vscode",
+    id: editorIds.vscode,
     name: "VS Code",
     bundleId: "com.microsoft.VSCode",
     icon: "logo/vscode.png",
@@ -33,7 +42,7 @@ const EDITORS: EditorInfo[] = [
     windowsPathPatterns: [/visual studio code\.lnk$/i, /visual studio code\.lnk$/i],
   },
   {
-    id: "cursor",
+    id: editorIds.cursor,
     name: "Cursor",
     bundleId: "com.todesktop.230313mzl4w4u92",
     icon: "logo/cursor.png",
@@ -42,7 +51,7 @@ const EDITORS: EditorInfo[] = [
     windowsPathPatterns: [/\/cursor\/cursor\.lnk$/i, /\/cursor\/cursor\.exe$/i],
   },
   {
-    id: "zed",
+    id: editorIds.zed,
     name: "Zed",
     bundleId: "dev.zed.Zed",
     icon: "logo/zed.png",
@@ -56,7 +65,7 @@ const EDITORS: EditorInfo[] = [
     ],
   },
   {
-    id: "intellij",
+    id: editorIds.intellij,
     name: "IntelliJ IDEA",
     bundleId: "com.jetbrains.intellij",
     icon: "logo/intellij.png",
@@ -69,7 +78,7 @@ const EDITORS: EditorInfo[] = [
     ],
   },
   {
-    id: "webstorm",
+    id: editorIds.webstorm,
     name: "WebStorm",
     bundleId: "com.jetbrains.WebStorm",
     icon: "logo/webstorm.png",
@@ -78,7 +87,7 @@ const EDITORS: EditorInfo[] = [
     windowsPathPatterns: [/\/jetbrains\/webstorm.*\/bin\/webstorm64\.exe$/i, /\/webstorm.*\.lnk$/i],
   },
   {
-    id: "pycharm",
+    id: editorIds.pycharm,
     name: "PyCharm",
     bundleId: "com.jetbrains.PyCharm",
     icon: "logo/pycharm.png",
@@ -112,9 +121,7 @@ function isEditorInstalled(
   }
 
   return apps.some((app) => {
-    if (app.bundleId === editor.bundleId) {
-      return true;
-    }
+    if (app.bundleId === editor.bundleId) return true;
 
     const name = app.name ?? "";
     const localizedName = app.localizedName ?? "";
@@ -152,11 +159,9 @@ export function useInstalledEditors() {
       const apps = await getApplications();
 
       return EDITORS.filter((editor) => {
-        if (!isEditorInstalled(editor, apps)) {
-          return false;
-        }
+        if (!isEditorInstalled(editor, apps)) return false;
 
-        return prefs[editor.prefKey as keyof EditorPreferences] ?? true;
+        return prefs[editor.prefKey] ?? true;
       });
     },
     [],

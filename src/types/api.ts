@@ -17,7 +17,6 @@ export const IssueState = {
   Closed: "closed",
   Merged: "merged",
 } as const;
-
 export type IssueState = (typeof IssueState)[keyof typeof IssueState];
 
 export const NotificationSubjectType = {
@@ -26,5 +25,4 @@ export const NotificationSubjectType = {
   Commit: "commit",
   Repository: "repository",
 } as const;
-
 export type NotificationSubjectType = (typeof NotificationSubjectType)[keyof typeof NotificationSubjectType];

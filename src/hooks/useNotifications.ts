@@ -1,11 +1,7 @@
 import { useCachedPromise } from "@raycast/utils";
 import { listNotifications } from "../api/notifications";
 import type { NotificationThread } from "../types/api";
-
-export const enum NotificationStatusFilter {
-  Unread = "unread",
-  All = "all",
-}
+import { NotificationStatusFilter } from "../types/sorts/notification-search";
 
 export function useNotifications(filter: NotificationStatusFilter) {
   const { data, isLoading, revalidate, mutate } = useCachedPromise(
