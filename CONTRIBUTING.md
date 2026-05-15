@@ -25,11 +25,26 @@ Raycast will load the extension in developer mode. Use Raycast's command search 
 
 - `npm run gen:langs`
 
+## Gitea SDK Query Parameter Quirk
+
+Prefer the official `@go-gitea/sdk.js` client for API calls. Some generated SDK mutation methods may serialize non-path parameters into the JSON request body, even when the Gitea API expects those parameters in the query string.
+
+For affected endpoints, use `client.request` with an explicit query-template route instead of the generated `client.rest.*` method. For example, notification status updates must send `to-status` as a query parameter:
+
+```ts
+await client.request("PATCH /notifications/threads/{id}{?to-status}", {
+  id,
+  "to-status": toStatus,
+});
+```
+
+Add a short code comment when bypassing a generated SDK method so future maintainers know it is intentional.
+
 ## Code Quality
 
 - Lint: `npm run lint`
 - Auto-fix lint: `npm run fix-lint`
-- Type check: `npm run type-check`
+- Type check: `npm run check:type`
 
 ## Build
 
