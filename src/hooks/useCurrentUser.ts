@@ -1,9 +1,10 @@
 import { useCachedPromise, useCachedState, showFailureToast } from "@raycast/utils";
 import { getCurrentUser } from "../api/user";
 import type { User } from "../types/api";
+import { CacheKey } from "../constants";
 
 export function useCurrentUser(enabled = true) {
-  const [user, setUser] = useCachedState<User | undefined>("current-user");
+  const [user, setUser] = useCachedState<User | undefined>(CacheKey.CurrentUser);
 
   const { data, isLoading, revalidate, mutate } = useCachedPromise(
     async (shouldFetch: boolean) => {
