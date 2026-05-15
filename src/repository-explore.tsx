@@ -1,23 +1,15 @@
 import { List } from "@raycast/api";
 import { useCachedState } from "@raycast/utils";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { RepositoryDropdown, RepositoryList } from "./components/repositories";
 import { useRepositories } from "./hooks/useRepositories";
-import { RepositorySortOption, RepositorySortTypes, mapRepositorySortToGitea } from "./types/sorts/repository-search";
+import { RepositorySortOption, RepositorySortTypes } from "./types/sorts/repository-search";
 
 export default function Command() {
   const [sort, setSort] = useCachedState<RepositorySortOption>(RepositorySortOption.MostStars);
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
-  const { giteaSort, giteaOrder } = useMemo(() => {
-    const mapped = mapRepositorySortToGitea(sort as RepositorySortOption);
-    return { giteaSort: mapped.sort, giteaOrder: mapped.order } as {
-      giteaSort: string | undefined;
-      giteaOrder: "asc" | "desc" | undefined;
-    };
-  }, [sort]);
-
-  const { items, isLoading, pagination } = useRepositories(giteaSort, giteaOrder);
+  const { items, isLoading, pagination } = useRepositories(sort);
 
   return (
     <List

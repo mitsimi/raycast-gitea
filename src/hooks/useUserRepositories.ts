@@ -1,38 +1,24 @@
-import { useCachedState, useCachedPromise, showFailureToast } from "@raycast/utils";
+import { useMemo } from "react";
+import { getUserRepositories } from "../api/repositories";
+import { CacheKey, DEFAULT_PAGE_SIZE } from "../constants";
 import type { Repository } from "../types/api";
-
-import { listUserRepositories } from "../api/repositories";
 import { RepositorySortOption, SortRepositories } from "../types/sorts/repository-search";
+import { usePaginatedCachedPromise } from "./usePaginatedCachedPromise";
 
 export function useUserRepositories(sort?: RepositorySortOption) {
-  const [items, setItems] = useCachedState<Repository[]>("user-repositories", []);
+  const result = usePaginatedCachedPromise<Repository, [RepositorySortOption | undefined]>({
+    cacheKey: CacheKey.UserRepositories,
+    errorTitle: "Couldn't retrieve repositories",
+    pageSize: DEFAULT_PAGE_SIZE,
+    args: [sort] as [RepositorySortOption | undefined],
+    fetchPage: (page) =>
+      getUserRepositories({
+        limit: DEFAULT_PAGE_SIZE,
+        page,
+      }),
+  });
 
-  const { isLoading, revalidate, mutate } = useCachedPromise(
-    async (s?: RepositorySortOption) => {
-      const data = await listUserRepositories();
-      return s ? SortRepositories(data, s) : data;
-    },
-    [sort] as [RepositorySortOption | undefined],
-    {
-      keepPreviousData: true,
-      initialData: items as Repository[],
-      onData: (data) => {
-        if (!Array.isArray(data)) return;
-        const next = data as Repository[];
-        const prev = items;
-        if (
-          prev.length === next.length &&
-          prev.every((r, i) => (r.id ?? r.full_name ?? "") === (next[i]?.id ?? next[i]?.full_name ?? ""))
-        ) {
-          return;
-        }
-        setItems(next);
-      },
-      onError(error) {
-        showFailureToast(error, { title: "Couldn't retrieve repositories" });
-      },
-    },
-  );
+  const items = useMemo(() => (sort ? SortRepositories(result.items, sort) : result.items), [result.items, sort]);
 
-  return { items, isLoading, revalidate, mutate };
+  return { ...result, items };
 }

@@ -1,6 +1,6 @@
 import { Action, ActionPanel, Form, Icon, showToast, Toast } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createIssue, listRepoAssignees, listRepoLabels, listRepoMilestones } from "./api/issues";
 import { useUserRepositories } from "./hooks/useUserRepositories";
 import type { Label, Milestone, Repository, User } from "./types/api";
@@ -62,9 +62,15 @@ function LabelPicker({ labels, selectedRepo }: { labels: Label[]; selectedRepo: 
 }
 
 export default function Command(props: { initialRepo?: Repository }) {
-  const { items: repositories, isLoading } = useUserRepositories();
+  const { items: repositories, isLoading, pagination } = useUserRepositories();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState<string>(props.initialRepo?.full_name ?? "");
+
+  useEffect(() => {
+    if (!isLoading && pagination.hasMore) {
+      pagination.onLoadMore();
+    }
+  }, [isLoading, pagination]);
 
   const repoOptions = useMemo(() => {
     return repositories
