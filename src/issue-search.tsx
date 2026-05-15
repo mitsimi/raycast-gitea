@@ -5,6 +5,7 @@ import { searchIssues } from "./api/issues";
 import type { Issue, Repository } from "./types/api";
 import CreateIssue from "./issue-create";
 import { getIssueIcon } from "./utils/icons";
+import { parseSearchQuery } from "./utils/search-query";
 
 type IssueSearchState = "open" | "closed" | "all";
 
@@ -139,17 +140,4 @@ function useSearchIssues(params: UseSearchIssuesParams) {
   );
 
   return { items, isLoading };
-}
-
-function parseSearchQuery(raw: string) {
-  const repoMatch = raw.match(/\brepo:([^\s]+)/i);
-  const ownerMatch = raw.match(/\bowner:([^\s]+)/i);
-  const repo = repoMatch?.[1];
-  const owner = repo ? repo.split("/")[0] : ownerMatch?.[1];
-  const query = raw
-    .replace(/\brepo:[^\s]+/gi, "")
-    .replace(/\bowner:[^\s]+/gi, "")
-    .trim();
-
-  return { query, owner, repo };
 }
