@@ -1,11 +1,22 @@
 import { getClient } from "./client";
 import type { NotificationThread } from "../types/api";
 
-export type ListNotificationParams = { limit?: number; all?: boolean; page?: number };
+export type ListNotificationParams = {
+  all?: boolean;
+  limit?: number;
+  page?: number;
+};
 export async function listNotifications(params: ListNotificationParams = {}): Promise<NotificationThread[]> {
   const client = getClient();
-  const { limit = 20, all = false, page } = params;
-  const { data } = await client.rest.notification.notifyGetList({ limit, all, ...(page ? { page } : {}) });
+  const { limit, all = false, page } = params;
+
+  const requestParams = {
+    all,
+    ...(typeof limit === "number" ? { limit } : {}),
+    ...(typeof page === "number" ? { page } : {}),
+  };
+
+  const { data } = await client.rest.notification.notifyGetList(requestParams);
   return data;
 }
 
@@ -15,12 +26,14 @@ export enum StatusType {
   Pinned = "pinned",
 }
 export type UpdateNotificationsParams = { id: string; toStatus: StatusType };
-export async function updateNotificationStatus(
-  params: UpdateNotificationsParams,
-): Promise<NotificationThread | undefined> {
+export async function updateNotificationStatus(params: UpdateNotificationsParams): Promise<void> {
   const client = getClient();
-  await client.rest.notification.notifyReadThread({ id: params.id, "to-status": params.toStatus });
-  return undefined;
+
+  // The generated SDK method sends `to-status` in the request body, but Gitea expects it as a query parameter.
+  await client.request("PATCH /notifications/threads/{id}{?to-status}", {
+    id: params.id,
+    "to-status": params.toStatus,
+  });
 }
 
 /**
@@ -33,5 +46,4 @@ export async function readAllNotificationStatus(...statusTypes: StatusType[]) {
     "to-status": "read",
     ...(statusTypes.length > 0 ? { "status-types": statusTypes } : {}),
   });
-  return [];
 }

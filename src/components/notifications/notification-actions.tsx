@@ -8,16 +8,23 @@ export default function NotificationActions(props: {
   mutate?: MutatePromise<NotificationThread[], NotificationThread[]>;
 }) {
   const subjectUrl = props.item.subject?.html_url;
+  const isPinned = Boolean(props.item.pinned);
 
-  const markAsRead = async () => {
-    let toStatus: StatusType = props.item.unread ? StatusType.Read : StatusType.Unread;
-    if (props.item.pinned) toStatus = StatusType.Read;
+  const runUpdate = async (toStatus: StatusType) => {
+    const updatePromise = updateNotificationStatus({ id: String(props.item.id), toStatus });
+    if (props.mutate) {
+      await props.mutate(updatePromise, { shouldRevalidateAfter: true });
+      return;
+    }
+    await updatePromise;
+  };
 
+  const toggleReadStatus = async () => {
+    const toStatus: StatusType = props.item.unread || isPinned ? StatusType.Read : StatusType.Unread;
     const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
+
     try {
-      await props.mutate?.(updateNotificationStatus({ id: String(props.item.id), toStatus: toStatus }), {
-        shouldRevalidateAfter: true,
-      });
+      await runUpdate(toStatus);
       toast.style = Toast.Style.Success;
       toast.title = `Marked as ${toStatus}`;
     } catch (err: unknown) {
@@ -27,30 +34,35 @@ export default function NotificationActions(props: {
     }
   };
 
+  const togglePinStatus = async () => {
+    const toStatus = isPinned ? StatusType.Unread : StatusType.Pinned;
+
+    const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
+    try {
+      await runUpdate(toStatus);
+      toast.style = Toast.Style.Success;
+      toast.title = `${isPinned ? "Unpinned" : "Pinned"} notification`;
+    } catch (err: unknown) {
+      toast.style = Toast.Style.Failure;
+      toast.title = `Could not ${isPinned ? "unpin" : "pin"} notification`;
+      toast.message = err instanceof Error ? err.message : String(err);
+    }
+  };
+
   const markAllAsRead = async () => {
     const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
     try {
-      await props.mutate?.(readAllNotificationStatus());
+      const updatePromise = readAllNotificationStatus();
+      if (props.mutate) {
+        await props.mutate(updatePromise, { shouldRevalidateAfter: true });
+      } else {
+        await updatePromise;
+      }
       toast.style = Toast.Style.Success;
       toast.title = `Marked all as read`;
     } catch (err: unknown) {
       toast.style = Toast.Style.Failure;
       toast.title = `Could not mark as read`;
-      toast.message = err instanceof Error ? err.message : String(err);
-    }
-  };
-
-  const pinNotification = async () => {
-    const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
-    try {
-      await props.mutate?.(updateNotificationStatus({ id: String(props.item.id), toStatus: StatusType.Pinned }), {
-        shouldRevalidateAfter: true,
-      });
-      toast.style = Toast.Style.Success;
-      toast.title = `${props.item.pinned ? "Unpinned" : "Pinned"} notification`;
-    } catch (err: unknown) {
-      toast.style = Toast.Style.Failure;
-      toast.title = `Could not ${props.item.pinned ? "unpin" : "pin"} notification`;
       toast.message = err instanceof Error ? err.message : String(err);
     }
   };
@@ -70,22 +82,20 @@ export default function NotificationActions(props: {
       <ActionPanel.Section title="Actions">
         <Action title="Mark All as Read" icon={Icon.Eye} onAction={markAllAsRead} />
         <Action
-          title={props.item.unread || props.item.pinned ? "Mark as Read" : "Mark as Unread"}
-          icon={props.item.unread ? Icon.Eye : Icon.EyeDisabled}
+          title={props.item.unread || isPinned ? "Mark as Read" : "Mark as Unread"}
+          icon={props.item.unread || isPinned ? Icon.Eye : Icon.EyeDisabled}
           shortcut={{
             macOS: { modifiers: ["cmd", "shift"], key: "r" },
             Windows: { modifiers: ["ctrl", "shift"], key: "r" },
           }}
-          onAction={markAsRead}
+          onAction={toggleReadStatus}
         />
-        {!props.item.pinned ? (
-          <Action
-            title="Pin Notification"
-            icon={Icon.Pin}
-            shortcut={Keyboard.Shortcut.Common.Pin}
-            onAction={pinNotification}
-          />
-        ) : null}
+        <Action
+          title={props.item.pinned ? "Unpin Notification" : "Pin Notification"}
+          icon={Icon.Pin}
+          shortcut={Keyboard.Shortcut.Common.Pin}
+          onAction={togglePinStatus}
+        />
       </ActionPanel.Section>
     </ActionPanel>
   );
