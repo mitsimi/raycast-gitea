@@ -3,6 +3,7 @@ export const DEFAULT_PAGE_SIZE = 30;
 export const CacheKey = {
   CurrentUser: "current-user",
   Notifications: "notifications",
+  NotificationsMenuBar: "notifications-menu-bar",
   Repositories: "repositories",
   UserRepositories: "user-repositories",
   Organizations: "organizations",

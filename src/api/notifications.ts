@@ -4,6 +4,7 @@ import type { NotificationThread } from "../types/api";
 
 export type ListNotificationParams = {
   all?: boolean;
+  statusTypes?: string[];
   limit?: number;
   page?: number;
 };
@@ -15,6 +16,7 @@ export async function listNotifications(params: ListNotificationParams = {}): Pr
     all,
     ...(typeof limit === "number" ? { limit } : {}),
     ...(typeof page === "number" ? { page } : {}),
+    ...(params.statusTypes ? { "status-types": params.statusTypes } : {}),
   };
 
   const { data } = await client.rest.notification.notifyGetList(requestParams);
@@ -51,7 +53,9 @@ export async function updateNotificationStatus(params: UpdateNotificationsParams
  */
 export async function readAllNotificationStatus(...statusTypes: StatusType[]) {
   const client = getClient();
-  await client.rest.notification.notifyReadList({
+
+  // The generated SDK method sends `to-status` and `status-types`` in the request body, but Gitea expects it as a query parameter.
+  await client.request("PUT /notifications{?to-status,status-types}", {
     "to-status": "read",
     ...(statusTypes.length > 0 ? { "status-types": statusTypes } : {}),
   });
