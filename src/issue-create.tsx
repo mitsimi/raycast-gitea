@@ -1,5 +1,5 @@
 import { Action, ActionPanel, Form, Icon, showToast, Toast } from "@raycast/api";
-import { useCachedPromise } from "@raycast/utils";
+import { showFailureToast, useCachedPromise } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
 import { createIssue, listRepoAssignees, listRepoLabels, listRepoMilestones } from "./api/issues";
 import { useUserRepositories } from "./hooks/useUserRepositories";
@@ -222,8 +222,10 @@ async function handleSubmit(values: Form.Values, setIsSubmitting: (v: boolean) =
   }
 
   const params = buildCreateIssueParams(formValues);
-  if (!params) {
-    await showToast({ style: Toast.Style.Failure, title: "Invalid repository selection" });
+  if (!params || "error" in params) {
+    await showFailureToast(params.error, {
+      title: "Invalid form data",
+    });
     return;
   }
 
@@ -233,7 +235,7 @@ async function handleSubmit(values: Form.Values, setIsSubmitting: (v: boolean) =
 
     await showToast({ style: Toast.Style.Success, title: "Issue created" });
   } catch (error) {
-    await showToast({ style: Toast.Style.Failure, title: "Failed to create issue", message: String(error) });
+    await showFailureToast(error, { title: "Failed to create issue" });
   } finally {
     setIsSubmitting(false);
   }

@@ -47,9 +47,31 @@ describe("create issue helpers", () => {
     });
   });
 
-  it("returns null for invalid required fields", () => {
-    expect(buildCreateIssueParams({ repository: "", title: "Fix" })).toBeNull();
-    expect(buildCreateIssueParams({ repository: "owner/repo", title: "   " })).toBeNull();
-    expect(buildCreateIssueParams({ repository: "owner", title: "Fix" })).toBeNull();
+  it("returns error for invalid required fields", () => {
+    expect(buildCreateIssueParams({ repository: "", title: "Fix" })).toEqual({
+      error: "Repository is required",
+    });
+    expect(buildCreateIssueParams({ repository: "owner/repo", title: "   " })).toEqual({
+      error: "Title is required",
+    });
+    expect(buildCreateIssueParams({ repository: "owner", title: "Fix" })).toEqual({
+      error: "Invalid repository format",
+    });
+  });
+
+  it("returns error for title exceeding 255 characters", () => {
+    const longTitle = "a".repeat(256);
+    expect(buildCreateIssueParams({ repository: "owner/repo", title: longTitle })).toEqual({
+      error: "Title must be 255 characters or less",
+    });
+  });
+
+  it("accepts title with exactly 255 characters", () => {
+    const result = buildCreateIssueParams({
+      repository: "owner/repo",
+      title: "a".repeat(255),
+    });
+    expect(result).not.toHaveProperty("error");
+    expect(result).toHaveProperty("owner", "owner");
   });
 });
