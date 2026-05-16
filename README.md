@@ -133,7 +133,7 @@ Shows your unread notification count in the menu bar with quick access to recent
 **Features:**
 
 - Displays unread count badge
-- Shows up to 20 most recent notifications
+- Shows most recent notifications
 - Click to open notification directly
 - Mark all as read from menu bar
 - Open full Notifications command

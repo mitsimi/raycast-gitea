@@ -6,10 +6,9 @@ import { getNotificationIcon } from "./utils/icons";
 import { CacheKey } from "./constants";
 
 export default function MenuBarCommand() {
-  const LIMIT = 20;
   const [notifications, setNotifications] = useCachedState<NotificationThread[]>(CacheKey.NotificationsMenuBar, []);
   const { isLoading, revalidate } = useCachedPromise(
-    () => listNotifications({ limit: LIMIT, statusTypes: [StatusType.Unread] }),
+    () => listNotifications({ statusTypes: [StatusType.Unread] }),
     [],
     {
       onData: (data) => {
@@ -50,7 +49,7 @@ export default function MenuBarCommand() {
       ) : (
         <>
           <MenuBarExtra.Section>
-            {notifications?.slice(0, LIMIT).map((item) => (
+            {notifications?.map((item) => (
               <MenuBarExtra.Item
                 key={item.id}
                 title={item.subject?.title || "[No Title]"}
