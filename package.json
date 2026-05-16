@@ -31,6 +31,29 @@
       "required": true
     },
     {
+      "name": "dateFormat",
+      "title": "Date Format",
+      "description": "The date format to use in the UI.",
+      "type": "dropdown",
+      "label": "",
+      "default": "YYYY-MM-DD",
+      "required": false,
+      "data": [
+        {
+          "title": "YYYY-MM-DD",
+          "value": "YYYY-MM-DD"
+        },
+        {
+          "title": "MM/DD/YYYY",
+          "value": "MM/DD/YYYY"
+        },
+        {
+          "title": "DD.MM.YYYY",
+          "value": "DD.MM.YYYY"
+        }
+      ]
+    },
+    {
       "name": "editorVSCode",
       "title": "Clone Editors",
       "description": "Show Visual Studio Code in clone actions",
