@@ -1,6 +1,7 @@
 import type { Repository } from "../types/api";
 import { getClient } from "./client";
 import { SortOrder } from "../types/sorts/common";
+import { DEFAULT_PAGE_SIZE } from "../constants";
 
 /**
  * Parameters for repoSearch endpoint - supports server-side sorting.
@@ -14,7 +15,7 @@ export type ListRepositoriesParams = { limit?: number; page?: number; sort?: str
  */
 export async function listRepositories(params: ListRepositoriesParams = {}): Promise<Repository[]> {
   const client = getClient();
-  const { limit = 20, page, sort, order } = params;
+  const { limit = DEFAULT_PAGE_SIZE, page, sort, order } = params;
   const { data, error } = await client.GET("/repos/search", {
     params: { query: { limit, ...(page ? { page } : {}), ...(sort ? { sort } : {}), ...(order ? { order } : {}) } },
   });

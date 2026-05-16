@@ -1,4 +1,5 @@
-export const DEFAULT_PAGE_SIZE = 30;
+export const DEFAULT_PAGE_SIZE = 30 as const;
+export const API_BASE = "/api/v1" as const;
 
 export const CacheKey = {
   CurrentUser: "current-user",
