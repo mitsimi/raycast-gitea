@@ -93,14 +93,16 @@ export type CreateIssueParams = {
   ref?: string;
 };
 
+// NOTE: `issueCreateIssue`’s generated types expect `{ body: CreateIssueOption }`,
+// but Gitea expects a flat JSON payload. We deliberately spread the issue fields
+// at the top level and cast the params to avoid the SDK wrapping `{ body: {...} }`,
+// which breaks with “CreateIssueOption.body must be string”.
 export async function createIssue(params: CreateIssueParams): Promise<Issue> {
   const client = getClient();
-  const { owner, repo, ...body } = params;
-  const { data } = await client.rest.issue.issueCreateIssue({
-    owner,
-    repo,
-    body,
-  });
+  const { owner, repo, ...issue } = params;
+  const { data } = await client.rest.issue.issueCreateIssue({ owner, repo, ...issue } as unknown as Parameters<
+    typeof client.rest.issue.issueCreateIssue
+  >[0]);
   return data;
 }
 

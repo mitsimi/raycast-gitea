@@ -223,7 +223,7 @@ async function handleSubmit(values: Form.Values, setIsSubmitting: (v: boolean) =
 
   const params = buildCreateIssueParams(formValues);
   if (!params || "error" in params) {
-    await showFailureToast(params.error, {
+    await showFailureToast(params?.error, {
       title: "Invalid form data",
     });
     return;

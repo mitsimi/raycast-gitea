@@ -38,29 +38,14 @@ export function groupLabels(labels: Label[]): GroupedLabels {
   );
 }
 
-/**
- * Validates and builds create issue parameters.
- * Returns validation error message if invalid, otherwise returns the API params.
- */
-export function buildCreateIssueParams(values: CreateIssueFormValues): CreateIssueParams | { error: string } {
-  // Validate repository
-  if (!values.repository) {
-    return { error: "Repository is required" };
+export function buildCreateIssueParams(values: CreateIssueFormValues): CreateIssueParams | null {
+  if (!values.repository || !values.title?.trim()) {
+    return null;
   }
 
   const { owner, repo } = parseRepo(values.repository);
   if (!owner || !repo) {
-    return { error: "Invalid repository format" };
-  }
-
-  // Validate title
-  const title = values.title?.trim();
-  if (!title) {
-    return { error: "Title is required" };
-  }
-
-  if (title.length > 255) {
-    return { error: "Title must be 255 characters or less" };
+    return null;
   }
 
   const regularLabels = (values.labels ?? []).map((value) => parseInt(value, 10)).filter(Number.isFinite);

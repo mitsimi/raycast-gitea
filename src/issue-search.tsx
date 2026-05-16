@@ -2,12 +2,17 @@ import { Action, ActionPanel, Icon, Keyboard, List } from "@raycast/api";
 import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
 import { searchIssues } from "./api/issues";
-import type { Issue, Repository } from "./types/api";
+import { type Issue, type Repository } from "./types/api";
 import CreateIssue from "./issue-create";
 import { getIssueIcon } from "./utils/icons";
 import { parseSearchQuery } from "./utils/search-query";
 
-type IssueSearchState = "open" | "closed" | "all";
+const IssueSearchState = {
+  Open: "open",
+  Closed: "closed",
+  All: "all",
+} as const;
+type IssueSearchState = (typeof IssueSearchState)[keyof typeof IssueSearchState];
 
 type IssueSearchOptions = {
   state: IssueSearchState;
@@ -17,7 +22,7 @@ type IssueSearchOptions = {
 };
 
 export default function Command() {
-  const [state, setState] = useCachedState<IssueSearchState>("issues-search-state", "open");
+  const [state, setState] = useCachedState<IssueSearchState>("issues-search-state", IssueSearchState.Open);
   const [searchText, setSearchText] = useState<string>("");
 
   const options = useMemo<IssueSearchOptions>(() => {
