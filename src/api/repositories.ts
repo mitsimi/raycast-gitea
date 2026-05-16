@@ -1,9 +1,9 @@
 import type { Repository } from "../types/api";
 import type { PaginatedResult } from "./common";
 import { getClient } from "./client";
+import { SortOrder } from "../types/sorts/common";
 
-export type ListRepositoriesParams = { limit?: number; page?: number; sort?: string; order?: "asc" | "desc" };
-export type ListUserRepositoriesParams = { limit?: number; page?: number };
+export type ListRepositoriesParams = { limit?: number; page?: number; sort?: string; order?: SortOrder };
 export async function listRepositories(params: ListRepositoriesParams = {}): Promise<Repository[]> {
   const client = getClient();
   const { limit = 20, page, sort, order } = params;
@@ -22,14 +22,15 @@ export async function getRepositories(params: ListRepositoriesParams = {}): Prom
   return { items, hasMore: typeof params.limit === "number" && items.length === params.limit };
 }
 
+export type ListUserRepositoriesParams = { limit?: number; page?: number };
 export async function listUserRepositories(params: ListUserRepositoriesParams = {}): Promise<Repository[]> {
   const client = getClient();
-  const { limit, page } = params;
+
   const { data } = await client.rest.user.userCurrentListRepos({
-    ...(typeof limit === "number" ? { limit } : {}),
-    ...(typeof page === "number" ? { page } : {}),
+    ...(typeof params.page === "number" ? { page: params.page } : {}),
+    ...(typeof params.limit === "number" ? { limit: params.limit } : {}),
   });
-  return data as Repository[];
+  return data ?? [];
 }
 
 export async function getUserRepositories(
