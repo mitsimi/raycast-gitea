@@ -24,8 +24,9 @@ export type IssueListParams = {
 
 export async function searchIssues(params: IssueListParams = {}): Promise<Issue[]> {
   const client = getClient();
-  const { data } = await client.rest.issue.issueSearchIssues(params);
-  return data;
+  const { data, error } = await client.GET("/repos/issues/search", { params: { query: params } });
+  if (error) throw new Error("Failed to fetch issues");
+  return data ?? [];
 }
 
 export type ListRepoIssuesParams = {
@@ -43,8 +44,12 @@ export type ListRepoIssuesParams = {
 
 export async function listRepoIssues(params: ListRepoIssuesParams): Promise<Issue[]> {
   const client = getClient();
-  const { data } = await client.rest.issue.issueListIssues(params);
-  return data;
+  const { owner, repo, ...query } = params;
+  const { data, error } = await client.GET("/repos/{owner}/{repo}/issues", {
+    params: { path: { owner, repo }, query },
+  });
+  if (error) throw new Error("Failed to fetch repository issues");
+  return data ?? [];
 }
 
 export type ListRepoLabelsParams = {
@@ -54,8 +59,11 @@ export type ListRepoLabelsParams = {
 
 export async function listRepoLabels(params: ListRepoLabelsParams): Promise<Label[]> {
   const client = getClient();
-  const { data } = await client.rest.issue.issueListLabels(params);
-  return data;
+  const { data, error } = await client.GET("/repos/{owner}/{repo}/labels", {
+    params: { path: { owner: params.owner, repo: params.repo } },
+  });
+  if (error) throw new Error("Failed to fetch labels");
+  return data ?? [];
 }
 
 export type ListRepoMilestonesParams = {
@@ -66,8 +74,11 @@ export type ListRepoMilestonesParams = {
 
 export async function listRepoMilestones(params: ListRepoMilestonesParams): Promise<Milestone[]> {
   const client = getClient();
-  const { data } = await client.rest.issue.issueGetMilestonesList({ ...params, state: params.state ?? "open" });
-  return data;
+  const { data, error } = await client.GET("/repos/{owner}/{repo}/milestones", {
+    params: { path: { owner: params.owner, repo: params.repo }, query: { state: params.state ?? "open" } },
+  });
+  if (error) throw new Error("Failed to fetch milestones");
+  return data ?? [];
 }
 
 export type ListRepoAssigneesParams = {
@@ -77,8 +88,11 @@ export type ListRepoAssigneesParams = {
 
 export async function listRepoAssignees(params: ListRepoAssigneesParams): Promise<User[]> {
   const client = getClient();
-  const { data } = await client.rest.repository.repoGetAssignees(params);
-  return data;
+  const { data, error } = await client.GET("/repos/{owner}/{repo}/assignees", {
+    params: { path: { owner: params.owner, repo: params.repo } },
+  });
+  if (error) throw new Error("Failed to fetch assignees");
+  return data ?? [];
 }
 
 export type CreateIssueParams = {
@@ -99,10 +113,13 @@ export type CreateIssueParams = {
 // which breaks with “CreateIssueOption.body must be string”.
 export async function createIssue(params: CreateIssueParams): Promise<Issue> {
   const client = getClient();
-  const { owner, repo, ...issue } = params;
-  const { data } = await client.rest.issue.issueCreateIssue({ owner, repo, ...issue } as unknown as Parameters<
-    typeof client.rest.issue.issueCreateIssue
-  >[0]);
+  const { owner, repo, ...body } = params;
+  const { data, error } = await client.POST("/repos/{owner}/{repo}/issues", {
+    params: { path: { owner, repo } },
+    body,
+  });
+  if (error) throw new Error("Failed to create issue");
+  if (!data) throw new Error("No issue returned from server");
   return data;
 }
 

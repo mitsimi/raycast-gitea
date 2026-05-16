@@ -10,17 +10,12 @@ export type ListNotificationParams = {
 };
 export async function listNotifications(params: ListNotificationParams = {}): Promise<NotificationThread[]> {
   const client = getClient();
-  const { limit, all = false, page } = params;
-
-  const requestParams = {
-    all,
-    ...(typeof limit === "number" ? { limit } : {}),
-    ...(typeof page === "number" ? { page } : {}),
-    ...(params.statusTypes ? { "status-types": params.statusTypes } : {}),
-  };
-
-  const { data } = await client.rest.notification.notifyGetList(requestParams);
-  return data;
+  const { limit = 20, all = false, page } = params;
+  const { data, error } = await client.GET("/notifications", {
+    params: { query: { limit, all, ...(page ? { page } : {}) } },
+  });
+  if (error) throw new Error("Failed to fetch notifications");
+  return data ?? [];
 }
 
 export async function getNotifications(
@@ -39,12 +34,11 @@ export type StatusType = (typeof StatusType)[keyof typeof StatusType];
 export type UpdateNotificationsParams = { id: string; toStatus: StatusType };
 export async function updateNotificationStatus(params: UpdateNotificationsParams): Promise<void> {
   const client = getClient();
-
-  // The generated SDK method sends `to-status` in the request body, but Gitea expects it as a query parameter.
-  await client.request("PATCH /notifications/threads/{id}{?to-status}", {
-    id: params.id,
-    "to-status": params.toStatus,
+  const { data, error } = await client.PATCH("/notifications/threads/{id}", {
+    params: { path: { id: params.id }, query: { "to-status": params.toStatus } },
   });
+  if (error) throw new Error("Failed to update notification status");
+  return data;
 }
 
 /**
@@ -53,10 +47,14 @@ export async function updateNotificationStatus(params: UpdateNotificationsParams
  */
 export async function readAllNotificationStatus(...statusTypes: StatusType[]) {
   const client = getClient();
-
-  // The generated SDK method sends `to-status` and `status-types`` in the request body, but Gitea expects it as a query parameter.
-  await client.request("PUT /notifications{?to-status,status-types}", {
-    "to-status": "read",
-    ...(statusTypes.length > 0 ? { "status-types": statusTypes } : {}),
+  const { data, error } = await client.PUT("/notifications", {
+    params: {
+      query: {
+        "to-status": "read",
+        ...(statusTypes.length > 0 ? { "status-types": statusTypes } : {}),
+      },
+    },
   });
+  if (error) throw new Error("Failed to update notifications");
+  return data ?? [];
 }

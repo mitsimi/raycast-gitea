@@ -1,19 +1,25 @@
 import { getPreferenceValues } from "@raycast/api";
-import { Gitea } from "@go-gitea/sdk.js";
+import createClient from "openapi-fetch";
+import type { paths } from "../types/gitea";
 
-let cachedClient: Gitea | null = null;
+type Prefs = { serverUrl: string; accessToken: string };
+const API_BASE = "/api/v1";
+
+let cachedClient: ReturnType<typeof createClient<paths>> | null = null;
 let cachedKey: string | null = null;
 
 export function getClient() {
-  const { serverUrl, accessToken } = getPreferenceValues<Preferences>();
-  const baseUrl = serverUrl.replace(/\/+$/, "");
+  const { serverUrl, accessToken } = getPreferenceValues<Prefs>();
+  const baseUrl = serverUrl.replace(/\/+$/, "") + API_BASE;
   const nextKey = `${baseUrl}::${accessToken}`;
 
   if (cachedClient && cachedKey === nextKey) return cachedClient;
 
-  cachedClient = new Gitea({
+  cachedClient = createClient<paths>({
     baseUrl,
-    auth: accessToken,
+    headers: {
+      Authorization: `token ${accessToken}`,
+    },
   });
   cachedKey = nextKey;
 

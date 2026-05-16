@@ -6,8 +6,11 @@ export type ListOrganizationsParams = { page?: number; limit?: number };
 
 export async function listOrganizations(params?: ListOrganizationsParams): Promise<Organization[]> {
   const client = getClient();
-  const { data } = await client.rest.organization.orgGetAll(params);
-  return data;
+  const { data, error } = await client.GET("/orgs", {
+    params: { query: params },
+  });
+  if (error) throw new Error("Failed to fetch organizations");
+  return data ?? [];
 }
 
 export async function getOrganizations(params?: ListOrganizationsParams): Promise<PaginatedResult<Organization>> {

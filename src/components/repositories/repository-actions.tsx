@@ -1,6 +1,7 @@
 import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
 import type { Repository } from "../../types/api";
 import CreateIssue from "../../issue-create";
+
 import { useInstalledEditors, getEditorUrlScheme } from "../../hooks/useInstalledEditors";
 
 function CloneActions({ cloneUrl }: { cloneUrl: string }) {
@@ -107,7 +108,7 @@ export default function RepositoryActions(props: {
 
       {cloneUrl ? <CloneActions cloneUrl={cloneUrl} /> : null}
 
-      {props.children ? <ActionPanel.Section>{props.children}</ActionPanel.Section> : null}
+      {props.children && <ActionPanel.Section>{props.children}</ActionPanel.Section>}
     </ActionPanel>
   );
 }
