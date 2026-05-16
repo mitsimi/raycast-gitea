@@ -20,7 +20,7 @@ export default function NotificationActions(props: {
   };
 
   const toggleReadStatus = async () => {
-    const toStatus: StatusType = props.item.unread || isPinned ? StatusType.Read : StatusType.Unread;
+    const toStatus: StatusType = props.item.unread ? StatusType.Read : StatusType.Unread;
     const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
 
     try {
@@ -82,8 +82,8 @@ export default function NotificationActions(props: {
       <ActionPanel.Section title="Actions">
         <Action title="Mark All as Read" icon={Icon.Eye} onAction={markAllAsRead} />
         <Action
-          title={props.item.unread || isPinned ? "Mark as Read" : "Mark as Unread"}
-          icon={props.item.unread || isPinned ? Icon.Eye : Icon.EyeDisabled}
+          title={props.item.unread ? "Mark as Read" : "Mark as Unread"}
+          icon={props.item.unread ? Icon.Eye : Icon.EyeDisabled}
           shortcut={{
             macOS: { modifiers: ["cmd", "shift"], key: "r" },
             Windows: { modifiers: ["ctrl", "shift"], key: "r" },
