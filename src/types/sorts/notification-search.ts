@@ -1,4 +1,4 @@
-import { CommonOptionType } from "./common";
+import type { CommonOptionType } from "./common";
 
 export const NotificationStatusFilter = {
   Unread: "unread",
@@ -6,7 +6,7 @@ export const NotificationStatusFilter = {
 } as const;
 export type NotificationStatusFilter = (typeof NotificationStatusFilter)[keyof typeof NotificationStatusFilter];
 
-export const NotificationSortTypes: CommonOptionType[] = [
+export const NotificationSortTypes = [
   { id: "1", name: "Unread", value: NotificationStatusFilter.Unread },
   { id: "2", name: "All", value: NotificationStatusFilter.All },
-] as const;
+] as const satisfies readonly CommonOptionType<NotificationStatusFilter>[];

@@ -16,10 +16,7 @@ export default function Command() {
       isLoading={isLoading}
       isShowingDetail={showDetails}
       searchBarAccessory={
-        <RepositoryDropdown
-          repoFilter={RepositorySortTypes}
-          onFilterChange={(newValue: string) => setSort(newValue as RepositorySortOption)}
-        />
+        <RepositoryDropdown repoFilter={RepositorySortTypes} onFilterChange={(newValue) => setSort(newValue)} />
       }
       pagination={pagination}
       throttle

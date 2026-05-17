@@ -3,8 +3,8 @@ import { useCachedState } from "@raycast/utils";
 import { useIssues } from "./hooks/useIssues";
 import { useMemo, useState } from "react";
 import CreateIssue from "./issue-create";
+import { getIssueItemKey, IssueItem, IssueKind } from "./components/issues";
 import { getIssueIcon } from "./utils/icons";
-import type { Repository } from "./types/api";
 
 enum IssueCategory {
   All = "all",
@@ -82,51 +82,11 @@ export default function Command() {
         />
       ) : (
         items.map((issue) => (
-          <List.Item
-            key={issue.id || issue.number || issue.title || "issue"}
-            title={issue.title || "[No Title]"}
-            subtitle={issue.repository?.full_name || "[No Repository]"}
+          <IssueItem
+            key={getIssueItemKey(issue, IssueKind.Issue)}
+            item={issue}
+            kind={IssueKind.Issue}
             icon={getIssueIcon(issue.state)}
-            accessories={[
-              {
-                text: `#${issue.number ?? ""}`,
-              },
-            ]}
-            actions={
-              <ActionPanel>
-                <ActionPanel.Section>
-                  {issue.html_url && (
-                    <Action.OpenInBrowser
-                      title="Open Issue"
-                      url={issue.html_url}
-                      shortcut={Keyboard.Shortcut.Common.Open}
-                    />
-                  )}
-                </ActionPanel.Section>
-                <ActionPanel.Section title="Copy">
-                  {issue.html_url && (
-                    <Action.CopyToClipboard
-                      title="Copy URL"
-                      content={issue.html_url}
-                      shortcut={Keyboard.Shortcut.Common.Copy}
-                    />
-                  )}
-                  {issue.number != null && (
-                    <Action.CopyToClipboard title="Copy Issue Number" content={`#${issue.number}`} />
-                  )}
-                </ActionPanel.Section>
-                <ActionPanel.Section>
-                  {issue.repository?.full_name && (
-                    <Action.Push
-                      title="Create Issue"
-                      icon={Icon.Plus}
-                      shortcut={Keyboard.Shortcut.Common.New}
-                      target={<CreateIssue initialRepo={issue.repository as Repository} />}
-                    />
-                  )}
-                </ActionPanel.Section>
-              </ActionPanel>
-            }
           />
         ))
       )}

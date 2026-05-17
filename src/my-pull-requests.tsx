@@ -1,11 +1,10 @@
-import { Action, ActionPanel, Icon, Keyboard, List, getPreferenceValues } from "@raycast/api";
+import { Icon, List, getPreferenceValues } from "@raycast/api";
 import { useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
+import { getIssueItemKey, IssueItem, IssueKind } from "./components/issues";
 import { usePullRequests } from "./hooks/usePullRequests";
 import { useCurrentUser } from "./hooks/useCurrentUser";
-import CreateIssue from "./issue-create";
 import { getPullRequestIcon } from "./utils/icons";
-import type { Repository } from "./types/api";
 
 const PullRequestCategory = {
   All: "all",
@@ -100,47 +99,11 @@ export default function Command() {
         <List.EmptyView icon={Icon.Code} title="No pull requests found" />
       ) : (
         sortedItems.map((pr) => (
-          <List.Item
-            key={pr.id || pr.number || pr.title || "pull-request"}
-            title={pr.title || "[No Title]"}
-            subtitle={pr.repository?.full_name || "[No Repository]"}
+          <IssueItem
+            key={getIssueItemKey(pr, IssueKind.PullRequest)}
+            item={pr}
+            kind={IssueKind.PullRequest}
             icon={getPullRequestIcon(pr.state, pr.pull_request)}
-            accessories={[{ text: `#${pr.number ?? ""}` }]}
-            actions={
-              <ActionPanel>
-                <ActionPanel.Section>
-                  {pr.html_url && (
-                    <Action.OpenInBrowser
-                      title="Open Pull Request"
-                      url={pr.html_url}
-                      shortcut={Keyboard.Shortcut.Common.Open}
-                    />
-                  )}
-                </ActionPanel.Section>
-                <ActionPanel.Section title="Copy">
-                  {pr.html_url && (
-                    <Action.CopyToClipboard
-                      title="Copy URL"
-                      content={pr.html_url}
-                      shortcut={Keyboard.Shortcut.Common.Copy}
-                    />
-                  )}
-                  {pr.number != null && (
-                    <Action.CopyToClipboard title="Copy Pull Request Number" content={`#${pr.number}`} />
-                  )}
-                </ActionPanel.Section>
-                <ActionPanel.Section>
-                  {pr.repository?.full_name && (
-                    <Action.Push
-                      title="Create Issue"
-                      icon={Icon.Plus}
-                      shortcut={Keyboard.Shortcut.Common.New}
-                      target={<CreateIssue initialRepo={pr.repository as Repository} />}
-                    />
-                  )}
-                </ActionPanel.Section>
-              </ActionPanel>
-            }
           />
         ))
       )}

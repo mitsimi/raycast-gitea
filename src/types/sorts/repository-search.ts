@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import type { Repository } from "../api";
-import { CommonOptionType, SortOrder } from "./common";
+import type { CommonOptionType } from "./common";
+import { SortOrder } from "./common";
 
 export const RepositorySortOption = {
   MostStars: "most stars",
@@ -12,14 +13,14 @@ export const RepositorySortOption = {
 } as const;
 export type RepositorySortOption = (typeof RepositorySortOption)[keyof typeof RepositorySortOption];
 
-export const RepositorySortTypes: CommonOptionType[] = [
+export const RepositorySortTypes = [
   { id: "1", name: "Most stars", value: RepositorySortOption.MostStars },
   { id: "2", name: "Fewest stars", value: RepositorySortOption.FewestStars },
   { id: "3", name: "Newest", value: RepositorySortOption.Newest },
   { id: "4", name: "Oldest", value: RepositorySortOption.Oldest },
   { id: "5", name: "Recently updated", value: RepositorySortOption.RecentlyUpdated },
   { id: "6", name: "Least recently updated", value: RepositorySortOption.LeastRecentlyUpdated },
-] as const;
+] as const satisfies readonly CommonOptionType<RepositorySortOption>[];
 
 export function SortRepositories(list: Repository[], sortType: RepositorySortOption | string): Repository[] {
   switch (sortType) {

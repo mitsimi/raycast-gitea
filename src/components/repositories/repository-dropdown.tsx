@@ -1,17 +1,21 @@
 import { List } from "@raycast/api";
-import { CommonOptionType } from "../../types/sorts/common";
+import type { CommonOptionType } from "../../types/sorts/common";
 
-export default function RepositoryDropdown(props: {
-  repoFilter: CommonOptionType[];
-  onFilterChange: (newValue: string) => void;
-}) {
-  const { repoFilter, onFilterChange } = props;
+type RepositoryDropdownProps<TValue extends string> = {
+  repoFilter: readonly CommonOptionType<TValue>[];
+  onFilterChange: (newValue: TValue) => void;
+};
+
+export default function RepositoryDropdown<TValue extends string>({
+  repoFilter,
+  onFilterChange,
+}: RepositoryDropdownProps<TValue>) {
   return (
     <List.Dropdown
       tooltip="Filter repositories"
       storeValue={true}
       onChange={(newValue) => {
-        onFilterChange(newValue);
+        onFilterChange(newValue as TValue);
       }}
     >
       <List.Dropdown.Section>
