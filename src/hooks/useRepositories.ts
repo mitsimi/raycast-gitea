@@ -1,4 +1,4 @@
-import { getRepositories } from "../api/repositories";
+import { getRepositories } from "../services/repositories";
 import { CacheKey, DEFAULT_PAGE_SIZE } from "../constants";
 import { RepositorySortOption, mapRepositorySortToGitea } from "../types/sorts/repository-search";
 import { usePaginatedCachedPromise } from "./usePaginatedCachedPromise";

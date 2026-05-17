@@ -1,4 +1,3 @@
-import type { PaginatedResult } from "./common";
 import { getClient } from "./client";
 import type { NotificationThread } from "../types/api";
 
@@ -10,19 +9,14 @@ export type ListNotificationParams = {
 };
 export async function listNotifications(params: ListNotificationParams = {}): Promise<NotificationThread[]> {
   const client = getClient();
-  const { limit = 20, all = false, page } = params;
+  const { limit = 20, all = false, page, statusTypes } = params;
   const { data, error } = await client.GET("/notifications", {
-    params: { query: { limit, all, ...(page ? { page } : {}) } },
+    params: {
+      query: { limit, all, ...(page ? { page } : {}), ...(statusTypes ? { "status-types": statusTypes } : {}) },
+    },
   });
   if (error) throw new Error("Failed to fetch notifications");
   return data ?? [];
-}
-
-export async function getNotifications(
-  params: ListNotificationParams = {},
-): Promise<PaginatedResult<NotificationThread>> {
-  const items = await listNotifications(params);
-  return { items, hasMore: typeof params.limit === "number" && items.length === params.limit };
 }
 
 export const StatusType = {

@@ -1,6 +1,5 @@
 import { getClient } from "./client";
 import type { Issue, Label, Milestone, User } from "../types/api";
-import { PaginatedResult } from "./common";
 
 export type IssueListParams = {
   state?: "open" | "closed" | "all";
@@ -107,10 +106,6 @@ export type CreateIssueParams = {
   ref?: string;
 };
 
-// NOTE: `issueCreateIssue`’s generated types expect `{ body: CreateIssueOption }`,
-// but Gitea expects a flat JSON payload. We deliberately spread the issue fields
-// at the top level and cast the params to avoid the SDK wrapping `{ body: {...} }`,
-// which breaks with “CreateIssueOption.body must be string”.
 export async function createIssue(params: CreateIssueParams): Promise<Issue> {
   const client = getClient();
   const { owner, repo, ...body } = params;
@@ -121,124 +116,4 @@ export async function createIssue(params: CreateIssueParams): Promise<Issue> {
   if (error) throw new Error("Failed to create issue");
   if (!data) throw new Error("No issue returned from server");
   return data;
-}
-
-export type MyIssuesParams = {
-  includeCreated: boolean;
-  includeAssigned: boolean;
-  includeMentioned: boolean;
-  includeRecentlyClosed: boolean;
-  query?: string;
-  page?: number;
-  limit?: number;
-};
-
-export type MyPullRequestsParams = {
-  includeCreated: boolean;
-  includeAssigned: boolean;
-  includeMentioned: boolean;
-  includeReviewRequested: boolean;
-  includeReviewed: boolean;
-  includeOwnedRepositories: boolean;
-  includeRecentlyClosed: boolean;
-  owner?: string;
-  query?: string;
-  page?: number;
-  limit?: number;
-};
-
-type IssueSearchRequest = {
-  enabled: boolean;
-  params: IssueListParams;
-};
-
-export async function getMyIssues(params: MyIssuesParams): Promise<PaginatedResult<Issue>> {
-  const baseQuery = {
-    type: "issues",
-    q: params.query,
-    page: params.page,
-    limit: params.limit,
-  } satisfies IssueListParams;
-
-  if (!params.includeCreated && !params.includeAssigned && !params.includeMentioned) {
-    return { items: [], hasMore: false };
-  }
-
-  const state = params.includeRecentlyClosed ? "all" : "open";
-  return searchEnabledRequests(
-    [
-      { enabled: params.includeCreated, params: { ...baseQuery, state, created: true } },
-      { enabled: params.includeAssigned, params: { ...baseQuery, state, assigned: true } },
-      { enabled: params.includeMentioned, params: { ...baseQuery, state, mentioned: true } },
-    ],
-    params.limit,
-  );
-}
-
-export async function getMyPullRequests(params: MyPullRequestsParams): Promise<PaginatedResult<Issue>> {
-  const baseQuery = {
-    type: "pulls",
-    q: params.query,
-    page: params.page,
-    limit: params.limit,
-  } satisfies IssueListParams;
-
-  if (
-    !params.includeCreated &&
-    !params.includeAssigned &&
-    !params.includeMentioned &&
-    !params.includeReviewRequested &&
-    !params.includeReviewed &&
-    !params.includeOwnedRepositories
-  ) {
-    return { items: [], hasMore: false };
-  }
-
-  const state = params.includeRecentlyClosed ? "all" : "open";
-  return searchEnabledRequests(
-    [
-      { enabled: params.includeCreated, params: { ...baseQuery, state, created: true } },
-      { enabled: params.includeAssigned, params: { ...baseQuery, state, assigned: true } },
-      { enabled: params.includeMentioned, params: { ...baseQuery, state, mentioned: true } },
-      { enabled: params.includeReviewRequested, params: { ...baseQuery, state, review_requested: true } },
-      { enabled: params.includeReviewed, params: { ...baseQuery, state, reviewed: true } },
-      {
-        enabled: params.includeOwnedRepositories && Boolean(params.owner),
-        params: { ...baseQuery, state, owner: params.owner },
-      },
-    ],
-    params.limit,
-  );
-}
-
-// ================================================================
-// Utility functions
-// ================================================================
-
-function dedupeIssuesById(items: Issue[]): Issue[] {
-  const deduped = new Map<number, Issue>();
-  const withoutId: Issue[] = [];
-
-  for (const issue of items) {
-    if (issue.id == null) {
-      withoutId.push(issue);
-      continue;
-    }
-    deduped.set(issue.id, issue);
-  }
-
-  return [...deduped.values(), ...withoutId];
-}
-
-async function searchEnabledRequests(requests: IssueSearchRequest[], limit?: number): Promise<PaginatedResult<Issue>> {
-  const enabledRequests = requests.filter((request) => request.enabled);
-  if (enabledRequests.length === 0) {
-    return { items: [], hasMore: false };
-  }
-
-  const pages = await Promise.all(enabledRequests.map((request) => searchIssues(request.params)));
-  return {
-    items: dedupeIssuesById(pages.flat()),
-    hasMore: limit != null && pages.some((page) => page.length === limit),
-  };
 }

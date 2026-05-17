@@ -1,4 +1,4 @@
-import { getMyIssues } from "../api/issues";
+import { getMyIssues } from "../services/issues";
 
 import { CacheKey, DEFAULT_PAGE_SIZE } from "../constants";
 import { usePaginatedCachedPromise } from "./usePaginatedCachedPromise";

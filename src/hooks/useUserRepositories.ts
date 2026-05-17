@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { getUserRepositories } from "../api/repositories";
+import { getUserRepositories } from "../services/repositories";
 import { CacheKey, DEFAULT_PAGE_SIZE } from "../constants";
 import type { Repository } from "../types/api";
 import { RepositorySortOption, SortRepositories } from "../types/sorts/repository-search";

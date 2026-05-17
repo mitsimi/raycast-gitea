@@ -1,4 +1,4 @@
-import { getOrganizations } from "../api/organizations";
+import { getOrganizations } from "../services/organizations";
 import { CacheKey, DEFAULT_PAGE_SIZE } from "../constants";
 import { usePaginatedCachedPromise } from "./usePaginatedCachedPromise";
 

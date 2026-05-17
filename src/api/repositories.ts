@@ -1,6 +1,6 @@
 import type { Repository } from "../types/api";
 import { getClient } from "./client";
-import { SortOrder } from "../types/sorts/common";
+import type { SortOrder } from "../types/sorts/common";
 import { DEFAULT_PAGE_SIZE } from "../constants";
 
 /**
@@ -24,9 +24,14 @@ export async function listRepositories(params: ListRepositoriesParams = {}): Pro
   return data?.data ?? [];
 }
 
-export async function listUserRepositories(): Promise<Repository[]> {
+export type ListUserRepositoriesParams = { limit?: number; page?: number };
+
+export async function listUserRepositories(params: ListUserRepositoriesParams = {}): Promise<Repository[]> {
   const client = getClient();
-  const { data, error } = await client.GET("/user/repos");
+  const { limit = DEFAULT_PAGE_SIZE, page } = params;
+  const { data, error } = await client.GET("/user/repos", {
+    params: { query: { limit, ...(page ? { page } : {}) } },
+  });
   if (error) throw new Error("Failed to fetch user repositories");
   return data ?? [];
 }

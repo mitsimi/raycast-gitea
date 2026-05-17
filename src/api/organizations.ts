@@ -1,5 +1,4 @@
 import type { Organization } from "../types/api";
-import type { PaginatedResult } from "./common";
 import { getClient } from "./client";
 
 export type ListOrganizationsParams = { page?: number; limit?: number };
@@ -11,9 +10,4 @@ export async function listOrganizations(params?: ListOrganizationsParams): Promi
   });
   if (error) throw new Error("Failed to fetch organizations");
   return data ?? [];
-}
-
-export async function getOrganizations(params?: ListOrganizationsParams): Promise<PaginatedResult<Organization>> {
-  const items = await listOrganizations(params);
-  return { items, hasMore: typeof params?.limit === "number" && items.length === params.limit };
 }

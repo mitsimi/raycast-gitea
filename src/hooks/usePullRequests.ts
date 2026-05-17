@@ -1,4 +1,4 @@
-import { getMyPullRequests } from "../api/issues";
+import { getMyPullRequests } from "../services/pull-requests";
 import { CacheKey, DEFAULT_PAGE_SIZE } from "../constants";
 import { usePaginatedCachedPromise } from "./usePaginatedCachedPromise";
 
