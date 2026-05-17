@@ -2,12 +2,12 @@ import { List } from "@raycast/api";
 import { useCachedState } from "@raycast/utils";
 import { RepositoryDropdown, RepositoryList } from "./components/repositories";
 import { useUserRepositories } from "./hooks/useUserRepositories";
-import { RepositorySortOption, RepositorySortTypes } from "./types/sorts/repository-search";
+import { RepositorySort, RepositorySortOptions } from "./domain/repository-sort";
 
 import { useState } from "react";
 
 export default function Command() {
-  const [sort, setSort] = useCachedState<RepositorySortOption>(RepositorySortOption.RecentlyUpdated);
+  const [sort, setSort] = useCachedState<RepositorySort>(RepositorySort.RecentlyUpdated);
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
   const { items, isLoading, pagination } = useUserRepositories(sort);
@@ -17,7 +17,7 @@ export default function Command() {
       isLoading={isLoading}
       isShowingDetail={showDetails}
       searchBarAccessory={
-        <RepositoryDropdown repoFilter={RepositorySortTypes} onFilterChange={(newValue) => setSort(newValue)} />
+        <RepositoryDropdown repoFilter={RepositorySortOptions} onFilterChange={(newValue) => setSort(newValue)} />
       }
       pagination={pagination}
       throttle

@@ -1,6 +1,6 @@
 import { List, Icon } from "@raycast/api";
 import { NotificationDropdown, NotificationList } from "./components/notifications";
-import { NotificationSortTypes, NotificationStatusFilter } from "./types/sorts/notification-search";
+import { NotificationFilterOptions, NotificationStatusFilter } from "./domain/notification-filter";
 import { useMemo, useState } from "react";
 import { useNotifications } from "./hooks/useNotifications";
 
@@ -18,7 +18,7 @@ export default function Command() {
     <List
       isLoading={isLoading}
       pagination={pagination}
-      searchBarAccessory={<NotificationDropdown options={NotificationSortTypes} onFilterChange={setFilter} />}
+      searchBarAccessory={<NotificationDropdown options={NotificationFilterOptions} onFilterChange={setFilter} />}
       throttle
     >
       {items.length <= 0 ? (

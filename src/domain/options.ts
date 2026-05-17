@@ -1,4 +1,4 @@
-export type CommonOptionType<TValue extends string = string> = {
+export type Option<TValue extends string = string> = {
   id: string;
   name: string;
   value: TValue;

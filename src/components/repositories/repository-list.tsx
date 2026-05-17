@@ -1,10 +1,10 @@
-import { Repository } from "../../types/api";
-import { RepositorySortOption } from "../../types/sorts/repository-search";
+import type { Repository } from "../../types/api";
+import type { RepositorySort } from "../../domain/repository-sort";
 import RepositoryItem from "./repository-item";
 
 export default function RepositoryList(props: {
   items: Repository[];
-  sort: RepositorySortOption | undefined;
+  sort: RepositorySort | undefined;
   showDetails: boolean;
   setShowDetails: (show: boolean) => void;
 }) {

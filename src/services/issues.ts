@@ -69,7 +69,12 @@ export async function searchIssues(params: SearchIssuesParams): Promise<Issue[]>
     limit: params.limit,
   });
 
-  return params.repo ? data.filter((issue) => issue.repository?.full_name === params.repo) : data;
+  return params.repo
+    ? data.filter(
+        (issue) =>
+          issue.repository?.full_name === getRepositoryFullName(params) || issue.repository?.name === params.repo,
+      )
+    : data;
 }
 
 export async function getCreateIssueMetadata({ owner, repo }: CreateIssueMetadataParams): Promise<CreateIssueMetadata> {
@@ -119,4 +124,8 @@ function dedupeIssuesById(items: Issue[]): Issue[] {
   }
 
   return [...deduped.values(), ...withoutId];
+}
+
+function getRepositoryFullName(params: SearchIssuesParams): string | undefined {
+  return params.owner && params.repo ? `${params.owner}/${params.repo}` : undefined;
 }

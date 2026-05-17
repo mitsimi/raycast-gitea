@@ -1,13 +1,19 @@
 import type { Repository } from "../types/api";
 import { getClient } from "./client";
-import type { SortOrder } from "../types/sorts/common";
+import type { GiteaRepositorySortKey } from "../domain/repository-sort";
+import type { SortOrder } from "../domain/options";
 import { DEFAULT_PAGE_SIZE } from "../constants";
 
 /**
  * Parameters for repoSearch endpoint - supports server-side sorting.
  * Used by Explore Repositories command.
  */
-export type ListRepositoriesParams = { limit?: number; page?: number; sort?: string; order?: SortOrder };
+export type ListRepositoriesParams = {
+  limit?: number;
+  page?: number;
+  sort?: GiteaRepositorySortKey;
+  order?: SortOrder;
+};
 
 /**
  * Search repositories across all accessible repositories.

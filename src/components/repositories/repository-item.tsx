@@ -1,14 +1,13 @@
 import { Color, Icon, List } from "@raycast/api";
-import { Repository } from "../../types/api";
+import type { Repository } from "../../types/api";
 import RepositoryDetails from "./repository-details";
 import RepositoryActions from "./repository-actions";
-import dayjs from "dayjs";
 import { getLanguageColor } from "../../utils/languages";
-import { RepositorySortOption } from "../../types/sorts/repository-search";
+import { RepositorySort } from "../../domain/repository-sort";
 
 export default function RepositoryItem(props: {
   item: Repository;
-  sort: RepositorySortOption | undefined;
+  sort: RepositorySort | undefined;
   showDetails: boolean;
   setShowDetails: (show: boolean) => void;
 }) {
@@ -38,17 +37,17 @@ export default function RepositoryItem(props: {
   );
 }
 
-function getAccessoryByFilter(item: Repository, filter?: string): List.Item.Accessory {
+function getAccessoryByFilter(item: Repository, filter?: RepositorySort): List.Item.Accessory {
   switch (filter) {
-    case "most stars":
-    case "fewest stars":
+    case RepositorySort.MostStars:
+    case RepositorySort.FewestStars:
       return { icon: Icon.Star, text: { value: `${item.stars_count ?? 0}`, color: Color.SecondaryText } };
-    case "newest":
-    case "oldest":
-      return item.created_at ? { icon: Icon.Calendar, date: dayjs(item.created_at).toDate() } : { icon: Icon.Calendar };
-    case "recently":
-    case "least recently":
-      return item.updated_at ? { icon: Icon.Calendar, date: dayjs(item.updated_at).toDate() } : { icon: Icon.Calendar };
+    case RepositorySort.Newest:
+    case RepositorySort.Oldest:
+      return item.created_at ? { icon: Icon.Calendar, date: new Date(item.created_at) } : { icon: Icon.Calendar };
+    case RepositorySort.RecentlyUpdated:
+    case RepositorySort.LeastRecentlyUpdated:
+      return item.updated_at ? { icon: Icon.Calendar, date: new Date(item.updated_at) } : { icon: Icon.Calendar };
   }
 
   return {};

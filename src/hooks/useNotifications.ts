@@ -1,6 +1,6 @@
 import { getNotifications } from "../services/notifications";
 import { CacheKey, DEFAULT_PAGE_SIZE } from "../constants";
-import { NotificationStatusFilter } from "../types/sorts/notification-search";
+import { NotificationStatusFilter } from "../domain/notification-filter";
 import { usePaginatedResource } from "./usePaginatedResource";
 
 export function useNotifications(filter: NotificationStatusFilter) {

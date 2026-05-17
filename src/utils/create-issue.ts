@@ -12,6 +12,10 @@ export type CreateIssueFormValues = {
   [key: string]: unknown;
 };
 
+export type CreateIssueFormError = {
+  error: string;
+};
+
 export type GroupedLabels = {
   regular: Label[];
   exclusive: Record<string, Label[]>;
@@ -38,14 +42,23 @@ export function groupLabels(labels: Label[]): GroupedLabels {
   );
 }
 
-export function buildCreateIssueParams(values: CreateIssueFormValues): CreateIssueParams | null {
-  if (!values.repository || !values.title?.trim()) {
-    return null;
+export function buildCreateIssueParams(values: CreateIssueFormValues): CreateIssueParams | CreateIssueFormError {
+  if (!values.repository) {
+    return { error: "Repository is required" };
+  }
+
+  if (!values.title?.trim()) {
+    return { error: "Title is required" };
   }
 
   const { owner, repo } = parseRepo(values.repository);
   if (!owner || !repo) {
-    return null;
+    return { error: "Invalid repository format" };
+  }
+
+  const title = values.title.trim();
+  if (title.length > 255) {
+    return { error: "Title must be 255 characters or less" };
   }
 
   const regularLabels = (values.labels ?? []).map((value) => parseInt(value, 10)).filter(Number.isFinite);
@@ -64,7 +77,7 @@ export function buildCreateIssueParams(values: CreateIssueFormValues): CreateIss
   return {
     owner,
     repo,
-    title: values.title.trim(),
+    title,
     body: values.body?.trim() || undefined,
     labels: labels.length > 0 ? labels : undefined,
     milestone: Number.isFinite(milestone) ? milestone : undefined,

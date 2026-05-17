@@ -1,8 +1,8 @@
 import { List } from "@raycast/api";
-import type { CommonOptionType } from "../../types/sorts/common";
+import type { Option } from "../../domain/options";
 
 type NotificationDropdownProps<TValue extends string> = {
-  options: readonly CommonOptionType<TValue>[];
+  options: readonly Option<TValue>[];
   onFilterChange: (newValue: TValue) => void;
 };
 

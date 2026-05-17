@@ -1,8 +1,8 @@
 import { List } from "@raycast/api";
-import type { CommonOptionType } from "../../types/sorts/common";
+import type { Option } from "../../domain/options";
 
 type RepositoryDropdownProps<TValue extends string> = {
-  repoFilter: readonly CommonOptionType<TValue>[];
+  repoFilter: readonly Option<TValue>[];
   onFilterChange: (newValue: TValue) => void;
 };
 
