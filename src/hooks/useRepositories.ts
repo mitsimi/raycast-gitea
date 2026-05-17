@@ -1,19 +1,19 @@
 import { getRepositories } from "../services/repositories";
 import { CacheKey, DEFAULT_PAGE_SIZE } from "../constants";
 import { RepositorySortOption, mapRepositorySortToGitea } from "../types/sorts/repository-search";
-import { usePaginatedCachedPromise } from "./usePaginatedCachedPromise";
+import { usePaginatedResource } from "./usePaginatedResource";
 
 export function useRepositories(sort?: RepositorySortOption) {
-  return usePaginatedCachedPromise({
+  return usePaginatedResource({
     cacheKey: CacheKey.Repositories,
     errorTitle: "Couldn't retrieve repositories",
     pageSize: DEFAULT_PAGE_SIZE,
-    args: [sort] as [RepositorySortOption | undefined],
-    fetchPage: (page, repositorySort) => {
+    params: { sort },
+    fetchPage: ({ sort: repositorySort, page, limit }) => {
       const { sort: giteaSort, order: giteaOrder } = mapRepositorySortToGitea(repositorySort ?? "");
 
       return getRepositories({
-        limit: DEFAULT_PAGE_SIZE,
+        limit,
         page,
         sort: giteaSort,
         order: giteaOrder,

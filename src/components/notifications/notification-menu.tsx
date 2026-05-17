@@ -1,14 +1,14 @@
 import { Color, Icon, List } from "@raycast/api";
 import NotificationActions from "./notification-actions";
 import { getTrailingNumberFromUrl } from "../../utils/string";
-import type { PaginatedCachedPromiseMutate } from "../../hooks/usePaginatedCachedPromise";
+import type { PaginatedResourceMutate } from "../../hooks/usePaginatedResource";
 import { NotificationThread } from "../../types/api";
 import { getNotificationIcon } from "../../utils/icons";
 
 export default function NotificationMenu(props: {
   items: NotificationThread[];
   revalidate?: () => void;
-  mutate?: PaginatedCachedPromiseMutate<NotificationThread>;
+  mutate?: PaginatedResourceMutate<NotificationThread>;
 }) {
   return props.items.map((item) => {
     return (
