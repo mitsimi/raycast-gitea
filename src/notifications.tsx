@@ -1,6 +1,6 @@
 import { List, Icon } from "@raycast/api";
 import { NotificationDropdown, NotificationList } from "./components/notifications";
-import { NotificationFilterOptions, NotificationStatusFilter } from "./domain/notification-filter";
+import { NotificationFilterOptions, NotificationStatusFilter } from "./domain/notification";
 import { useMemo, useState } from "react";
 import { useNotifications } from "./hooks/useNotifications";
 

@@ -1,5 +1,6 @@
 import { api } from "../api";
-import type { ListNotificationParams, StatusType, UpdateNotificationsParams } from "../api/notifications";
+import type { ListNotificationParams, UpdateNotificationsParams } from "../api/notifications";
+import { NotificationStatus } from "../domain/notification";
 import type { PaginatedResult } from ".";
 import type { NotificationThread } from "../types/api";
 
@@ -11,13 +12,13 @@ export async function getNotifications(
 }
 
 export async function listUnreadNotifications(): Promise<NotificationThread[]> {
-  return api.notifications.list({ statusTypes: ["unread"] });
+  return api.notifications.list({ statusTypes: [NotificationStatus.Unread] });
 }
 
 export async function updateNotificationStatus(params: UpdateNotificationsParams): Promise<void> {
   return api.notifications.updateStatus(params);
 }
 
-export async function readAllNotifications(...statusTypes: StatusType[]) {
+export async function readAllNotifications(...statusTypes: NotificationStatus[]) {
   return api.notifications.readAll(...statusTypes);
 }

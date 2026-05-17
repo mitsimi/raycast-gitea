@@ -1,5 +1,12 @@
 import type { Option } from "./options";
 
+export const NotificationStatus = {
+  Read: "read",
+  Unread: "unread",
+  Pinned: "pinned",
+} as const;
+export type NotificationStatus = (typeof NotificationStatus)[keyof typeof NotificationStatus];
+
 export const NotificationStatusFilter = {
   Unread: "unread",
   All: "all",

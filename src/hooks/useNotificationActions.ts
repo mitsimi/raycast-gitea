@@ -1,12 +1,12 @@
 import { showToast, Toast } from "@raycast/api";
+import type { NotificationStatus } from "../domain/notification";
 import { readAllNotifications, updateNotificationStatus } from "../services/notifications";
-import { StatusType } from "../api/notifications";
 
 export function useNotificationActions() {
-  const updateStatus = async (params: { id: string; toStatus: StatusType }) =>
+  const updateStatus = async (params: { id: string; toStatus: NotificationStatus }) =>
     updateNotificationStatus({ id: params.id, toStatus: params.toStatus });
 
-  const readAll = async (...statusTypes: StatusType[]) => readAllNotifications(...statusTypes);
+  const readAll = async (...statusTypes: NotificationStatus[]) => readAllNotifications(...statusTypes);
 
   const runWithToast = async (promise: Promise<unknown>, messages: { success: string; failure: string }) => {
     const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });

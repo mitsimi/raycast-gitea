@@ -1,9 +1,10 @@
 import { getClient } from "./client";
+import type { NotificationStatus } from "../domain/notification";
 import type { NotificationThread } from "../types/api";
 
 export type ListNotificationParams = {
   all?: boolean;
-  statusTypes?: string[];
+  statusTypes?: NotificationStatus[];
   limit?: number;
   page?: number;
 };
@@ -19,13 +20,7 @@ export async function listNotifications(params: ListNotificationParams = {}): Pr
   return data ?? [];
 }
 
-export const StatusType = {
-  Read: "read",
-  Unread: "unread",
-  Pinned: "pinned",
-} as const;
-export type StatusType = (typeof StatusType)[keyof typeof StatusType];
-export type UpdateNotificationsParams = { id: string; toStatus: StatusType };
+export type UpdateNotificationsParams = { id: string; toStatus: NotificationStatus };
 export async function updateNotificationStatus(params: UpdateNotificationsParams): Promise<void> {
   const client = getClient();
   const { data, error } = await client.PATCH("/notifications/threads/{id}", {
@@ -39,7 +34,7 @@ export async function updateNotificationStatus(params: UpdateNotificationsParams
  * Update the status of all notifications to read.
  * Defaults to filtering by unread status-type and setting to-status to read.
  */
-export async function readAllNotificationStatus(...statusTypes: StatusType[]) {
+export async function readAllNotificationStatus(...statusTypes: NotificationStatus[]) {
   const client = getClient();
   const { data, error } = await client.PUT("/notifications", {
     params: {
