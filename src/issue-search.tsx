@@ -1,9 +1,9 @@
 import { Action, ActionPanel, Icon, Keyboard, List } from "@raycast/api";
-import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/utils";
+import { useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
-import { api } from "./api";
-import { type Issue, type Repository } from "./types/api";
+import { type Repository } from "./types/api";
 import CreateIssue from "./issue-create";
+import { useSearchIssues } from "./hooks/useSearchIssues";
 import { getIssueIcon } from "./utils/icons";
 import { parseSearchQuery } from "./utils/search-query";
 
@@ -104,45 +104,4 @@ export default function Command() {
       )}
     </List>
   );
-}
-
-type UseSearchIssuesParams = {
-  query?: string;
-  state?: IssueSearchState;
-  owner?: string;
-  repo?: string;
-};
-
-function useSearchIssues(params: UseSearchIssuesParams) {
-  const { state, owner, repo, query } = params;
-  const [items, setItems] = useCachedState<Issue[]>("issues-search", []);
-
-  const { isLoading } = useCachedPromise(
-    async (s?: IssueSearchState, o?: string, r?: string, q?: string) => {
-      const data = await api.issues.search({
-        type: "issues",
-        state: s,
-        q: q?.trim() ? q : undefined,
-        owner: o,
-        limit: 50,
-      });
-      return r ? data.filter((issue) => issue.repository?.full_name === r) : data;
-    },
-    [state, owner, repo, query] as [
-      IssueSearchState | undefined,
-      string | undefined,
-      string | undefined,
-      string | undefined,
-    ],
-    {
-      keepPreviousData: true,
-      initialData: items,
-      onData: (data) => setItems(data),
-      onError(error) {
-        showFailureToast(error, { title: "Couldn't search issues" });
-      },
-    },
-  );
-
-  return { items, isLoading };
 }

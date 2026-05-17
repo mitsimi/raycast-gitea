@@ -1,7 +1,7 @@
-import { Action, ActionPanel, Icon, Keyboard, showToast, Toast } from "@raycast/api";
-import { api } from "../../api";
+import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
 import { StatusType } from "../../api/notifications";
 import type { PaginatedResourceMutate } from "../../hooks/usePaginatedResource";
+import { useNotificationActions } from "../../hooks/useNotificationActions";
 import { NotificationThread } from "../../types/api";
 
 export default function NotificationActions(props: {
@@ -10,9 +10,10 @@ export default function NotificationActions(props: {
 }) {
   const subjectUrl = props.item.subject?.html_url;
   const isPinned = Boolean(props.item.pinned);
+  const { readAll, runWithToast, updateStatus } = useNotificationActions();
 
   const runUpdate = async (toStatus: StatusType) => {
-    const updatePromise = api.notifications.updateStatus({ id: String(props.item.id), toStatus });
+    const updatePromise = updateStatus({ id: String(props.item.id), toStatus });
     if (props.mutate) {
       await props.mutate(updatePromise, { shouldRevalidateAfter: true });
       return;
@@ -22,50 +23,36 @@ export default function NotificationActions(props: {
 
   const toggleReadStatus = async () => {
     const toStatus: StatusType = props.item.unread ? StatusType.Read : StatusType.Unread;
-    const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
-
-    try {
-      await runUpdate(toStatus);
-      toast.style = Toast.Style.Success;
-      toast.title = `Marked as ${toStatus}`;
-    } catch (err: unknown) {
-      toast.style = Toast.Style.Failure;
-      toast.title = `Could not mark as ${toStatus}`;
-      toast.message = err instanceof Error ? err.message : String(err);
-    }
+    await runWithToast(runUpdate(toStatus), {
+      success: `Marked as ${toStatus}`,
+      failure: `Could not mark as ${toStatus}`,
+    });
   };
 
   const togglePinStatus = async () => {
     const toStatus = isPinned ? StatusType.Unread : StatusType.Pinned;
 
-    const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
-    try {
-      await runUpdate(toStatus);
-      toast.style = Toast.Style.Success;
-      toast.title = `${isPinned ? "Unpinned" : "Pinned"} notification`;
-    } catch (err: unknown) {
-      toast.style = Toast.Style.Failure;
-      toast.title = `Could not ${isPinned ? "unpin" : "pin"} notification`;
-      toast.message = err instanceof Error ? err.message : String(err);
-    }
+    await runWithToast(runUpdate(toStatus), {
+      success: `${isPinned ? "Unpinned" : "Pinned"} notification`,
+      failure: `Could not ${isPinned ? "unpin" : "pin"} notification`,
+    });
   };
 
   const markAllAsRead = async () => {
-    const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
-    try {
-      const updatePromise = api.notifications.readAll();
-      if (props.mutate) {
-        await props.mutate(updatePromise, { shouldRevalidateAfter: true });
-      } else {
-        await updatePromise;
-      }
-      toast.style = Toast.Style.Success;
-      toast.title = `Marked all as read`;
-    } catch (err: unknown) {
-      toast.style = Toast.Style.Failure;
-      toast.title = `Could not mark as read`;
-      toast.message = err instanceof Error ? err.message : String(err);
-    }
+    await runWithToast(
+      (async () => {
+        const updatePromise = readAll();
+        if (props.mutate) {
+          await props.mutate(updatePromise, { shouldRevalidateAfter: true });
+        } else {
+          await updatePromise;
+        }
+      })(),
+      {
+        success: "Marked all as read",
+        failure: "Could not mark as read",
+      },
+    );
   };
 
   return (

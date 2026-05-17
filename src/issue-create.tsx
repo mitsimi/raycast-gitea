@@ -1,9 +1,10 @@
 import { Action, ActionPanel, Form, Icon, showToast, Toast } from "@raycast/api";
-import { showFailureToast, useCachedPromise } from "@raycast/utils";
+import { showFailureToast } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
-import { api } from "./api";
+import { useCreateIssueMetadata } from "./hooks/useCreateIssueMetadata";
+import { useCreateIssueMutation } from "./hooks/useCreateIssueMutation";
 import { useUserRepositories } from "./hooks/useUserRepositories";
-import type { Label, Milestone, Repository, User } from "./types/api";
+import type { Label, Repository } from "./types/api";
 import { buildCreateIssueParams, groupLabels, parseRepo } from "./utils/create-issue";
 
 function LabelPicker({ labels, selectedRepo }: { labels: Label[]; selectedRepo: boolean }) {
@@ -63,7 +64,7 @@ function LabelPicker({ labels, selectedRepo }: { labels: Label[]; selectedRepo: 
 
 export default function Command(props: { initialRepo?: Repository }) {
   const { items: repositories, isLoading, pagination } = useUserRepositories();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { createIssue, isSubmitting } = useCreateIssueMutation();
   const [selectedRepo, setSelectedRepo] = useState<string>(props.initialRepo?.full_name ?? "");
 
   useEffect(() => {
@@ -79,42 +80,7 @@ export default function Command(props: { initialRepo?: Repository }) {
   }, [repositories]);
 
   const { owner, repo } = useMemo(() => parseRepo(selectedRepo), [selectedRepo]);
-
-  const { data: labels } = useCachedPromise(
-    async (o?: string, r?: string): Promise<Label[]> => {
-      if (!o || !r) return [];
-      return api.issues.listLabels({ owner: o, repo: r });
-    },
-    [owner, repo] as [string | undefined, string | undefined],
-    {
-      keepPreviousData: true,
-      initialData: [],
-    },
-  );
-
-  const { data: milestones } = useCachedPromise(
-    async (o?: string, r?: string): Promise<Milestone[]> => {
-      if (!o || !r) return [];
-      return api.issues.listMilestones({ owner: o, repo: r, state: "open" });
-    },
-    [owner, repo] as [string | undefined, string | undefined],
-    {
-      keepPreviousData: true,
-      initialData: [],
-    },
-  );
-
-  const { data: assignees } = useCachedPromise(
-    async (o?: string, r?: string): Promise<User[]> => {
-      if (!o || !r) return [];
-      return api.issues.listAssignees({ owner: o, repo: r });
-    },
-    [owner, repo] as [string | undefined, string | undefined],
-    {
-      keepPreviousData: true,
-      initialData: [],
-    },
-  );
+  const { labels, milestones, assignees } = useCreateIssueMetadata(owner, repo);
 
   const isRepoSelected = Boolean(selectedRepo);
 
@@ -126,7 +92,7 @@ export default function Command(props: { initialRepo?: Repository }) {
       enableDrafts={initialRepo === undefined}
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Create Issue" onSubmit={(values) => handleSubmit(values, setIsSubmitting)} />
+          <Action.SubmitForm title="Create Issue" onSubmit={(values) => handleSubmit(values, createIssue)} />
         </ActionPanel>
       }
     >
@@ -169,7 +135,7 @@ export default function Command(props: { initialRepo?: Repository }) {
 
           <Form.Separator />
 
-          {!!labels?.length && (
+          {labels.length > 0 && (
             <>
               <LabelPicker labels={labels} selectedRepo={isRepoSelected} />
               <Form.Separator />
@@ -177,7 +143,7 @@ export default function Command(props: { initialRepo?: Repository }) {
           )}
 
           <Form.TagPicker id="assignees" title="Assignees" placeholder="Select assignees">
-            {(assignees ?? []).map((user) => (
+            {assignees.map((user) => (
               <Form.TagPicker.Item
                 key={user.login ?? user.id ?? "user"}
                 value={user.login ?? ""}
@@ -188,7 +154,7 @@ export default function Command(props: { initialRepo?: Repository }) {
           </Form.TagPicker>
           <Form.Dropdown id="milestone" title="Milestone" placeholder="Select a milestone">
             <Form.Dropdown.Item value="" title="No milestone" />
-            {(milestones ?? []).map((milestone) => (
+            {milestones.map((milestone) => (
               <Form.Dropdown.Item
                 key={milestone.id ?? milestone.title ?? "milestone"}
                 value={String(milestone.id ?? "")}
@@ -214,7 +180,10 @@ type FormValues = {
   [key: string]: unknown;
 };
 
-async function handleSubmit(values: Form.Values, setIsSubmitting: (v: boolean) => void) {
+async function handleSubmit(
+  values: Form.Values,
+  createIssue: ReturnType<typeof useCreateIssueMutation>["createIssue"],
+) {
   const formValues = values as unknown as FormValues;
   if (!formValues.repository || !formValues.title?.trim()) {
     await showToast({ style: Toast.Style.Failure, title: "Repository and title are required" });
@@ -229,14 +198,5 @@ async function handleSubmit(values: Form.Values, setIsSubmitting: (v: boolean) =
     return;
   }
 
-  setIsSubmitting(true);
-  try {
-    await api.issues.create(params);
-
-    await showToast({ style: Toast.Style.Success, title: "Issue created" });
-  } catch (error) {
-    await showFailureToast(error, { title: "Failed to create issue" });
-  } finally {
-    setIsSubmitting(false);
-  }
+  await createIssue(params);
 }

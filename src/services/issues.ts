@@ -1,7 +1,7 @@
 import { PaginatedResult } from ".";
 import { api } from "../api";
-import type { IssueListParams } from "../api/issues";
-import type { Issue } from "../types/api";
+import type { CreateIssueParams, IssueListParams } from "../api/issues";
+import type { Issue, Label, Milestone, User } from "../types/api";
 
 export type MyIssuesParams = {
   includeCreated: boolean;
@@ -11,6 +11,25 @@ export type MyIssuesParams = {
   query?: string;
   page?: number;
   limit?: number;
+};
+
+export type SearchIssuesParams = {
+  query?: string;
+  state?: IssueListParams["state"];
+  owner?: string;
+  repo?: string;
+  limit?: number;
+};
+
+export type CreateIssueMetadataParams = {
+  owner?: string;
+  repo?: string;
+};
+
+export type CreateIssueMetadata = {
+  labels: Label[];
+  milestones: Milestone[];
+  assignees: User[];
 };
 
 type IssueSearchRequest = {
@@ -39,6 +58,36 @@ export async function getMyIssues(params: MyIssuesParams): Promise<PaginatedResu
     ],
     params.limit,
   );
+}
+
+export async function searchIssues(params: SearchIssuesParams): Promise<Issue[]> {
+  const data = await api.issues.search({
+    type: "issues",
+    state: params.state,
+    q: params.query?.trim() ? params.query : undefined,
+    owner: params.owner,
+    limit: params.limit,
+  });
+
+  return params.repo ? data.filter((issue) => issue.repository?.full_name === params.repo) : data;
+}
+
+export async function getCreateIssueMetadata({ owner, repo }: CreateIssueMetadataParams): Promise<CreateIssueMetadata> {
+  if (!owner || !repo) {
+    return { labels: [], milestones: [], assignees: [] };
+  }
+
+  const [labels, milestones, assignees] = await Promise.all([
+    api.issues.listLabels({ owner, repo }),
+    api.issues.listMilestones({ owner, repo, state: "open" }),
+    api.issues.listAssignees({ owner, repo }),
+  ]);
+
+  return { labels, milestones, assignees };
+}
+
+export async function createIssue(params: CreateIssueParams): Promise<Issue> {
+  return api.issues.create(params);
 }
 
 export async function searchEnabledIssueRequests(

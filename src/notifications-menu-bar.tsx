@@ -1,6 +1,7 @@
 import { MenuBarExtra, Icon, Color, open, launchCommand, LaunchType } from "@raycast/api";
 import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/utils";
-import { api } from "./api";
+import { readAllNotifications } from "./services/notifications";
+import { listUnreadNotifications } from "./services/notifications";
 import { StatusType } from "./api/notifications";
 import { NotificationThread } from "./types/api";
 import { getNotificationIcon } from "./utils/icons";
@@ -8,21 +9,17 @@ import { CacheKey } from "./constants";
 
 export default function MenuBarCommand() {
   const [notifications, setNotifications] = useCachedState<NotificationThread[]>(CacheKey.NotificationsMenuBar, []);
-  const { isLoading, revalidate } = useCachedPromise(
-    () => api.notifications.list({ statusTypes: [StatusType.Unread] }),
-    [],
-    {
-      onData: (data) => {
-        if (Array.isArray(data)) setNotifications(data as NotificationThread[]);
-      },
+  const { isLoading, revalidate } = useCachedPromise(() => listUnreadNotifications(), [], {
+    onData: (data) => {
+      if (Array.isArray(data)) setNotifications(data as NotificationThread[]);
     },
-  );
+  });
 
   const unreadCount = notifications?.length ?? 0;
 
   const handleMarkAllAsRead = async () => {
     try {
-      await api.notifications.readAll(StatusType.Unread);
+      await readAllNotifications(StatusType.Unread);
       revalidate();
     } catch (error) {
       showFailureToast(error, { title: "Failed to mark all as read" });
