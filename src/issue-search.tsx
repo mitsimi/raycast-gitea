@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Icon, Keyboard, List } from "@raycast/api";
 import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
-import { searchIssues } from "./api/issues";
+import { api } from "./api";
 import { type Issue, type Repository } from "./types/api";
 import CreateIssue from "./issue-create";
 import { getIssueIcon } from "./utils/icons";
@@ -119,7 +119,7 @@ function useSearchIssues(params: UseSearchIssuesParams) {
 
   const { isLoading } = useCachedPromise(
     async (s?: IssueSearchState, o?: string, r?: string, q?: string) => {
-      const data = await searchIssues({
+      const data = await api.issues.search({
         type: "issues",
         state: s,
         q: q?.trim() ? q : undefined,

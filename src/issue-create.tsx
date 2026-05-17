@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Form, Icon, showToast, Toast } from "@raycast/api";
 import { showFailureToast, useCachedPromise } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
-import { createIssue, listRepoAssignees, listRepoLabels, listRepoMilestones } from "./api/issues";
+import { api } from "./api";
 import { useUserRepositories } from "./hooks/useUserRepositories";
 import type { Label, Milestone, Repository, User } from "./types/api";
 import { buildCreateIssueParams, groupLabels, parseRepo } from "./utils/create-issue";
@@ -83,7 +83,7 @@ export default function Command(props: { initialRepo?: Repository }) {
   const { data: labels } = useCachedPromise(
     async (o?: string, r?: string): Promise<Label[]> => {
       if (!o || !r) return [];
-      return listRepoLabels({ owner: o, repo: r });
+      return api.issues.listLabels({ owner: o, repo: r });
     },
     [owner, repo] as [string | undefined, string | undefined],
     {
@@ -95,7 +95,7 @@ export default function Command(props: { initialRepo?: Repository }) {
   const { data: milestones } = useCachedPromise(
     async (o?: string, r?: string): Promise<Milestone[]> => {
       if (!o || !r) return [];
-      return listRepoMilestones({ owner: o, repo: r, state: "open" });
+      return api.issues.listMilestones({ owner: o, repo: r, state: "open" });
     },
     [owner, repo] as [string | undefined, string | undefined],
     {
@@ -107,7 +107,7 @@ export default function Command(props: { initialRepo?: Repository }) {
   const { data: assignees } = useCachedPromise(
     async (o?: string, r?: string): Promise<User[]> => {
       if (!o || !r) return [];
-      return listRepoAssignees({ owner: o, repo: r });
+      return api.issues.listAssignees({ owner: o, repo: r });
     },
     [owner, repo] as [string | undefined, string | undefined],
     {
@@ -231,7 +231,7 @@ async function handleSubmit(values: Form.Values, setIsSubmitting: (v: boolean) =
 
   setIsSubmitting(true);
   try {
-    await createIssue(params);
+    await api.issues.create(params);
 
     await showToast({ style: Toast.Style.Success, title: "Issue created" });
   } catch (error) {

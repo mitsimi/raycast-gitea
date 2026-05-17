@@ -1,6 +1,6 @@
 import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/utils";
 import type { MutatePromise } from "@raycast/utils";
-import type { PaginatedResult } from "../api/common";
+import type { PaginatedResult } from "../services";
 
 export type PaginatedCachedPromiseMutate<T> = MutatePromise<PaginatedResult<T>, PaginatedResult<T>>;
 

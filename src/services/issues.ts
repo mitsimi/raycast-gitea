@@ -1,5 +1,6 @@
-import { searchIssues, type IssueListParams } from "../api/issues";
-import type { PaginatedResult } from "../api/common";
+import { PaginatedResult } from ".";
+import { api } from "../api";
+import type { IssueListParams } from "../api/issues";
 import type { Issue } from "../types/api";
 
 export type MyIssuesParams = {
@@ -49,7 +50,7 @@ export async function searchEnabledIssueRequests(
     return { items: [], hasMore: false };
   }
 
-  const pages = await Promise.all(enabledRequests.map((request) => searchIssues(request.params)));
+  const pages = await Promise.all(enabledRequests.map((request) => api.issues.search(request.params)));
   return {
     items: dedupeIssuesById(pages.flat()),
     hasMore: limit != null && pages.some((page) => page.length === limit),

@@ -1,5 +1,6 @@
 import { Action, ActionPanel, Icon, Keyboard, showToast, Toast } from "@raycast/api";
-import { readAllNotificationStatus, updateNotificationStatus, StatusType } from "../../api/notifications";
+import { api } from "../../api";
+import { StatusType } from "../../api/notifications";
 import type { PaginatedCachedPromiseMutate } from "../../hooks/usePaginatedCachedPromise";
 import { NotificationThread } from "../../types/api";
 
@@ -11,7 +12,7 @@ export default function NotificationActions(props: {
   const isPinned = Boolean(props.item.pinned);
 
   const runUpdate = async (toStatus: StatusType) => {
-    const updatePromise = updateNotificationStatus({ id: String(props.item.id), toStatus });
+    const updatePromise = api.notifications.updateStatus({ id: String(props.item.id), toStatus });
     if (props.mutate) {
       await props.mutate(updatePromise, { shouldRevalidateAfter: true });
       return;
@@ -52,7 +53,7 @@ export default function NotificationActions(props: {
   const markAllAsRead = async () => {
     const toast = await showToast({ style: Toast.Style.Animated, title: "Updating..." });
     try {
-      const updatePromise = readAllNotificationStatus();
+      const updatePromise = api.notifications.readAll();
       if (props.mutate) {
         await props.mutate(updatePromise, { shouldRevalidateAfter: true });
       } else {

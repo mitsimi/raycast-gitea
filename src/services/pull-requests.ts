@@ -1,4 +1,4 @@
-import type { PaginatedResult } from "../api/common";
+import type { PaginatedResult } from ".";
 import type { Issue } from "../types/api";
 import type { IssueListParams } from "../api/issues";
 import { searchEnabledIssueRequests } from "./issues";
