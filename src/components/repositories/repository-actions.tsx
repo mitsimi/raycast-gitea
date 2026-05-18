@@ -1,38 +1,7 @@
 import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
 import type { Repository } from "../../types/api";
 import CreateIssue from "../../issue-create";
-
-import { useInstalledEditors, getEditorUrlScheme } from "../../hooks/useInstalledEditors";
-
-function CloneActions({ cloneUrl }: { cloneUrl: string }) {
-  const { installedEditors } = useInstalledEditors();
-
-  if (installedEditors.length === 0) {
-    return null;
-  }
-
-  const shortcut_keys = (i: number) => (i + 1).toString() as "1" | "2" | "3" | "4" | "5" | "6";
-
-  return (
-    <ActionPanel.Section title="Clone with Editor">
-      {installedEditors.map((editor, index) => (
-        <Action.OpenInBrowser
-          key={editor.bundleId}
-          title={`Clone with ${editor.name}`}
-          icon={{ source: editor.icon }}
-          url={getEditorUrlScheme(editor.id, cloneUrl)}
-          shortcut={{
-            macOS: { modifiers: ["cmd", "shift"], key: shortcut_keys(index) },
-            Windows: {
-              modifiers: ["ctrl", "shift"],
-              key: shortcut_keys(index),
-            },
-          }}
-        />
-      ))}
-    </ActionPanel.Section>
-  );
-}
+import RepositoryCloneActions from "./repository-clone-actions";
 
 export default function RepositoryActions(props: {
   item: Repository;
@@ -106,7 +75,7 @@ export default function RepositoryActions(props: {
         ) : null}
       </ActionPanel.Section>
 
-      {cloneUrl ? <CloneActions cloneUrl={cloneUrl} /> : null}
+      {cloneUrl ? <RepositoryCloneActions cloneUrl={cloneUrl} /> : null}
 
       {props.children && <ActionPanel.Section>{props.children}</ActionPanel.Section>}
     </ActionPanel>
