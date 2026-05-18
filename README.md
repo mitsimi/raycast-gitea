@@ -164,7 +164,7 @@ Browse your personal repositories.
   - Website link if available
 - **Actions**:
   - Open repository in browser (↵)
-  - Clone with editor (VS Code, Cursor, Zed, IntelliJ, WebStorm, PyCharm) - ⌘⇧C for first editor
+  - Clone with editor (VS Code, Cursor, Zed, IntelliJ) - ⌘⇧C for first editor
   - Copy repository URL (⌘C)
   - Copy SSH URL (⌘⇧S)
   - Create issue in repository (⌘N)

@@ -88,24 +88,6 @@
       "label": "IntelliJ IDEA",
       "default": true,
       "required": false
-    },
-    {
-      "name": "editorWebStorm",
-      "title": "",
-      "description": "Show WebStorm in clone actions",
-      "type": "checkbox",
-      "label": "WebStorm",
-      "default": true,
-      "required": false
-    },
-    {
-      "name": "editorPyCharm",
-      "title": "",
-      "description": "Show PyCharm in clone actions",
-      "type": "checkbox",
-      "label": "PyCharm",
-      "default": true,
-      "required": false
     }
   ],
   "commands": [

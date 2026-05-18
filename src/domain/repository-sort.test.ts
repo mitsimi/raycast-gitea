@@ -40,14 +40,40 @@ describe("repository sort domain", () => {
     ]);
   });
 
-  it("maps UI sort options to Gitea query params", () => {
-    expect(mapRepositorySortToGitea(RepositorySort.MostStars)).toEqual({
-      sort: "stars",
-      order: SortOrder.Descending,
-    });
-    expect(mapRepositorySortToGitea(RepositorySort.Oldest)).toEqual({
-      sort: "created",
-      order: SortOrder.Ascending,
-    });
+  it("sorts missing numeric and date values as zero", () => {
+    const incompleteRepositories = [
+      repo({ full_name: "missing" }),
+      repo({ full_name: "zero", stars_count: 0, created_at: "invalid", updated_at: "invalid" }),
+      repo({ full_name: "known", stars_count: 10, created_at: "2024-01-01T00:00:00Z" }),
+    ];
+
+    expect(sortRepositories(incompleteRepositories, RepositorySort.MostStars).map((item) => item.full_name)).toEqual([
+      "known",
+      "missing",
+      "zero",
+    ]);
+    expect(sortRepositories(incompleteRepositories, RepositorySort.Newest).map((item) => item.full_name)).toEqual([
+      "known",
+      "missing",
+      "zero",
+    ]);
+  });
+
+  it("does not mutate the input list", () => {
+    const input = [...repositories];
+
+    expect(sortRepositories(input, RepositorySort.MostStars)).not.toBe(input);
+    expect(input).toEqual(repositories);
+  });
+
+  it.each([
+    [RepositorySort.MostStars, { sort: "stars", order: SortOrder.Descending }],
+    [RepositorySort.FewestStars, { sort: "stars", order: SortOrder.Ascending }],
+    [RepositorySort.Newest, { sort: "created", order: SortOrder.Descending }],
+    [RepositorySort.Oldest, { sort: "created", order: SortOrder.Ascending }],
+    [RepositorySort.RecentlyUpdated, { sort: "updated", order: SortOrder.Descending }],
+    [RepositorySort.LeastRecentlyUpdated, { sort: "updated", order: SortOrder.Ascending }],
+  ] as const)("maps %s to Gitea query params", (sort, expected) => {
+    expect(mapRepositorySortToGitea(sort)).toEqual(expected);
   });
 });

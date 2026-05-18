@@ -5,8 +5,6 @@ export const EditorId = {
   Cursor: "cursor",
   Zed: "zed",
   IntelliJ: "intellij",
-  WebStorm: "webstorm",
-  PyCharm: "pycharm",
 } as const;
 
 export type EditorId = (typeof EditorId)[keyof typeof EditorId];
@@ -69,24 +67,6 @@ export const Editors = [
       /\/intellij idea.*\.lnk$/i,
     ],
   },
-  {
-    id: EditorId.WebStorm,
-    name: "WebStorm",
-    bundleId: "com.jetbrains.WebStorm",
-    icon: "logo/webstorm.png",
-    prefKey: "editorWebStorm",
-    namePatterns: [/^webstorm$/i],
-    windowsPathPatterns: [/\/jetbrains\/webstorm.*\/bin\/webstorm64\.exe$/i, /\/webstorm.*\.lnk$/i],
-  },
-  {
-    id: EditorId.PyCharm,
-    name: "PyCharm",
-    bundleId: "com.jetbrains.PyCharm",
-    icon: "logo/pycharm.png",
-    prefKey: "editorPyCharm",
-    namePatterns: [/^pycharm$/i, /^pycharm community edition$/i, /^pycharm professional$/i],
-    windowsPathPatterns: [/\/jetbrains\/pycharm.*\/bin\/pycharm64\.exe$/i, /\/pycharm.*\.lnk$/i],
-  },
 ] as const satisfies readonly EditorInfo[];
 
 const editorUrlSchemes = {
@@ -95,10 +75,6 @@ const editorUrlSchemes = {
   [EditorId.Zed]: (repoUrl: string) => `zed://git/clone?repo=${encodeURIComponent(repoUrl)}`,
   [EditorId.IntelliJ]: (repoUrl: string) =>
     `jetbrains://idea/checkout/git?checkout.repo=${encodeURIComponent(repoUrl)}&idea.required.plugins.id=Git4Idea`,
-  [EditorId.WebStorm]: (repoUrl: string) =>
-    `jetbrains://webstorm/checkout/git?checkout.repo=${encodeURIComponent(repoUrl)}&idea.required.plugins.id=Git4Idea`,
-  [EditorId.PyCharm]: (repoUrl: string) =>
-    `jetbrains://pycharm/checkout/git?checkout.repo=${encodeURIComponent(repoUrl)}&idea.required.plugins.id=Git4Idea`,
 } satisfies Record<EditorId, (repoUrl: string) => string>;
 
 export function getEditorUrlScheme(editorId: EditorId, repoUrl: string): string {

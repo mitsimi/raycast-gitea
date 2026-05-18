@@ -47,6 +47,43 @@ describe("create issue helpers", () => {
     });
   });
 
+  it("combines regular and multiple exclusive labels while ignoring invalid label values", () => {
+    expect(
+      buildCreateIssueParams({
+        repository: "owner/repo",
+        title: "Fix labels",
+        labels: ["1", "bad", "3"],
+        "label.priority": "2",
+        "label.kind": "not-a-number",
+        "label.area": "",
+      }),
+    ).toMatchObject({
+      labels: [1, 3, 2],
+    });
+  });
+
+  it("omits optional fields when form values are blank", () => {
+    expect(
+      buildCreateIssueParams({
+        repository: "owner/repo",
+        title: "Fix",
+        body: "   ",
+        labels: [],
+        assignees: [" ", ""],
+        milestone: "",
+      }),
+    ).toEqual({
+      owner: "owner",
+      repo: "repo",
+      title: "Fix",
+      body: undefined,
+      labels: undefined,
+      milestone: undefined,
+      assignees: undefined,
+      due_date: undefined,
+    });
+  });
+
   it("returns error for invalid required fields", () => {
     expect(buildCreateIssueParams({ repository: "", title: "Fix" })).toEqual({
       error: "Repository is required",
