@@ -1,6 +1,7 @@
 import { Action, ActionPanel } from "@raycast/api";
 import { getEditorUrlScheme } from "../../domain/editor";
 import { useInstalledEditors } from "../../hooks/useInstalledEditors";
+import { crossPlatformShortcut } from "../../utils/shortcuts";
 
 const cloneShortcutKeys = ["1", "2", "3", "4", "5", "6"] as const;
 
@@ -20,12 +21,7 @@ export default function RepositoryCloneActions({ cloneUrl }: { cloneUrl: string 
           icon={{ source: editor.icon }}
           url={getEditorUrlScheme(editor.id, cloneUrl)}
           shortcut={
-            cloneShortcutKeys[index]
-              ? {
-                  macOS: { modifiers: ["cmd", "shift"], key: cloneShortcutKeys[index] },
-                  Windows: { modifiers: ["ctrl", "shift"], key: cloneShortcutKeys[index] },
-                }
-              : undefined
+            cloneShortcutKeys[index] ? crossPlatformShortcut(cloneShortcutKeys[index], ["cmd", "shift"]) : undefined
           }
         />
       ))}

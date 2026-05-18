@@ -1,8 +1,10 @@
-import { List } from "@raycast/api";
+import { Action, Icon, Keyboard, List } from "@raycast/api";
 import { useCachedState } from "@raycast/utils";
 import { RepositoryDropdown, RepositoryList } from "./components/repositories";
 import { useUserRepositories } from "./hooks/useUserRepositories";
 import { RepositorySort, RepositorySortOptions } from "./domain/repository-sort";
+import CreateIssue from "./issue-create";
+import type { Repository } from "./types/api";
 
 import { useState } from "react";
 
@@ -22,7 +24,24 @@ export default function Command() {
       pagination={pagination}
       throttle
     >
-      <RepositoryList items={items} sort={sort} showDetails={showDetails} setShowDetails={setShowDetails} />
+      <RepositoryList
+        items={items}
+        sort={sort}
+        showDetails={showDetails}
+        setShowDetails={setShowDetails}
+        getCreateIssueAction={getCreateIssueAction}
+      />
     </List>
   );
+}
+
+function getCreateIssueAction(item: Repository) {
+  return item.full_name ? (
+    <Action.Push
+      title="Create Issue"
+      icon={Icon.Plus}
+      shortcut={Keyboard.Shortcut.Common.New}
+      target={<CreateIssue initialRepo={item} />}
+    />
+  ) : null;
 }

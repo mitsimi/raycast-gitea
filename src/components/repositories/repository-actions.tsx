@@ -1,12 +1,13 @@
 import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
 import type { Repository } from "../../types/api";
-import CreateIssue from "../../issue-create";
+import { crossPlatformShortcut } from "../../utils/shortcuts";
 import RepositoryCloneActions from "./repository-clone-actions";
 
 export default function RepositoryActions(props: {
   item: Repository;
   showDetails: boolean;
   setShowDetails: (show: boolean) => void;
+  createIssueAction?: ActionPanel.Section.Children;
   children?: ActionPanel.Section.Children;
 }) {
   const cloneUrl = props.item.ssh_url || props.item.clone_url;
@@ -25,21 +26,11 @@ export default function RepositoryActions(props: {
         <Action
           title={props.showDetails ? "Hide Details" : "Show Details"}
           icon={props.showDetails ? Icon.EyeDisabled : Icon.Eye}
-          shortcut={{
-            macOS: { modifiers: ["cmd", "shift"], key: "d" },
-            Windows: { modifiers: ["ctrl", "shift"], key: "d" },
-          }}
+          shortcut={crossPlatformShortcut("d", ["cmd", "shift"])}
           onAction={() => props.setShowDetails(!props.showDetails)}
         />
 
-        {props.item.full_name ? (
-          <Action.Push
-            title="Create Issue"
-            icon={Icon.Plus}
-            shortcut={Keyboard.Shortcut.Common.New}
-            target={<CreateIssue initialRepo={props.item} />}
-          />
-        ) : null}
+        {props.createIssueAction}
       </ActionPanel.Section>
 
       <ActionPanel.Section title="Copy">
@@ -47,30 +38,21 @@ export default function RepositoryActions(props: {
           <Action.CopyToClipboard
             title="Copy HTML URL"
             content={props.item.html_url}
-            shortcut={{
-              macOS: { modifiers: ["cmd", "shift"], key: "h" },
-              Windows: { modifiers: ["ctrl", "shift"], key: "h" },
-            }}
+            shortcut={crossPlatformShortcut("h", ["cmd", "shift"])}
           />
         ) : null}
         {props.item.clone_url ? (
           <Action.CopyToClipboard
             title="Copy Clone URL"
             content={props.item.clone_url}
-            shortcut={{
-              macOS: { modifiers: ["cmd", "shift"], key: "c" },
-              Windows: { modifiers: ["ctrl", "shift"], key: "c" },
-            }}
+            shortcut={crossPlatformShortcut("c", ["cmd", "shift"])}
           />
         ) : null}
         {props.item.ssh_url ? (
           <Action.CopyToClipboard
             title="Copy SSH URL"
             content={props.item.ssh_url}
-            shortcut={{
-              macOS: { modifiers: ["cmd", "shift"], key: "s" },
-              Windows: { modifiers: ["ctrl", "shift"], key: "s" },
-            }}
+            shortcut={crossPlatformShortcut("s", ["cmd", "shift"])}
           />
         ) : null}
       </ActionPanel.Section>
