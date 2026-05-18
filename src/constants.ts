@@ -7,7 +7,6 @@ export const CacheKey = {
   NotificationsMenuBar: "notifications-menu-bar",
   Repositories: "repositories",
   UserRepositories: "user-repositories",
-  Organizations: "organizations",
   Issues: "issues",
   PullRequests: "pull-requests",
   IssueSearch: "issues-search",

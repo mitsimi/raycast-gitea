@@ -31,7 +31,6 @@ To use this extension to its fullest potential, you need to set following scopes
 | Scope        | Permissions    |
 | ------------ | -------------- |
 | issue        | read and write |
-| organization | read           |
 | notification | read and write |
 | repository   | read and write |
 | user         | read and write |
@@ -184,19 +183,6 @@ Discover public repositories on your Gitea instance.
 - Same details view and actions
 - Shows all public repositories you have access to browse
 - Pagination support for browsing large numbers of repositories
-
-### Search Organizations
-
-Browse organizations on your Gitea instance.
-
-**Features:**
-
-- Search organizations by name
-- Shows organization avatar, description, and visibility status
-- **Actions**:
-  - Open organization page in browser (↵)
-  - Copy organization URL
-  - Copy organization name
 
 ## Keyboard Shortcuts
 

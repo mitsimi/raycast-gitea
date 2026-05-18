@@ -7,7 +7,6 @@ export type Issue = Schemas["Issue"];
 export type User = Schemas["User"];
 export type Label = Schemas["Label"];
 export type Milestone = Schemas["Milestone"];
-export type Organization = Schemas["Organization"];
 export type NotificationThread = Schemas["NotificationThread"];
 export type NotificationSubject = Schemas["NotificationSubject"];
 export type PullRequestMeta = Schemas["PullRequestMeta"];
