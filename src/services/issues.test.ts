@@ -10,6 +10,7 @@ vi.mock("../api", () => ({
       listAssignees: vi.fn(),
       listLabels: vi.fn(),
       listMilestones: vi.fn(),
+      listRepo: vi.fn(),
       search: vi.fn(),
     },
   },
@@ -26,44 +27,70 @@ describe("issue services", () => {
     vi.clearAllMocks();
   });
 
-  it("searches issues and applies repository filtering by full name", async () => {
-    issueApi.search.mockResolvedValue([
+  it("searches repository issues with the repository issue listing endpoint", async () => {
+    issueApi.listRepo.mockResolvedValue([
       issue({ id: 1, repository: { full_name: "alice/app" } }),
-      issue({ id: 2, repository: { full_name: "alice/other" } }),
+      issue({ id: 2, repository: { full_name: "alice/app" } }),
     ]);
 
     await expect(searchIssues({ owner: "alice", repo: "app", query: "bug", state: "open" })).resolves.toEqual({
-      items: [issue({ id: 1, repository: { full_name: "alice/app" } })],
+      items: [
+        issue({ id: 1, repository: { full_name: "alice/app" } }),
+        issue({ id: 2, repository: { full_name: "alice/app" } }),
+      ],
       hasMore: false,
     });
-    expect(issueApi.search).toHaveBeenCalledWith({
-      type: "issues",
+    expect(issueApi.listRepo).toHaveBeenCalledWith({
+      owner: "alice",
+      repo: "app",
       state: "open",
       q: "bug",
-      owner: "alice",
       page: undefined,
       limit: undefined,
     });
+    expect(issueApi.search).not.toHaveBeenCalled();
   });
 
-  it("searches a requested page and reports hasMore from the raw page size", async () => {
+  it("does not filter repository searches to the first owner search page", async () => {
+    issueApi.listRepo.mockResolvedValue([issue({ id: 1, repository: { full_name: "alice/app" } })]);
+
+    await expect(searchIssues({ owner: "alice", repo: "app", page: 2, limit: 1 })).resolves.toEqual({
+      items: [issue({ id: 1, repository: { full_name: "alice/app" } })],
+      hasMore: true,
+    });
+    expect(issueApi.listRepo).toHaveBeenCalledWith({
+      owner: "alice",
+      repo: "app",
+      state: undefined,
+      q: undefined,
+      page: 2,
+      limit: 1,
+    });
+    expect(issueApi.search).not.toHaveBeenCalled();
+  });
+
+  it("keeps owner-only issue searches on the global search endpoint", async () => {
     issueApi.search.mockResolvedValue([
       issue({ id: 1, repository: { full_name: "alice/app" } }),
       issue({ id: 2, repository: { full_name: "alice/other" } }),
     ]);
 
-    await expect(searchIssues({ owner: "alice", repo: "app", page: 2, limit: 2 })).resolves.toEqual({
-      items: [issue({ id: 1, repository: { full_name: "alice/app" } })],
+    await expect(searchIssues({ owner: "alice", query: "bug", state: "closed", page: 2, limit: 2 })).resolves.toEqual({
+      items: [
+        issue({ id: 1, repository: { full_name: "alice/app" } }),
+        issue({ id: 2, repository: { full_name: "alice/other" } }),
+      ],
       hasMore: true,
     });
     expect(issueApi.search).toHaveBeenCalledWith({
       type: "issues",
-      state: undefined,
-      q: undefined,
+      state: "closed",
+      q: "bug",
       owner: "alice",
       page: 2,
       limit: 2,
     });
+    expect(issueApi.listRepo).not.toHaveBeenCalled();
   });
 
   it("aggregates enabled my-issue searches, dedupes by id, and reports hasMore", async () => {

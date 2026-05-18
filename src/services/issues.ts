@@ -62,6 +62,22 @@ export async function getMyIssues(params: MyIssuesParams): Promise<PaginatedResu
 }
 
 export async function searchIssues(params: SearchIssuesParams): Promise<PaginatedResult<Issue>> {
+  if (params.owner && params.repo) {
+    const data = await api.issues.listRepo({
+      owner: params.owner,
+      repo: params.repo,
+      state: params.state,
+      q: params.query?.trim() ? params.query : undefined,
+      page: params.page,
+      limit: params.limit,
+    });
+
+    return {
+      items: data,
+      hasMore: params.limit != null && data.length === params.limit,
+    };
+  }
+
   const data = await api.issues.search({
     type: "issues",
     state: params.state,
