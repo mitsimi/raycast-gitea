@@ -1,7 +1,9 @@
 import type { CreateIssueParams } from "../api/issues";
 import type { Label } from "../types/api";
 
-export type CreateIssueFormValues = {
+type ExclusiveLabelField = `label.${string}`;
+
+type BaseCreateIssueFormValues = {
   repository: string;
   title: string;
   body?: string;
@@ -9,8 +11,9 @@ export type CreateIssueFormValues = {
   assignees?: string[];
   milestone?: string;
   dueDate?: string;
-  [key: string]: unknown;
 };
+
+export type CreateIssueFormValues = BaseCreateIssueFormValues & Partial<Record<ExclusiveLabelField, string>>;
 
 export type CreateIssueFormError = {
   error: string;
@@ -63,10 +66,10 @@ export function buildCreateIssueParams(values: CreateIssueFormValues): CreateIss
 
   const regularLabels = (values.labels ?? []).map((value) => parseInt(value, 10)).filter(Number.isFinite);
   const exclusiveLabels = Object.keys(values)
-    .filter((key) => key.startsWith("label."))
+    .filter((key): key is ExclusiveLabelField => key.startsWith("label."))
     .map((key) => values[key])
-    .filter(Boolean)
-    .map((value) => parseInt(value as string, 10))
+    .filter((value): value is string => Boolean(value))
+    .map((value) => parseInt(value, 10))
     .filter(Number.isFinite);
   const labels = [...regularLabels, ...exclusiveLabels];
 
