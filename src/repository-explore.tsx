@@ -6,9 +6,10 @@ import { useRepositories } from "./hooks/useRepositories";
 import { RepositorySort, RepositorySortOptions } from "./domain/repository-sort";
 import CreateIssue from "./issue-create";
 import type { Repository } from "./types/api";
+import { CacheKey } from "./constants";
 
 export default function Command() {
-  const [sort, setSort] = useCachedState<RepositorySort>(RepositorySort.MostStars);
+  const [sort, setSort] = useCachedState<RepositorySort>(`${CacheKey.Repositories}-sort`, RepositorySort.MostStars);
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
   const { items, isLoading, pagination } = useRepositories(sort);

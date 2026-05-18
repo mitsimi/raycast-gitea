@@ -7,9 +7,13 @@ import CreateIssue from "./issue-create";
 import type { Repository } from "./types/api";
 
 import { useState } from "react";
+import { CacheKey } from "./constants";
 
 export default function Command() {
-  const [sort, setSort] = useCachedState<RepositorySort>(RepositorySort.RecentlyUpdated);
+  const [sort, setSort] = useCachedState<RepositorySort>(
+    `${CacheKey.UserRepositories}-sort`,
+    RepositorySort.RecentlyUpdated,
+  );
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
   const { items, isLoading, pagination } = useUserRepositories(sort);

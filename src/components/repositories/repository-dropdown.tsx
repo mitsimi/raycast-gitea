@@ -13,7 +13,6 @@ export default function RepositoryDropdown<TValue extends string>({
   return (
     <List.Dropdown
       tooltip="Filter repositories"
-      storeValue={true}
       onChange={(newValue) => {
         onFilterChange(newValue as TValue);
       }}
