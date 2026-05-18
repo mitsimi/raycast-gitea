@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form, Icon, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Color, Form, Icon, showToast, Toast } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
 import { LabelPicker } from "./components/issues";
@@ -55,9 +55,7 @@ export default function Command(props: { initialRepo?: Repository }) {
             <Form.Dropdown.Item
               key={initialRepo.id ?? initialRepo.full_name ?? initialRepo.name ?? "repo"}
               title={initialRepo.full_name ?? initialRepo.name ?? ""}
-              icon={{
-                source: initialRepo.avatar_url || initialRepo.owner?.avatar_url || "icon/repo.svg",
-              }}
+              icon={getRepositoryIcon(initialRepo)}
               value={initialRepo.full_name ?? ""}
             />
           </Form.Dropdown.Section>
@@ -68,7 +66,7 @@ export default function Command(props: { initialRepo?: Repository }) {
             <Form.Dropdown.Item
               key={repo.id ?? repo.full_name ?? repo.name ?? "repo"}
               title={repo.full_name ?? repo.name ?? ""}
-              icon={{ source: repo.avatar_url || repo.owner?.avatar_url || "" }}
+              icon={getRepositoryIcon(repo)}
               value={repo.full_name ?? ""}
             />
           ))}
@@ -113,6 +111,11 @@ export default function Command(props: { initialRepo?: Repository }) {
       )}
     </Form>
   );
+}
+
+function getRepositoryIcon(repo: Repository) {
+  const avatarUrl = repo.avatar_url || repo.owner?.avatar_url;
+  return avatarUrl ? { source: avatarUrl } : { source: "icon/repo.svg", tintColor: Color.PrimaryText };
 }
 
 async function handleSubmit(
