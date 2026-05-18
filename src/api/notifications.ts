@@ -1,9 +1,12 @@
 import { getClient } from "./client";
 import type { NotificationStatus } from "../domain/notification";
-import type { NotificationThread, PathParamsOf, QueryOf } from "../types/api";
+import type { NotificationThread } from "../types/api";
 
-export type ListNotificationParams = Omit<QueryOf<"notifyGetList">, "status-types"> & {
+export type ListNotificationParams = {
+  all?: boolean;
   statusTypes?: NotificationStatus[];
+  limit?: number;
+  page?: number;
 };
 export async function listNotifications(params: ListNotificationParams = {}): Promise<NotificationThread[]> {
   const client = getClient();
@@ -17,7 +20,7 @@ export async function listNotifications(params: ListNotificationParams = {}): Pr
   return data ?? [];
 }
 
-export type UpdateNotificationsParams = PathParamsOf<"notifyReadThread"> & { toStatus: NotificationStatus };
+export type UpdateNotificationsParams = { id: string; toStatus: NotificationStatus };
 export async function updateNotificationStatus(params: UpdateNotificationsParams): Promise<void> {
   const client = getClient();
   const { data, error } = await client.PATCH("/notifications/threads/{id}", {
