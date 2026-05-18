@@ -29,13 +29,14 @@ export default function Command() {
     return { state, owner, repo, query } as IssueSearchOptions & { query?: string };
   }, [searchText, state]);
 
-  const { items, isLoading } = useSearchIssues(options);
+  const { items, isLoading, pagination } = useSearchIssues(options);
 
   return (
     <List
       isLoading={isLoading}
       searchBarPlaceholder="Search issues"
       onSearchTextChange={setSearchText}
+      pagination={pagination}
       throttle
       searchBarAccessory={
         <List.Dropdown

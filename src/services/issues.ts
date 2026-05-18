@@ -18,6 +18,7 @@ export type SearchIssuesParams = {
   state?: IssueListParams["state"];
   owner?: string;
   repo?: string;
+  page?: number;
   limit?: number;
 };
 
@@ -60,21 +61,27 @@ export async function getMyIssues(params: MyIssuesParams): Promise<PaginatedResu
   );
 }
 
-export async function searchIssues(params: SearchIssuesParams): Promise<Issue[]> {
+export async function searchIssues(params: SearchIssuesParams): Promise<PaginatedResult<Issue>> {
   const data = await api.issues.search({
     type: "issues",
     state: params.state,
     q: params.query?.trim() ? params.query : undefined,
     owner: params.owner,
+    page: params.page,
     limit: params.limit,
   });
 
-  return params.repo
+  const items = params.repo
     ? data.filter(
         (issue) =>
           issue.repository?.full_name === getRepositoryFullName(params) || issue.repository?.name === params.repo,
       )
     : data;
+
+  return {
+    items,
+    hasMore: params.limit != null && data.length === params.limit,
+  };
 }
 
 export async function getCreateIssueMetadata({ owner, repo }: CreateIssueMetadataParams): Promise<CreateIssueMetadata> {

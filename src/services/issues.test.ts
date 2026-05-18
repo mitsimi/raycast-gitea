@@ -32,15 +32,37 @@ describe("issue services", () => {
       issue({ id: 2, repository: { full_name: "alice/other" } }),
     ]);
 
-    await expect(searchIssues({ owner: "alice", repo: "app", query: "bug", state: "open" })).resolves.toEqual([
-      issue({ id: 1, repository: { full_name: "alice/app" } }),
-    ]);
+    await expect(searchIssues({ owner: "alice", repo: "app", query: "bug", state: "open" })).resolves.toEqual({
+      items: [issue({ id: 1, repository: { full_name: "alice/app" } })],
+      hasMore: false,
+    });
     expect(issueApi.search).toHaveBeenCalledWith({
       type: "issues",
       state: "open",
       q: "bug",
       owner: "alice",
+      page: undefined,
       limit: undefined,
+    });
+  });
+
+  it("searches a requested page and reports hasMore from the raw page size", async () => {
+    issueApi.search.mockResolvedValue([
+      issue({ id: 1, repository: { full_name: "alice/app" } }),
+      issue({ id: 2, repository: { full_name: "alice/other" } }),
+    ]);
+
+    await expect(searchIssues({ owner: "alice", repo: "app", page: 2, limit: 2 })).resolves.toEqual({
+      items: [issue({ id: 1, repository: { full_name: "alice/app" } })],
+      hasMore: true,
+    });
+    expect(issueApi.search).toHaveBeenCalledWith({
+      type: "issues",
+      state: undefined,
+      q: undefined,
+      owner: "alice",
+      page: 2,
+      limit: 2,
     });
   });
 
