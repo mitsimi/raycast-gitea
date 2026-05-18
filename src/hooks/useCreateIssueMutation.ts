@@ -7,13 +7,15 @@ import { createIssue } from "../services/issues";
 export function useCreateIssueMutation() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = async (params: CreateIssueParams) => {
+  const submit = async (params: CreateIssueParams): Promise<boolean> => {
     setIsSubmitting(true);
     try {
       await createIssue(params);
       await showToast({ style: Toast.Style.Success, title: "Issue created" });
+      return true;
     } catch (error) {
       await showFailureToast(error, { title: "Failed to create issue" });
+      return false;
     } finally {
       setIsSubmitting(false);
     }

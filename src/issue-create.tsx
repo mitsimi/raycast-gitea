@@ -12,6 +12,7 @@ export default function Command(props: { initialRepo?: Repository }) {
   const { items: repositories, isLoading, pagination } = useUserRepositories();
   const { createIssue, isSubmitting } = useCreateIssueMutation();
   const [selectedRepo, setSelectedRepo] = useState<string>(props.initialRepo?.full_name ?? "");
+  const [formKey, setFormKey] = useState(0);
 
   useEffect(() => {
     if (!isLoading && pagination.hasMore) {
@@ -32,13 +33,19 @@ export default function Command(props: { initialRepo?: Repository }) {
 
   const initialRepo = props.initialRepo;
 
+  const resetForm = () => {
+    setFormKey((key) => key + 1);
+    setSelectedRepo(initialRepo?.full_name ?? "");
+  };
+
   return (
     <Form
+      key={formKey}
       isLoading={isLoading || isSubmitting}
       enableDrafts={initialRepo === undefined}
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Create Issue" onSubmit={(values) => handleSubmit(values, createIssue)} />
+          <Action.SubmitForm title="Create Issue" onSubmit={(values) => handleSubmit(values, createIssue, resetForm)} />
         </ActionPanel>
       }
     >
@@ -121,6 +128,7 @@ function getRepositoryIcon(repo: Repository) {
 async function handleSubmit(
   values: Form.Values,
   createIssue: ReturnType<typeof useCreateIssueMutation>["createIssue"],
+  resetForm: () => void,
 ) {
   const formValues = values as CreateIssueFormValues;
   if (!formValues.repository || !formValues.title?.trim()) {
@@ -136,5 +144,8 @@ async function handleSubmit(
     return;
   }
 
-  await createIssue(params);
+  const didCreate = await createIssue(params);
+  if (didCreate) {
+    resetForm();
+  }
 }
