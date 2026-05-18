@@ -12,7 +12,6 @@ export type NotificationSubject = Schemas["NotificationSubject"];
 export type PullRequestMeta = Schemas["PullRequestMeta"];
 export type RepositoryMeta = Schemas["RepositoryMeta"];
 export type SearchResults = Schemas["SearchResults"];
-export type StateType = Schemas["StateType"];
 
 export const IssueState = {
   Open: "open",
@@ -20,6 +19,7 @@ export const IssueState = {
   Merged: "merged",
 } as const;
 export type IssueState = (typeof IssueState)[keyof typeof IssueState];
+export type StateType = IssueState;
 
 export const NotificationSubjectType = {
   Issue: "issue",

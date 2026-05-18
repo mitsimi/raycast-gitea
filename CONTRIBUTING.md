@@ -17,21 +17,26 @@ Raycast will load the extension in developer mode. Use Raycast's command search 
 
 ## Scripts
 
-- `npm run gen:swagger`: Converts Swagger v2 to v3 and generates `openapi.json`
-- `npm run gen:types`: Generates TypeScript types from `openapi.json`
+- `npm run gen:types`: Downloads the Gitea Swagger spec and regenerates `src/types/gitea.d.ts`
 - `npm run gen:langs`: Regenerates `assets/languages.json` from GitHub Linguist
 
 ## OpenAPI / Swagger Workflow
 
-Gitea provides a Swagger (OpenAPI 2.0) spec. This project converts it to OpenAPI 3 and generates types.
+Gitea provides a Swagger (OpenAPI 2.0) spec. This project downloads the spec, converts it to OpenAPI 3 in a temporary directory, and generates TypeScript types.
 
 Typical flow:
 
-1. Update or replace `swagger.v1.json` with the latest spec from your Gitea instance (http(s)://<your-gitea-instance>/swagger.v1.json) or the official Gitea Swagger spec (https://gitea.com/swagger.v1.json).
-2. Convert v2 to v3: `npm run gen:swagger` (creates `openapi.json`)
-3. Generate types: `npm run gen:types` (writes `src/types/gitea.d.ts`)
+1. Generate types from the official Gitea spec: `npm run gen:types`
+2. Review and commit changes to `src/types/gitea.d.ts`
 
-Re-run these steps whenever endpoints or models change in Gitea.
+To generate from a specific Gitea instance or a local spec file, pass the source as an argument:
+
+```sh
+npm run gen:types -- https://example.com/swagger.v1.json
+npm run gen:types -- ./tmp/swagger.v1.json
+```
+
+Re-run this whenever endpoints or models change in Gitea. The intermediate `swagger.v1.json` and `openapi.json` files are intentionally ignored and should not be committed.
 
 ## Language Metadata
 

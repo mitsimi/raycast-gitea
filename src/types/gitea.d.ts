@@ -4,40 +4,6 @@
  */
 
 export interface paths {
-    "/activitypub/user-id/{user-id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Returns the Person actor for a user */
-        get: operations["activitypubPerson"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/activitypub/user-id/{user-id}/inbox": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Send to the inbox */
-        post: operations["activitypubPersonInbox"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/admin/actions/jobs": {
         parameters: {
             query?: never;
@@ -81,7 +47,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Get an global actions runner registration token */
+        /** Get a global actions runner registration token */
         post: operations["adminCreateRunnerRegistrationToken"];
         delete?: never;
         options?: never;
@@ -96,15 +62,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get an global runner */
+        /** Get a global runner */
         get: operations["getAdminRunner"];
         put?: never;
         post?: never;
-        /** Delete an global runner */
+        /** Delete a global runner */
         delete: operations["deleteAdminRunner"];
         options?: never;
         head?: never;
-        patch?: never;
+        /** Update a global runner */
+        patch: operations["updateAdminRunner"];
         trace?: never;
     };
     "/admin/actions/runs": {
@@ -238,23 +205,6 @@ export interface paths {
         };
         /** List all organizations */
         get: operations["adminGetAllOrgs"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/admin/runners/registration-token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get an global actions runner registration token */
-        get: operations["adminGetRunnerRegistrationToken"];
         put?: never;
         post?: never;
         delete?: never;
@@ -591,23 +541,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/nodeinfo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Returns the nodeinfo of the Gitea application */
-        get: operations["getNodeInfo"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/notifications": {
         parameters: {
             query?: never;
@@ -759,8 +692,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get an organization's actions runner registration token */
-        get: operations["orgGetRunnerRegistrationToken"];
+        get?: never;
         put?: never;
         /** Get an organization's actions runner registration token */
         post: operations["orgCreateRunnerRegistrationToken"];
@@ -785,7 +717,8 @@ export interface paths {
         delete: operations["deleteOrgRunner"];
         options?: never;
         head?: never;
-        patch?: never;
+        /** Update an org-level runner */
+        patch: operations["updateOrgRunner"];
         trace?: never;
     };
     "/orgs/{org}/actions/runs": {
@@ -1122,7 +1055,8 @@ export interface paths {
         put?: never;
         /** Create a repository in an organization */
         post: operations["createOrgRepo"];
-        delete?: never;
+        /** Delete all repositories in an organization */
+        delete: operations["orgDeleteRepos"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1191,7 +1125,8 @@ export interface paths {
         get: operations["listPackageVersions"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** Delete a package */
+        delete: operations["deletePackage"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1259,8 +1194,8 @@ export interface paths {
         get: operations["getPackage"];
         put?: never;
         post?: never;
-        /** Delete a package */
-        delete: operations["deletePackage"];
+        /** Delete a package version */
+        delete: operations["deletePackageVersion"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1480,8 +1415,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get a repository's actions runner registration token */
-        get: operations["repoGetRunnerRegistrationToken"];
+        get?: never;
         put?: never;
         /** Get a repository's actions runner registration token */
         post: operations["repoCreateRunnerRegistrationToken"];
@@ -1498,15 +1432,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get an repo-level runner */
+        /** Get a repo-level runner */
         get: operations["getRepoRunner"];
         put?: never;
         post?: never;
-        /** Delete an repo-level runner */
+        /** Delete a repo-level runner */
         delete: operations["deleteRepoRunner"];
         options?: never;
         head?: never;
-        patch?: never;
+        /** Update a repo-level runner */
+        patch: operations["updateRepoRunner"];
         trace?: never;
     };
     "/repos/{owner}/{repo}/actions/runs": {
@@ -1561,6 +1496,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/repos/{owner}/{repo}/actions/runs/{run}/attempts/{attempt}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Gets a specific workflow run attempt */
+        get: operations["getWorkflowRunAttempt"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/repos/{owner}/{repo}/actions/runs/{run}/attempts/{attempt}/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lists all jobs for a workflow run attempt */
+        get: operations["listWorkflowRunAttemptJobs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/repos/{owner}/{repo}/actions/runs/{run}/jobs": {
         parameters: {
             query?: never;
@@ -1572,6 +1541,57 @@ export interface paths {
         get: operations["listWorkflowRunJobs"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/repos/{owner}/{repo}/actions/runs/{run}/jobs/{job_id}/rerun": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reruns a specific workflow job in a run */
+        post: operations["rerunWorkflowJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/repos/{owner}/{repo}/actions/runs/{run}/rerun": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reruns an entire workflow run */
+        post: operations["rerunWorkflowRun"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/repos/{owner}/{repo}/actions/runs/{run}/rerun-failed-jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reruns all failed jobs in a workflow run */
+        post: operations["rerunFailedWorkflowRun"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1902,7 +1922,8 @@ export interface paths {
         };
         /** Retrieve a specific branch from a repository, including its effective branch protection */
         get: operations["repoGetBranch"];
-        put?: never;
+        /** Update a branch reference to a new commit */
+        put: operations["repoUpdateBranch"];
         post?: never;
         /** Delete a specific branch from a repository */
         delete: operations["repoDeleteBranch"];
@@ -2103,7 +2124,7 @@ export interface paths {
          * @description This API follows GitHub's design, and it is not easy to use. Recommend users to use the "contents-ext" API instead.
          */
         get: operations["repoGetContents"];
-        /** Update a file in a repository */
+        /** Update a file in a repository if SHA is set, or create the file if SHA is not set */
         put: operations["repoUpdateFile"];
         /** Create a file in a repository */
         post: operations["repoCreateFile"];
@@ -2609,7 +2630,11 @@ export interface paths {
         delete: operations["issueDelete"];
         options?: never;
         head?: never;
-        /** Edit an issue. If using deadline only the date will be taken into account, and time of day ignored. */
+        /**
+         * Edit an issue. If using deadline only the date will be taken into account, and time of day ignored.
+         * @description Pass `content_version` to enable optimistic locking on body edits.
+         *     If the version doesn't match the current value, the request fails with 409 Conflict.
+         */
         patch: operations["issueEditIssue"];
         trace?: never;
     };
@@ -3260,6 +3285,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/repos/{owner}/{repo}/pulls/comments/{id}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resolve a pull request review comment */
+        post: operations["repoResolvePullReviewComment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/repos/{owner}/{repo}/pulls/comments/{id}/unresolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Unresolve a pull request review comment */
+        post: operations["repoUnresolvePullReviewComment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/repos/{owner}/{repo}/pulls/pinned": {
         parameters: {
             query?: never;
@@ -3323,6 +3382,23 @@ export interface paths {
         get: operations["repoDownloadPullDiffOrPatch"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/repos/{owner}/{repo}/pulls/{index}/comments/{id}/replies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reply to a pull request review comment */
+        post: operations["repoCreatePullReviewCommentReply"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3410,7 +3486,7 @@ export interface paths {
         /** List all reviews for a pull request */
         get: operations["repoListPullReviews"];
         put?: never;
-        /** Create a review to an pull request */
+        /** Create a review to a pull request */
         post: operations["repoCreatePullReview"];
         delete?: never;
         options?: never;
@@ -3428,7 +3504,7 @@ export interface paths {
         /** Get a specific review for a pull request */
         get: operations["repoGetPullReview"];
         put?: never;
-        /** Submit a pending review to an pull request */
+        /** Submit a pending review to a pull request */
         post: operations["repoSubmitPullReview"];
         /** Delete a specific review from a pull request */
         delete: operations["repoDeletePullReview"];
@@ -4431,10 +4507,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get an user's actions runner registration token */
-        get: operations["userGetRunnerRegistrationToken"];
+        get?: never;
         put?: never;
-        /** Get an user's actions runner registration token */
+        /** Get a user's actions runner registration token */
         post: operations["userCreateRunnerRegistrationToken"];
         delete?: never;
         options?: never;
@@ -4449,15 +4524,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get an user-level runner */
+        /** Get a user-level runner */
         get: operations["getUserRunner"];
         put?: never;
         post?: never;
-        /** Delete an user-level runner */
+        /** Delete a user-level runner */
         delete: operations["deleteUserRunner"];
         options?: never;
         head?: never;
-        patch?: never;
+        /** Update a user-level runner */
+        patch: operations["updateUserRunner"];
         trace?: never;
     };
     "/user/actions/runs": {
@@ -5349,6 +5425,7 @@ export interface components {
         /** @description ActionRunner represents a Runner */
         ActionRunner: {
             busy?: boolean;
+            disabled?: boolean;
             ephemeral?: boolean;
             /** Format: int64 */
             id?: number;
@@ -5511,10 +5588,20 @@ export interface components {
             /** Format: int64 */
             id?: number;
             path?: string;
+            /**
+             * @description PreviousAttemptURL is the API URL of the previous attempt of this run, e.g. ".../actions/runs/{run_id}/attempts/{attempt-1}".
+             *     It is set only when the current attempt is > 1 (i.e. a rerun). For the first attempt, or for legacy runs that pre-date ActionRunAttempt, it is null.
+             */
+            previous_attempt_url?: string;
             repository?: components["schemas"]["Repository"];
             /** Format: int64 */
             repository_id?: number;
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description RunAttempt is 1-based for runs created after ActionRunAttempt was introduced.
+             *     A value of 0 is a legacy-only sentinel for runs created before attempts existed
+             *     and indicates no corresponding /attempts/{n} resource is available.
+             */
             run_attempt?: number;
             /** Format: int64 */
             run_number?: number;
@@ -5588,14 +5675,15 @@ export interface components {
              */
             user_id?: number;
         };
-        /** @description ActivityPub type */
-        ActivityPub: {
-            /** @description Context defines the JSON-LD context for ActivityPub */
-            "@context"?: string;
-        };
         /** @description AddCollaboratorOption options when adding a user as a collaborator of a repository */
         AddCollaboratorOption: {
-            /** @enum {string} */
+            /**
+             * @description Permission level to grant the collaborator
+             *     read RepoWritePermissionRead
+             *     write RepoWritePermissionWrite
+             *     admin RepoWritePermissionAdmin
+             * @enum {string}
+             */
             permission?: "read" | "write" | "admin";
         };
         /** @description AddTimeOption options for adding time to an issue */
@@ -5639,14 +5727,16 @@ export interface components {
          */
         ApplyDiffPatchFileOptions: {
             author?: components["schemas"]["Identity"];
-            /** @description branch (optional) to base this file from. if not given, the default branch is used */
+            /** @description branch (optional) is the base branch for the changes. If not supplied, the default branch is used */
             branch?: string;
             committer?: components["schemas"]["Identity"];
             content: string;
             dates?: components["schemas"]["CommitDateOptions"];
-            /** @description message (optional) for the commit of this file. if not supplied, a default message will be used */
+            /** @description force_push (optional) will do a force-push if the new branch already exists */
+            force_push?: boolean;
+            /** @description message (optional) is the commit message of the changes. If not supplied, a default message will be used */
             message?: string;
-            /** @description new_branch (optional) will make a new branch from `branch` before creating the file */
+            /** @description new_branch (optional) will make a new branch from base branch for the changes. If not supplied, the changes will be committed to the base branch */
             new_branch?: string;
             /** @description Add a Signed-off-by trailer by the committer at the end of the commit log message. */
             signoff?: boolean;
@@ -5776,15 +5866,17 @@ export interface components {
          */
         ChangeFilesOptions: {
             author?: components["schemas"]["Identity"];
-            /** @description branch (optional) to base this file from. if not given, the default branch is used */
+            /** @description branch (optional) is the base branch for the changes. If not supplied, the default branch is used */
             branch?: string;
             committer?: components["schemas"]["Identity"];
             dates?: components["schemas"]["CommitDateOptions"];
             /** @description list of file operations */
             files: components["schemas"]["ChangeFileOperation"][];
-            /** @description message (optional) for the commit of this file. if not supplied, a default message will be used */
+            /** @description force_push (optional) will do a force-push if the new branch already exists */
+            force_push?: boolean;
+            /** @description message (optional) is the commit message of the changes. If not supplied, a default message will be used */
             message?: string;
-            /** @description new_branch (optional) will make a new branch from `branch` before creating the file */
+            /** @description new_branch (optional) will make a new branch from base branch for the changes. If not supplied, the changes will be committed to the base branch */
             new_branch?: string;
             /** @description Add a Signed-off-by trailer by the committer at the end of the commit log message. */
             signoff?: boolean;
@@ -6118,20 +6210,22 @@ export interface components {
             emails?: string[];
         };
         /**
-         * @description CreateFileOptions options for creating files
+         * @description CreateFileOptions options for creating a file
          *     Note: `author` and `committer` are optional (if only one is given, it will be used for the other, otherwise the authenticated user will be used)
          */
         CreateFileOptions: {
             author?: components["schemas"]["Identity"];
-            /** @description branch (optional) to base this file from. if not given, the default branch is used */
+            /** @description branch (optional) is the base branch for the changes. If not supplied, the default branch is used */
             branch?: string;
             committer?: components["schemas"]["Identity"];
             /** @description content must be base64 encoded */
             content: string;
             dates?: components["schemas"]["CommitDateOptions"];
-            /** @description message (optional) for the commit of this file. if not supplied, a default message will be used */
+            /** @description force_push (optional) will do a force-push if the new branch already exists */
+            force_push?: boolean;
+            /** @description message (optional) is the commit message of the changes. If not supplied, a default message will be used */
             message?: string;
-            /** @description new_branch (optional) will make a new branch from `branch` before creating the file */
+            /** @description new_branch (optional) will make a new branch from base branch for the changes. If not supplied, the changes will be committed to the base branch */
             new_branch?: string;
             /** @description Add a Signed-off-by trailer by the committer at the end of the commit log message. */
             signoff?: boolean;
@@ -6161,6 +6255,8 @@ export interface components {
             config: components["schemas"]["CreateHookOptionConfig"];
             /** @description List of events that will trigger this webhook */
             events?: string[];
+            /** @description Optional human-readable name for the webhook */
+            name?: string;
             /** @enum {string} */
             type: "dingtalk" | "discord" | "gitea" | "gogs" | "msteams" | "slack" | "telegram" | "feishu" | "wechatwork" | "packagist";
         };
@@ -6191,6 +6287,8 @@ export interface components {
              * @description milestone id
              */
             milestone?: number;
+            /** @description list of project ids */
+            projects?: number[];
             ref?: string;
             title: string;
         };
@@ -6260,6 +6358,9 @@ export interface components {
             username: string;
             /**
              * @description possible values are `public` (default), `limited` or `private`
+             *     public UserVisibilityPublic
+             *     limited UserVisibilityLimited
+             *     private UserVisibilityPrivate
              * @enum {string}
              */
             visibility?: "public" | "limited" | "private";
@@ -6268,6 +6369,8 @@ export interface components {
         };
         /** @description CreatePullRequestOption options when creating a pull request */
         CreatePullRequestOption: {
+            /** @description Whether maintainers can edit the pull request */
+            allow_maintainer_edit?: boolean;
             /** @description The primary assignee username */
             assignee?: string;
             /** @description The list of assignee usernames */
@@ -6313,12 +6416,17 @@ export interface components {
             /** @description the tree path */
             path?: string;
         };
-        /** @description CreatePullReviewOptions are options to create a pull review */
+        /** @description CreatePullReviewCommentReplyOptions are options to reply to a pull request review comment */
+        CreatePullReviewCommentReplyOptions: {
+            body?: string;
+        };
+        /** @description CreatePullReviewOptions are options to create a pull request review */
         CreatePullReviewOptions: {
             body?: string;
             comments?: components["schemas"]["CreatePullReviewComment"][];
             commit_id?: string;
-            event?: components["schemas"]["ReviewStateType"];
+            /** @enum {string} */
+            event?: "APPROVED" | "PENDING" | "COMMENT" | "REQUEST_CHANGES" | "REQUEST_REVIEW";
         };
         /** CreatePushMirrorOption represents need information to create a push mirror of a repository. */
         CreatePushMirrorOption: {
@@ -6366,7 +6474,9 @@ export interface components {
             /** @description Name of the repository to create */
             name: string;
             /**
-             * @description ObjectFormatName of the underlying git repository
+             * @description ObjectFormatName of the underlying git repository, empty string for default (sha1)
+             *     sha1 ObjectFormatSHA1
+             *     sha256 ObjectFormatSHA256
              * @enum {string}
              */
             object_format_name?: "sha1" | "sha256";
@@ -6483,8 +6593,14 @@ export interface components {
             source_id?: number;
             /** @description username of the user */
             username: string;
-            /** @description User visibility level: public, limited, or private */
-            visibility?: string;
+            /**
+             * @description User visibility level: public, limited, or private
+             *     public UserVisibilityPublic
+             *     limited UserVisibilityLimited
+             *     private UserVisibilityPrivate
+             * @enum {string}
+             */
+            visibility?: "public" | "limited" | "private";
         };
         /** @description CreateVariableOption the option when creating variable */
         CreateVariableOption: {
@@ -6530,20 +6646,22 @@ export interface components {
             emails?: string[];
         };
         /**
-         * @description DeleteFileOptions options for deleting files (used for other File structs below)
+         * @description DeleteFileOptions options for deleting a file
          *     Note: `author` and `committer` are optional (if only one is given, it will be used for the other, otherwise the authenticated user will be used)
          */
         DeleteFileOptions: {
             author?: components["schemas"]["Identity"];
-            /** @description branch (optional) to base this file from. if not given, the default branch is used */
+            /** @description branch (optional) is the base branch for the changes. If not supplied, the default branch is used */
             branch?: string;
             committer?: components["schemas"]["Identity"];
             dates?: components["schemas"]["CommitDateOptions"];
-            /** @description message (optional) for the commit of this file. if not supplied, a default message will be used */
+            /** @description force_push (optional) will do a force-push if the new branch already exists */
+            force_push?: boolean;
+            /** @description message (optional) is the commit message of the changes. If not supplied, a default message will be used */
             message?: string;
-            /** @description new_branch (optional) will make a new branch from `branch` before creating the file */
+            /** @description new_branch (optional) will make a new branch from base branch for the changes. If not supplied, the changes will be committed to the base branch */
             new_branch?: string;
-            /** @description the blob ID (SHA) for the file that already exists, it is required for changing existing files */
+            /** @description the blob ID (SHA) for the file to delete */
             sha: string;
             /** @description Add a Signed-off-by trailer by the committer at the end of the commit log message. */
             signoff?: boolean;
@@ -6574,10 +6692,14 @@ export interface components {
             /** @description URL is the API URL for this deploy key */
             url?: string;
         };
-        /** @description DismissPullReviewOptions are options to dismiss a pull review */
+        /** @description DismissPullReviewOptions are options to dismiss a pull request review */
         DismissPullReviewOptions: {
             message?: string;
             priors?: boolean;
+        };
+        /** EditActionRunnerOption represents the editable fields for a runner. */
+        EditActionRunnerOption: {
+            disabled: boolean;
         };
         /** @description EditAttachmentOptions options for editing attachments */
         EditAttachmentOptions: {
@@ -6642,6 +6764,8 @@ export interface components {
             };
             /** @description List of events that trigger this webhook */
             events?: string[];
+            /** @description Optional human-readable name */
+            name?: string;
         };
         /** @description EditIssueCommentOption options for editing a comment */
         EditIssueCommentOption: {
@@ -6653,10 +6777,17 @@ export interface components {
             assignee?: string;
             assignees?: string[];
             body?: string;
+            /**
+             * Format: int64
+             * @description The current version of the issue content to detect conflicts during editing
+             */
+            content_version?: number;
             /** Format: date-time */
             due_date?: string;
             /** Format: int64 */
             milestone?: number;
+            /** @description list of project ids to set (replaces existing projects) */
+            projects?: number[];
             ref?: string;
             state?: string;
             title?: string;
@@ -6684,8 +6815,11 @@ export interface components {
              * @description Deadline is the updated due date for the milestone
              */
             due_on?: string;
-            /** @description State indicates the updated state of the milestone */
-            state?: string;
+            /**
+             * @description State indicates the updated state of the milestone
+             * @enum {string}
+             */
+            state?: "open" | "closed";
             /** @description Title is the updated title of the milestone */
             title?: string;
         };
@@ -6693,7 +6827,7 @@ export interface components {
         EditOrgOption: {
             /** @description The description of the organization */
             description?: string;
-            /** @description The email address of the organization */
+            /** @description The email address of the organization; use empty string to clear */
             email?: string;
             /** @description The full display name of the organization */
             full_name?: string;
@@ -6703,6 +6837,9 @@ export interface components {
             repo_admin_change_team_access?: boolean;
             /**
              * @description possible values are `public`, `limited` or `private`
+             *     public UserVisibilityPublic
+             *     limited UserVisibilityLimited
+             *     private UserVisibilityPrivate
              * @enum {string}
              */
             visibility?: "public" | "limited" | "private";
@@ -6721,6 +6858,11 @@ export interface components {
             base?: string;
             /** @description The new description body for the pull request */
             body?: string;
+            /**
+             * Format: int64
+             * @description The current version of the pull request content to detect conflicts during editing
+             */
+            content_version?: number;
             /** Format: date-time */
             due_date?: string;
             /** @description The new list of label IDs for the pull request */
@@ -6916,8 +7058,14 @@ export interface components {
             restricted?: boolean;
             /** Format: int64 */
             source_id: number;
-            /** @description User visibility level: public, limited, or private */
-            visibility?: string;
+            /**
+             * @description User visibility level: public, limited, or private
+             *     public UserVisibilityPublic
+             *     limited UserVisibilityLimited
+             *     private UserVisibilityPrivate
+             * @enum {string}
+             */
+            visibility?: "public" | "limited" | "private";
             /** @description The user's personal website URL */
             website?: string;
         };
@@ -7247,6 +7395,8 @@ export interface components {
              * @description The unique identifier of the webhook
              */
             id?: number;
+            /** @description Optional human-readable name for the webhook */
+            name?: string;
             /** @description The type of the webhook (e.g., gitea, slack, discord) */
             type?: string;
             /** Format: date-time */
@@ -7278,6 +7428,11 @@ export interface components {
             closed_at?: string;
             /** Format: int64 */
             comments?: number;
+            /**
+             * Format: int64
+             * @description The version of the issue content for optimistic locking
+             */
+            content_version?: number;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -7295,10 +7450,12 @@ export interface components {
             original_author_id?: number;
             /** Format: int64 */
             pin_order?: number;
+            projects?: components["schemas"]["Project"][];
             pull_request?: components["schemas"]["PullRequestMeta"];
             ref?: string;
             repository?: components["schemas"]["RepositoryMeta"];
-            state?: components["schemas"]["StateType"];
+            /** @enum {string} */
+            state?: "open" | "closed";
             /** Format: int64 */
             time_estimate?: number;
             title?: string;
@@ -7331,16 +7488,13 @@ export interface components {
                 [key: string]: unknown;
             };
             id?: string;
-            type?: components["schemas"]["IssueFormFieldType"];
+            /** @enum {string} */
+            type?: "markdown" | "textarea" | "input" | "dropdown" | "checkboxes";
             validations?: {
                 [key: string]: unknown;
             };
-            visible?: components["schemas"]["IssueFormFieldVisible"][];
+            visible?: ("form" | "content")[];
         };
-        /** IssueFormFieldType defines issue form field type, can be "markdown", "textarea", "input", "dropdown" or "checkboxes" */
-        IssueFormFieldType: string;
-        /** @description IssueFormFieldVisible defines issue form field visible */
-        IssueFormFieldVisible: string;
         /** @description IssueLabelsOption a collection of labels */
         IssueLabelsOption: {
             /**
@@ -7493,14 +7647,14 @@ export interface components {
         };
         /** @description MergePullRequestForm form for merging Pull Request */
         MergePullRequestOption: {
-            /** @enum {string} */
-            Do: "merge" | "rebase" | "rebase-merge" | "squash" | "fast-forward-only" | "manually-merged";
-            MergeCommitID?: string;
-            MergeMessageField?: string;
-            MergeTitleField?: string;
             delete_branch_after_merge?: boolean;
+            /** @enum {string} */
+            do: "merge" | "rebase" | "rebase-merge" | "squash" | "fast-forward-only" | "manually-merged";
             force_merge?: boolean;
             head_commit_id?: string;
+            merge_commit_id?: string;
+            merge_message_field?: string;
+            merge_title_field?: string;
             merge_when_checks_succeed?: boolean;
         };
         MergeUpstreamRequest: {
@@ -7569,7 +7723,13 @@ export interface components {
              * @description OpenIssues is the number of open issues in this milestone
              */
             open_issues?: number;
-            state?: components["schemas"]["StateType"];
+            /**
+             * @description State indicates if the milestone is open or closed
+             *     open StateOpen  StateOpen pr is opened
+             *     closed StateClosed  StateClosed pr is closed
+             * @enum {string}
+             */
+            state?: "open" | "closed";
             /** @description Title is the title of the milestone */
             title?: string;
             /** Format: date-time */
@@ -7666,10 +7826,25 @@ export interface components {
             latest_comment_html_url?: string;
             /** @description LatestCommentURL is the API URL for the latest comment */
             latest_comment_url?: string;
-            state?: components["schemas"]["StateType"];
+            /**
+             * @description State indicates the current state of the notification subject
+             *     open NotifySubjectStateOpen  NotifySubjectStateOpen is an open subject
+             *     closed NotifySubjectStateClosed  NotifySubjectStateClosed is a closed subject
+             *     merged NotifySubjectStateMerged  NotifySubjectStateMerged is a merged pull request
+             * @enum {string}
+             */
+            state?: "open" | "closed" | "merged";
             /** @description Title is the title of the notification subject */
             title?: string;
-            type?: components["schemas"]["NotifySubjectType"];
+            /**
+             * @description Type indicates the type of the notification subject
+             *     Issue NotifySubjectIssue  NotifySubjectIssue a issue is subject of an notification
+             *     Pull NotifySubjectPull  NotifySubjectPull a pull is subject of an notification
+             *     Commit NotifySubjectCommit  NotifySubjectCommit a commit is subject of an notification
+             *     Repository NotifySubjectRepository  NotifySubjectRepository a repository is subject of an notification
+             * @enum {string}
+             */
+            type?: "Issue" | "Pull" | "Commit" | "Repository";
             /** @description URL is the API URL for the notification subject */
             url?: string;
         };
@@ -7694,8 +7869,6 @@ export interface components {
             /** @description URL is the API URL for this notification thread */
             url?: string;
         };
-        /** @description NotifySubjectType represent type of notification subject */
-        NotifySubjectType: string;
         /** OAuth2Application represents an OAuth2 application. */
         OAuth2Application: {
             /** @description The client ID of the OAuth2 application */
@@ -7747,8 +7920,14 @@ export interface components {
              *     deprecated
              */
             username?: string;
-            /** @description The visibility level of the organization (public, limited, private) */
-            visibility?: string;
+            /**
+             * @description The visibility level of the organization (public, limited, private)
+             *     public UserVisibilityPublic
+             *     limited UserVisibilityLimited
+             *     private UserVisibilityPrivate
+             * @enum {string}
+             */
+            visibility?: "public" | "limited" | "private";
             /** @description The website URL of the organization */
             website?: string;
         };
@@ -7871,6 +8050,41 @@ export interface components {
             pull?: boolean;
             push?: boolean;
         };
+        /** @description Project represents a project */
+        Project: {
+            /** Format: date-time */
+            closed_at?: string;
+            /** Format: date-time */
+            created_at?: string;
+            /**
+             * Format: int64
+             * @description CreatorID is the user who created the project
+             */
+            creator_id?: number;
+            /** @description Description provides details about the project */
+            description?: string;
+            /**
+             * Format: int64
+             * @description ID is the unique identifier for the project
+             */
+            id?: number;
+            /** @description IsClosed indicates if the project is closed */
+            is_closed?: boolean;
+            /**
+             * Format: int64
+             * @description OwnerID is the owner of the project (for org-level projects)
+             */
+            owner_id?: number;
+            /**
+             * Format: int64
+             * @description RepoID is the repository this project belongs to (for repo-level projects)
+             */
+            repo_id?: number;
+            /** @description Title is the title of the project */
+            title?: string;
+            /** Format: date-time */
+            updated_at?: string;
+        };
         /** @description PublicKey publickey is a user key to push code to repository */
         PublicKey: {
             /** Format: date-time */
@@ -7926,6 +8140,11 @@ export interface components {
              * @description The number of comments on the pull request
              */
             comments?: number;
+            /**
+             * Format: int64
+             * @description The version of the pull request content for optimistic locking
+             */
+            content_version?: number;
             /** Format: date-time */
             created_at?: string;
             /**
@@ -7984,7 +8203,13 @@ export interface components {
              * @description number of review comments made on the diff of a PR review (not including comments on commits or issues in a PR)
              */
             review_comments?: number;
-            state?: components["schemas"]["StateType"];
+            /**
+             * @description The current state of the pull request
+             *     open StateOpen  StateOpen pr is opened
+             *     closed StateClosed  StateClosed pr is closed
+             * @enum {string}
+             */
+            state?: "open" | "closed";
             /** @description The title of the pull request */
             title?: string;
             /** Format: date-time */
@@ -8016,7 +8241,8 @@ export interface components {
             /** @description HTMLPullURL is the web URL for the pull request */
             pull_request_url?: string;
             stale?: boolean;
-            state?: components["schemas"]["ReviewStateType"];
+            /** @enum {string} */
+            state?: "APPROVED" | "PENDING" | "COMMENT" | "REQUEST_CHANGES" | "REQUEST_REVIEW";
             /** Format: date-time */
             submitted_at?: string;
             team?: components["schemas"]["Team"];
@@ -8048,7 +8274,7 @@ export interface components {
             updated_at?: string;
             user?: components["schemas"]["User"];
         };
-        /** @description PullReviewRequestOptions are options to add or remove pull review requests */
+        /** @description PullReviewRequestOptions are options to add or remove pull request review requests */
         PullReviewRequestOptions: {
             reviewers?: string[];
             team_reviewers?: string[];
@@ -8142,8 +8368,16 @@ export interface components {
         };
         /** @description RepoCollaboratorPermission to get repository permission for a collaborator */
         RepoCollaboratorPermission: {
-            /** @description Permission level of the collaborator */
-            permission?: string;
+            /**
+             * @description Permission level of the collaborator
+             *     none AccessLevelNameNone
+             *     read AccessLevelNameRead
+             *     write AccessLevelNameWrite
+             *     admin AccessLevelNameAdmin
+             *     owner AccessLevelNameOwner
+             * @enum {string}
+             */
+            permission?: "none" | "read" | "write" | "admin" | "owner";
             /** @description RoleName is the name of the permission role */
             role_name?: string;
             user?: components["schemas"]["User"];
@@ -8184,6 +8418,8 @@ export interface components {
             archived_at?: string;
             autodetect_manual_merge?: boolean;
             avatar_url?: string;
+            /** Format: int64 */
+            branch_count?: number;
             clone_url?: string;
             /** Format: date-time */
             created_at?: string;
@@ -8191,6 +8427,7 @@ export interface components {
             default_branch?: string;
             default_delete_branch_after_merge?: boolean;
             default_merge_style?: string;
+            default_target_branch?: string;
             description?: string;
             empty?: boolean;
             external_tracker?: components["schemas"]["ExternalTracker"];
@@ -8224,6 +8461,8 @@ export interface components {
             name?: string;
             /**
              * @description ObjectFormatName of the underlying git repository
+             *     sha1 ObjectFormatSHA1
+             *     sha256 ObjectFormatSHA256
              * @enum {string}
              */
             object_format_name?: "sha1" | "sha256";
@@ -8262,8 +8501,13 @@ export interface components {
             name?: string;
             owner?: string;
         };
-        /** @description ReviewStateType review state type */
-        ReviewStateType: string;
+        /** @description RunDetails returns workflow_dispatch runid and url */
+        RunDetails: {
+            html_url?: string;
+            run_url?: string;
+            /** Format: int64 */
+            workflow_run_id?: number;
+        };
         /** @description SearchResults results of a successful search */
         SearchResults: {
             /** @description Data contains the repository search results */
@@ -8285,8 +8529,6 @@ export interface components {
             /** @description Version is the server version string */
             version?: string;
         };
-        /** @description StateType issue state type */
-        StateType: string;
         /** @description StopWatch represent a running stopwatch */
         StopWatch: {
             /** Format: date-time */
@@ -8310,10 +8552,11 @@ export interface components {
              */
             seconds?: number;
         };
-        /** @description SubmitPullReviewOptions are options to submit a pending pull review */
+        /** @description SubmitPullReviewOptions are options to submit a pending pull request review */
         SubmitPullReviewOptions: {
             body?: string;
-            event?: components["schemas"]["ReviewStateType"];
+            /** @enum {string} */
+            event?: "APPROVED" | "PENDING" | "COMMENT" | "REQUEST_CHANGES" | "REQUEST_REVIEW";
         };
         /** @description Tag represents a repository tag */
         Tag: {
@@ -8515,26 +8758,37 @@ export interface components {
         UpdateBranchProtectionPriories: {
             ids?: number[];
         };
+        /** @description UpdateBranchRepoOption options when updating a branch reference in a repository */
+        UpdateBranchRepoOption: {
+            /** @description Force update even if the change is not a fast-forward */
+            force?: boolean;
+            /** @description New commit SHA (or any ref) the branch should point to */
+            new_commit_id: string;
+            /** @description Expected old commit SHA of the branch; if provided it must match the current tip */
+            old_commit_id?: string;
+        };
         /**
-         * @description UpdateFileOptions options for updating files
+         * @description UpdateFileOptions options for updating or creating a file
          *     Note: `author` and `committer` are optional (if only one is given, it will be used for the other, otherwise the authenticated user will be used)
          */
         UpdateFileOptions: {
             author?: components["schemas"]["Identity"];
-            /** @description branch (optional) to base this file from. if not given, the default branch is used */
+            /** @description branch (optional) is the base branch for the changes. If not supplied, the default branch is used */
             branch?: string;
             committer?: components["schemas"]["Identity"];
             /** @description content must be base64 encoded */
             content: string;
             dates?: components["schemas"]["CommitDateOptions"];
+            /** @description force_push (optional) will do a force-push if the new branch already exists */
+            force_push?: boolean;
             /** @description from_path (optional) is the path of the original file which will be moved/renamed to the path in the URL */
             from_path?: string;
-            /** @description message (optional) for the commit of this file. if not supplied, a default message will be used */
+            /** @description message (optional) is the commit message of the changes. If not supplied, a default message will be used */
             message?: string;
-            /** @description new_branch (optional) will make a new branch from `branch` before creating the file */
+            /** @description new_branch (optional) will make a new branch from base branch for the changes. If not supplied, the changes will be committed to the base branch */
             new_branch?: string;
-            /** @description the blob ID (SHA) for the file that already exists, it is required for changing existing files */
-            sha: string;
+            /** @description the blob ID (SHA) for the file that already exists to update, or leave it empty to create a new file */
+            sha?: string;
             /** @description Add a Signed-off-by trailer by the committer at the end of the commit log message. */
             signoff?: boolean;
         };
@@ -8611,8 +8865,14 @@ export interface components {
             source_id?: number;
             /** Format: int64 */
             starred_repos_count?: number;
-            /** @description User visibility level option: public, limited, private */
-            visibility?: string;
+            /**
+             * @description User visibility level option: public, limited, private
+             *     public UserVisibilityPublic
+             *     limited UserVisibilityLimited
+             *     private UserVisibilityPrivate
+             * @enum {string}
+             */
+            visibility?: "public" | "limited" | "private";
             /** @description the user's website */
             website?: string;
         };
@@ -8735,7 +8995,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["AccessToken"];
-                "text/html": components["schemas"]["AccessToken"];
             };
         };
         /** @description AccessTokenList represents a list of API access token. */
@@ -8745,7 +9004,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["AccessToken"][];
-                "text/html": components["schemas"]["AccessToken"][];
             };
         };
         /** @description ActionVariable */
@@ -8755,7 +9013,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionVariable"];
-                "text/html": components["schemas"]["ActionVariable"];
             };
         };
         /** @description ActionWorkflow */
@@ -8765,7 +9022,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionWorkflow"];
-                "text/html": components["schemas"]["ActionWorkflow"];
             };
         };
         /** @description ActionWorkflowList */
@@ -8775,7 +9031,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionWorkflowResponse"];
-                "text/html": components["schemas"]["ActionWorkflowResponse"];
             };
         };
         /** @description ActivityFeedsList */
@@ -8785,17 +9040,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Activity"][];
-                "text/html": components["schemas"]["Activity"][];
-            };
-        };
-        /** @description ActivityPub */
-        ActivityPub: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["ActivityPub"];
-                "text/html": components["schemas"]["ActivityPub"];
             };
         };
         /** @description AnnotatedTag */
@@ -8805,7 +9049,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["AnnotatedTag"];
-                "text/html": components["schemas"]["AnnotatedTag"];
             };
         };
         /** @description Artifact */
@@ -8815,7 +9058,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionArtifact"];
-                "text/html": components["schemas"]["ActionArtifact"];
             };
         };
         /** @description ArtifactsList */
@@ -8825,7 +9067,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionArtifactsResponse"];
-                "text/html": components["schemas"]["ActionArtifactsResponse"];
             };
         };
         /** @description Attachment */
@@ -8835,7 +9076,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Attachment"];
-                "text/html": components["schemas"]["Attachment"];
             };
         };
         /** @description AttachmentList */
@@ -8845,7 +9085,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Attachment"][];
-                "text/html": components["schemas"]["Attachment"][];
             };
         };
         /** @description BadgeList */
@@ -8855,7 +9094,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Badge"][];
-                "text/html": components["schemas"]["Badge"][];
             };
         };
         /** @description Branch */
@@ -8865,7 +9103,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Branch"];
-                "text/html": components["schemas"]["Branch"];
             };
         };
         /** @description BranchList */
@@ -8875,7 +9112,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Branch"][];
-                "text/html": components["schemas"]["Branch"][];
             };
         };
         /** @description BranchProtection */
@@ -8885,7 +9121,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["BranchProtection"];
-                "text/html": components["schemas"]["BranchProtection"];
             };
         };
         /** @description BranchProtectionList */
@@ -8895,7 +9130,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["BranchProtection"][];
-                "text/html": components["schemas"]["BranchProtection"][];
             };
         };
         /** @description ChangedFileList */
@@ -8915,7 +9149,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ChangedFile"][];
-                "text/html": components["schemas"]["ChangedFile"][];
             };
         };
         /** @description CombinedStatus */
@@ -8925,7 +9158,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["CombinedStatus"];
-                "text/html": components["schemas"]["CombinedStatus"];
             };
         };
         /** @description Comment */
@@ -8935,7 +9167,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Comment"];
-                "text/html": components["schemas"]["Comment"];
             };
         };
         /** @description CommentList */
@@ -8945,7 +9176,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Comment"][];
-                "text/html": components["schemas"]["Comment"][];
             };
         };
         /** @description Commit */
@@ -8955,7 +9185,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Commit"];
-                "text/html": components["schemas"]["Commit"];
             };
         };
         /** @description CommitList */
@@ -8975,7 +9204,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Commit"][];
-                "text/html": components["schemas"]["Commit"][];
             };
         };
         /** @description CommitStatus */
@@ -8985,7 +9213,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["CommitStatus"];
-                "text/html": components["schemas"]["CommitStatus"];
             };
         };
         /** @description CommitStatusList */
@@ -8995,7 +9222,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["CommitStatus"][];
-                "text/html": components["schemas"]["CommitStatus"][];
             };
         };
         Compare: {
@@ -9004,7 +9230,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Compare"];
-                "text/html": components["schemas"]["Compare"];
             };
         };
         ContentsExtResponse: {
@@ -9013,7 +9238,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ContentsExtResponse"];
-                "text/html": components["schemas"]["ContentsExtResponse"];
             };
         };
         /** @description ContentsListResponse */
@@ -9023,7 +9247,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ContentsResponse"][];
-                "text/html": components["schemas"]["ContentsResponse"][];
             };
         };
         /** @description ContentsResponse */
@@ -9033,7 +9256,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ContentsResponse"];
-                "text/html": components["schemas"]["ContentsResponse"];
             };
         };
         /** @description CronList */
@@ -9043,7 +9265,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Cron"][];
-                "text/html": components["schemas"]["Cron"][];
             };
         };
         /** @description DeployKey */
@@ -9053,7 +9274,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["DeployKey"];
-                "text/html": components["schemas"]["DeployKey"];
             };
         };
         /** @description DeployKeyList */
@@ -9063,7 +9283,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["DeployKey"][];
-                "text/html": components["schemas"]["DeployKey"][];
             };
         };
         /** @description EmailList */
@@ -9073,7 +9292,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Email"][];
-                "text/html": components["schemas"]["Email"][];
             };
         };
         /** @description EmptyRepository */
@@ -9083,7 +9301,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["APIError"];
-                "text/html": components["schemas"]["APIError"];
             };
         };
         /** @description FileDeleteResponse */
@@ -9093,7 +9310,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["FileDeleteResponse"];
-                "text/html": components["schemas"]["FileDeleteResponse"];
             };
         };
         /** @description FileResponse */
@@ -9103,7 +9319,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["FileResponse"];
-                "text/html": components["schemas"]["FileResponse"];
             };
         };
         /** @description FilesResponse */
@@ -9113,7 +9328,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["FilesResponse"];
-                "text/html": components["schemas"]["FilesResponse"];
             };
         };
         /** @description GPGKey */
@@ -9123,7 +9337,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GPGKey"];
-                "text/html": components["schemas"]["GPGKey"];
             };
         };
         /** @description GPGKeyList */
@@ -9133,7 +9346,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GPGKey"][];
-                "text/html": components["schemas"]["GPGKey"][];
             };
         };
         /** @description GeneralAPISettings */
@@ -9143,7 +9355,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GeneralAPISettings"];
-                "text/html": components["schemas"]["GeneralAPISettings"];
             };
         };
         /** @description GeneralAttachmentSettings */
@@ -9153,7 +9364,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GeneralAttachmentSettings"];
-                "text/html": components["schemas"]["GeneralAttachmentSettings"];
             };
         };
         /** @description GeneralRepoSettings */
@@ -9163,7 +9373,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GeneralRepoSettings"];
-                "text/html": components["schemas"]["GeneralRepoSettings"];
             };
         };
         /** @description GeneralUISettings */
@@ -9173,7 +9382,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GeneralUISettings"];
-                "text/html": components["schemas"]["GeneralUISettings"];
             };
         };
         /** @description GitBlobResponse */
@@ -9183,7 +9391,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GitBlobResponse"];
-                "text/html": components["schemas"]["GitBlobResponse"];
             };
         };
         /** @description GitHook */
@@ -9193,7 +9400,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GitHook"];
-                "text/html": components["schemas"]["GitHook"];
             };
         };
         /** @description GitHookList */
@@ -9203,7 +9409,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GitHook"][];
-                "text/html": components["schemas"]["GitHook"][];
             };
         };
         /** @description GitTreeResponse */
@@ -9213,7 +9418,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GitTreeResponse"];
-                "text/html": components["schemas"]["GitTreeResponse"];
             };
         };
         /** @description GitignoreTemplateInfo */
@@ -9223,7 +9427,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GitignoreTemplateInfo"];
-                "text/html": components["schemas"]["GitignoreTemplateInfo"];
             };
         };
         /** @description GitignoreTemplateList */
@@ -9233,7 +9436,6 @@ export interface components {
             };
             content: {
                 "application/json": string[];
-                "text/html": string[];
             };
         };
         /** @description Hook */
@@ -9243,7 +9445,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Hook"];
-                "text/html": components["schemas"]["Hook"];
             };
         };
         /** @description HookList */
@@ -9253,7 +9454,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Hook"][];
-                "text/html": components["schemas"]["Hook"][];
             };
         };
         /** @description Issue */
@@ -9263,7 +9463,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Issue"];
-                "text/html": components["schemas"]["Issue"];
             };
         };
         /** @description IssueDeadline */
@@ -9273,7 +9472,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["IssueDeadline"];
-                "text/html": components["schemas"]["IssueDeadline"];
             };
         };
         /** @description IssueList */
@@ -9283,7 +9481,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Issue"][];
-                "text/html": components["schemas"]["Issue"][];
             };
         };
         /** @description IssueTemplates */
@@ -9293,7 +9490,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["IssueTemplate"][];
-                "text/html": components["schemas"]["IssueTemplate"][];
             };
         };
         /** @description Label */
@@ -9303,7 +9499,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Label"];
-                "text/html": components["schemas"]["Label"];
             };
         };
         /** @description LabelList */
@@ -9313,7 +9508,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Label"][];
-                "text/html": components["schemas"]["Label"][];
             };
         };
         /** @description LabelTemplateInfo */
@@ -9323,7 +9517,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["LabelTemplate"][];
-                "text/html": components["schemas"]["LabelTemplate"][];
             };
         };
         /** @description LabelTemplateList */
@@ -9333,7 +9526,6 @@ export interface components {
             };
             content: {
                 "application/json": string[];
-                "text/html": string[];
             };
         };
         /** @description LanguageStatistics */
@@ -9345,9 +9537,6 @@ export interface components {
                 "application/json": {
                     [key: string]: number;
                 };
-                "text/html": {
-                    [key: string]: number;
-                };
             };
         };
         /** @description LicenseTemplateInfo */
@@ -9357,7 +9546,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["LicenseTemplateInfo"];
-                "text/html": components["schemas"]["LicenseTemplateInfo"];
             };
         };
         /** @description LicenseTemplateList */
@@ -9367,7 +9555,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["LicensesTemplateListEntry"][];
-                "text/html": components["schemas"]["LicensesTemplateListEntry"][];
             };
         };
         /** @description LicensesList */
@@ -9377,7 +9564,6 @@ export interface components {
             };
             content: {
                 "application/json": string[];
-                "text/html": string[];
             };
         };
         /** @description MarkdownRender is a rendered markdown document */
@@ -9387,7 +9573,6 @@ export interface components {
             };
             content: {
                 "application/json": string;
-                "text/html": string;
             };
         };
         /** @description MarkupRender is a rendered markup document */
@@ -9397,7 +9582,6 @@ export interface components {
             };
             content: {
                 "application/json": string;
-                "text/html": string;
             };
         };
         MergeUpstreamRequest: {
@@ -9406,7 +9590,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["MergeUpstreamRequest"];
-                "text/html": components["schemas"]["MergeUpstreamRequest"];
             };
         };
         MergeUpstreamResponse: {
@@ -9415,7 +9598,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["MergeUpstreamResponse"];
-                "text/html": components["schemas"]["MergeUpstreamResponse"];
             };
         };
         /** @description Milestone */
@@ -9425,7 +9607,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Milestone"];
-                "text/html": components["schemas"]["Milestone"];
             };
         };
         /** @description MilestoneList */
@@ -9435,7 +9616,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Milestone"][];
-                "text/html": components["schemas"]["Milestone"][];
             };
         };
         /** @description NodeInfo */
@@ -9445,7 +9625,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["NodeInfo"];
-                "text/html": components["schemas"]["NodeInfo"];
             };
         };
         /** @description Note */
@@ -9455,7 +9634,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Note"];
-                "text/html": components["schemas"]["Note"];
             };
         };
         /** @description Number of unread notifications */
@@ -9465,7 +9643,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["NotificationCount"];
-                "text/html": components["schemas"]["NotificationCount"];
             };
         };
         /** @description NotificationThread */
@@ -9475,7 +9652,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["NotificationThread"];
-                "text/html": components["schemas"]["NotificationThread"];
             };
         };
         /** @description NotificationThreadList */
@@ -9485,7 +9661,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["NotificationThread"][];
-                "text/html": components["schemas"]["NotificationThread"][];
             };
         };
         /** @description OAuth2Application */
@@ -9495,7 +9670,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["OAuth2Application"];
-                "text/html": components["schemas"]["OAuth2Application"];
             };
         };
         /** @description OAuth2ApplicationList represents a list of OAuth2 applications. */
@@ -9505,7 +9679,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["OAuth2Application"][];
-                "text/html": components["schemas"]["OAuth2Application"][];
             };
         };
         /** @description Organization */
@@ -9515,7 +9688,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Organization"];
-                "text/html": components["schemas"]["Organization"];
             };
         };
         /** @description OrganizationList */
@@ -9525,7 +9697,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Organization"][];
-                "text/html": components["schemas"]["Organization"][];
             };
         };
         /** @description OrganizationPermissions */
@@ -9535,7 +9706,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["OrganizationPermissions"];
-                "text/html": components["schemas"]["OrganizationPermissions"];
             };
         };
         /** @description Package */
@@ -9545,7 +9715,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Package"];
-                "text/html": components["schemas"]["Package"];
             };
         };
         /** @description PackageFileList */
@@ -9555,7 +9724,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PackageFile"][];
-                "text/html": components["schemas"]["PackageFile"][];
             };
         };
         /** @description PackageList */
@@ -9565,7 +9733,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Package"][];
-                "text/html": components["schemas"]["Package"][];
             };
         };
         /** @description PublicKey */
@@ -9575,7 +9742,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PublicKey"];
-                "text/html": components["schemas"]["PublicKey"];
             };
         };
         /** @description PublicKeyList */
@@ -9585,7 +9751,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PublicKey"][];
-                "text/html": components["schemas"]["PublicKey"][];
             };
         };
         /** @description PullRequest */
@@ -9595,7 +9760,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PullRequest"];
-                "text/html": components["schemas"]["PullRequest"];
             };
         };
         /** @description PullRequestList */
@@ -9605,7 +9769,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PullRequest"][];
-                "text/html": components["schemas"]["PullRequest"][];
             };
         };
         /** @description PullReview */
@@ -9615,7 +9778,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PullReview"];
-                "text/html": components["schemas"]["PullReview"];
             };
         };
         /** @description PullComment */
@@ -9625,7 +9787,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PullReviewComment"];
-                "text/html": components["schemas"]["PullReviewComment"];
             };
         };
         /** @description PullCommentList */
@@ -9635,7 +9796,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PullReviewComment"][];
-                "text/html": components["schemas"]["PullReviewComment"][];
             };
         };
         /** @description PullReviewList */
@@ -9645,7 +9805,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PullReview"][];
-                "text/html": components["schemas"]["PullReview"][];
             };
         };
         /** @description PushMirror */
@@ -9655,7 +9814,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PushMirror"];
-                "text/html": components["schemas"]["PushMirror"];
             };
         };
         /** @description PushMirrorList */
@@ -9665,7 +9823,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["PushMirror"][];
-                "text/html": components["schemas"]["PushMirror"][];
             };
         };
         /** @description Reaction */
@@ -9675,7 +9832,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Reaction"];
-                "text/html": components["schemas"]["Reaction"];
             };
         };
         /** @description ReactionList */
@@ -9685,7 +9841,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Reaction"][];
-                "text/html": components["schemas"]["Reaction"][];
             };
         };
         /** @description Reference */
@@ -9695,7 +9850,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Reference"];
-                "text/html": components["schemas"]["Reference"];
             };
         };
         /** @description ReferenceList */
@@ -9705,7 +9859,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Reference"][];
-                "text/html": components["schemas"]["Reference"][];
             };
         };
         /** @description RegistrationToken is response related to registration token */
@@ -9723,7 +9876,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Release"];
-                "text/html": components["schemas"]["Release"];
             };
         };
         /** @description ReleaseList */
@@ -9733,7 +9885,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Release"][];
-                "text/html": components["schemas"]["Release"][];
             };
         };
         /** @description RepoCollaboratorPermission */
@@ -9743,7 +9894,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["RepoCollaboratorPermission"];
-                "text/html": components["schemas"]["RepoCollaboratorPermission"];
             };
         };
         /** @description RepoIssueConfig */
@@ -9753,7 +9903,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["IssueConfig"];
-                "text/html": components["schemas"]["IssueConfig"];
             };
         };
         /** @description RepoIssueConfigValidation */
@@ -9763,7 +9912,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["IssueConfigValidation"];
-                "text/html": components["schemas"]["IssueConfigValidation"];
             };
         };
         /** @description RepoNewIssuePinsAllowed */
@@ -9773,7 +9921,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["NewIssuePinsAllowed"];
-                "text/html": components["schemas"]["NewIssuePinsAllowed"];
             };
         };
         /** @description Repository */
@@ -9783,7 +9930,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Repository"];
-                "text/html": components["schemas"]["Repository"];
             };
         };
         /** @description RepositoryList */
@@ -9793,7 +9939,15 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Repository"][];
-                "text/html": components["schemas"]["Repository"][];
+            };
+        };
+        /** @description RunDetails */
+        RunDetails: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["RunDetails"];
             };
         };
         /** @description Runner */
@@ -9803,7 +9957,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionRunner"];
-                "text/html": components["schemas"]["ActionRunner"];
             };
         };
         /** @description RunnerList */
@@ -9813,7 +9966,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionRunnersResponse"];
-                "text/html": components["schemas"]["ActionRunnersResponse"];
             };
         };
         /** @description SearchResults */
@@ -9823,7 +9975,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["SearchResults"];
-                "text/html": components["schemas"]["SearchResults"];
             };
         };
         /** @description Secret */
@@ -9833,7 +9984,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Secret"];
-                "text/html": components["schemas"]["Secret"];
             };
         };
         /** @description SecretList */
@@ -9843,7 +9993,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Secret"][];
-                "text/html": components["schemas"]["Secret"][];
             };
         };
         /** @description ServerVersion */
@@ -9853,7 +10002,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ServerVersion"];
-                "text/html": components["schemas"]["ServerVersion"];
             };
         };
         /** @description StopWatch */
@@ -9863,7 +10011,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["StopWatch"];
-                "text/html": components["schemas"]["StopWatch"];
             };
         };
         /** @description StopWatchList */
@@ -9873,7 +10020,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["StopWatch"][];
-                "text/html": components["schemas"]["StopWatch"][];
             };
         };
         /** @description StringSlice */
@@ -9883,7 +10029,6 @@ export interface components {
             };
             content: {
                 "application/json": string[];
-                "text/html": string[];
             };
         };
         /** @description Tag */
@@ -9893,7 +10038,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Tag"];
-                "text/html": components["schemas"]["Tag"];
             };
         };
         /** @description TagList */
@@ -9903,7 +10047,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Tag"][];
-                "text/html": components["schemas"]["Tag"][];
             };
         };
         /** @description TagProtection */
@@ -9913,7 +10056,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["TagProtection"];
-                "text/html": components["schemas"]["TagProtection"];
             };
         };
         /** @description TagProtectionList */
@@ -9923,7 +10065,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["TagProtection"][];
-                "text/html": components["schemas"]["TagProtection"][];
             };
         };
         /** @description TasksList */
@@ -9933,7 +10074,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionTaskResponse"];
-                "text/html": components["schemas"]["ActionTaskResponse"];
             };
         };
         /** @description Team */
@@ -9943,7 +10083,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Team"];
-                "text/html": components["schemas"]["Team"];
             };
         };
         /** @description TeamList */
@@ -9953,7 +10092,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Team"][];
-                "text/html": components["schemas"]["Team"][];
             };
         };
         /** @description TimelineList */
@@ -9963,7 +10101,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["TimelineComment"][];
-                "text/html": components["schemas"]["TimelineComment"][];
             };
         };
         /** @description TopicListResponse */
@@ -9973,7 +10110,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["TopicResponse"][];
-                "text/html": components["schemas"]["TopicResponse"][];
             };
         };
         /** @description TopicNames */
@@ -9983,7 +10119,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["TopicName"];
-                "text/html": components["schemas"]["TopicName"];
             };
         };
         /** @description TrackedTime */
@@ -9993,7 +10128,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["TrackedTime"];
-                "text/html": components["schemas"]["TrackedTime"];
             };
         };
         /** @description TrackedTimeList */
@@ -10003,7 +10137,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["TrackedTime"][];
-                "text/html": components["schemas"]["TrackedTime"][];
             };
         };
         /** @description User */
@@ -10013,7 +10146,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["User"];
-                "text/html": components["schemas"]["User"];
             };
         };
         /** @description UserHeatmapData */
@@ -10023,7 +10155,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["UserHeatmapData"][];
-                "text/html": components["schemas"]["UserHeatmapData"][];
             };
         };
         /** @description UserList */
@@ -10033,7 +10164,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["User"][];
-                "text/html": components["schemas"]["User"][];
             };
         };
         /** @description UserSettings */
@@ -10043,7 +10173,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["UserSettings"][];
-                "text/html": components["schemas"]["UserSettings"][];
             };
         };
         /** @description VariableList */
@@ -10053,7 +10182,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionVariable"][];
-                "text/html": components["schemas"]["ActionVariable"][];
             };
         };
         /** @description WatchInfo */
@@ -10063,7 +10191,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["WatchInfo"];
-                "text/html": components["schemas"]["WatchInfo"];
             };
         };
         /** @description WikiCommitList */
@@ -10073,7 +10200,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["WikiCommitList"];
-                "text/html": components["schemas"]["WikiCommitList"];
             };
         };
         /** @description WikiPage */
@@ -10083,7 +10209,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["WikiPage"];
-                "text/html": components["schemas"]["WikiPage"];
             };
         };
         /** @description WikiPageList */
@@ -10093,7 +10218,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["WikiPageMetaData"][];
-                "text/html": components["schemas"]["WikiPageMetaData"][];
             };
         };
         /** @description WorkflowJob */
@@ -10103,7 +10227,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionWorkflowJob"];
-                "text/html": components["schemas"]["ActionWorkflowJob"];
             };
         };
         /** @description WorkflowJobsList */
@@ -10113,7 +10236,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionWorkflowJobsResponse"];
-                "text/html": components["schemas"]["ActionWorkflowJobsResponse"];
             };
         };
         /** @description WorkflowRun */
@@ -10123,7 +10245,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionWorkflowRun"];
-                "text/html": components["schemas"]["ActionWorkflowRun"];
             };
         };
         /** @description WorkflowRunsList */
@@ -10133,7 +10254,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["ActionWorkflowRunsResponse"];
-                "text/html": components["schemas"]["ActionWorkflowRunsResponse"];
             };
         };
         /** @description APIConflict is a conflict empty response */
@@ -10191,7 +10311,6 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["LockIssueOption"];
-                "text/html": components["schemas"]["LockIssueOption"];
             };
         };
         /** @description APIRedirect is a redirect response */
@@ -10217,7 +10336,6 @@ export interface components {
             };
             content: {
                 "application/json": string;
-                "text/html": string;
             };
         };
         /** @description APIValidationError is error format response related to input validation */
@@ -10232,12 +10350,6 @@ export interface components {
     };
     parameters: never;
     requestBodies: {
-        CreateOAuth2ApplicationOptions: {
-            content: {
-                "application/json": components["schemas"]["CreateOAuth2ApplicationOptions"];
-                "text/plain": components["schemas"]["CreateOAuth2ApplicationOptions"];
-            };
-        };
         CreateWikiPageOptions: {
             content: {
                 "application/json": components["schemas"]["CreateWikiPageOptions"];
@@ -10253,6 +10365,21 @@ export interface components {
                 "application/json": components["schemas"]["CreateKeyOption"];
             };
         };
+        CreateOAuth2ApplicationOptions: {
+            content: {
+                "application/json": components["schemas"]["CreateOAuth2ApplicationOptions"];
+            };
+        };
+        UpdateUserAvatarOption: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserAvatarOption"];
+            };
+        };
+        PullReviewRequestOptions: {
+            content: {
+                "application/json": components["schemas"]["PullReviewRequestOptions"];
+            };
+        };
         CreateOrgOption: {
             content: {
                 "application/json": components["schemas"]["CreateOrgOption"];
@@ -10263,12 +10390,6 @@ export interface components {
                 "application/json": components["schemas"]["IssueLabelsOption"];
             };
         };
-        UpdateUserAvatarOption: {
-            content: {
-                "application/json": components["schemas"]["UpdateUserAvatarOption"];
-                "text/plain": components["schemas"]["UpdateUserAvatarOption"];
-            };
-        };
         CreateHookOption: {
             content: {
                 "application/json": components["schemas"]["CreateHookOption"];
@@ -10277,6 +10398,16 @@ export interface components {
         EditReactionOption: {
             content: {
                 "application/json": components["schemas"]["EditReactionOption"];
+            };
+        };
+        UserBadgeOption: {
+            content: {
+                "application/json": components["schemas"]["UserBadgeOption"];
+            };
+        };
+        EditActionRunnerOption: {
+            content: {
+                "application/json": components["schemas"]["EditActionRunnerOption"];
             };
         };
         EditHookOption: {
@@ -10333,13 +10464,6 @@ export interface components {
         IssueMeta: {
             content: {
                 "application/json": components["schemas"]["IssueMeta"];
-                "text/plain": components["schemas"]["IssueMeta"];
-            };
-        };
-        PullReviewRequestOptions: {
-            content: {
-                "application/json": components["schemas"]["PullReviewRequestOptions"];
-                "text/plain": components["schemas"]["PullReviewRequestOptions"];
             };
         };
     };
@@ -10348,36 +10472,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    activitypubPerson: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description user ID of the user */
-                "user-id": number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["ActivityPub"];
-        };
-    };
-    activitypubPersonInbox: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description user ID of the user */
-                "user-id": number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: components["responses"]["empty"];
-        };
-    };
     listAdminWorkflowJobs: {
         parameters: {
             query?: {
@@ -10401,14 +10495,17 @@ export interface operations {
     };
     getAdminRunners: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description filter by disabled status (true or false) */
+                disabled?: boolean;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            200: components["schemas"]["ActionRunnersResponse"];
+            200: components["responses"]["RunnerList"];
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
         };
@@ -10437,7 +10534,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["schemas"]["ActionRunner"];
+            200: components["responses"]["Runner"];
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
         };
@@ -10463,6 +10560,24 @@ export interface operations {
             };
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
+        };
+    };
+    updateAdminRunner: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description id of the runner */
+                runner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: components["requestBodies"]["EditActionRunnerOption"];
+        responses: {
+            200: components["responses"]["Runner"];
+            400: components["responses"]["error"];
+            404: components["responses"]["notFound"];
+            422: components["responses"]["validationError"];
         };
     };
     listAdminWorkflowRuns: {
@@ -10660,18 +10775,6 @@ export interface operations {
             403: components["responses"]["forbidden"];
         };
     };
-    adminGetRunnerRegistrationToken: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["RegistrationToken"];
-        };
-    };
     adminUnadoptedList: {
         parameters: {
             query?: {
@@ -10740,6 +10843,24 @@ export interface operations {
                 page?: number;
                 /** @description page size of results */
                 limit?: number;
+                /** @description sort users by attribute. Supported values are "name", "created", "updated" and "id". Default is "name" */
+                sort?: string;
+                /** @description sort order, either "asc" (ascending) or "desc" (descending). Default is "asc", ignored if "sort" is not specified. */
+                order?: string;
+                /** @description search term (username, full name, email) */
+                q?: string;
+                /** @description visibility filter. Supported values are "public", "limited" and "private". */
+                visibility?: string;
+                /** @description filter active users */
+                is_active?: boolean;
+                /** @description filter admin users */
+                is_admin?: boolean;
+                /** @description filter restricted users */
+                is_restricted?: boolean;
+                /** @description filter 2FA enabled users */
+                is_2fa_enabled?: boolean;
+                /** @description filter login prohibited users */
+                is_prohibit_login?: boolean;
             };
             header?: never;
             path?: never;
@@ -10749,6 +10870,7 @@ export interface operations {
         responses: {
             200: components["responses"]["UserList"];
             403: components["responses"]["forbidden"];
+            422: components["responses"]["validationError"];
         };
     };
     adminCreateUser: {
@@ -10839,11 +10961,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["UserBadgeOption"];
-            };
-        };
+        requestBody?: components["requestBodies"]["UserBadgeOption"];
         responses: {
             204: components["responses"]["empty"];
             403: components["responses"]["forbidden"];
@@ -10859,12 +10977,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["UserBadgeOption"];
-                "text/plain": components["schemas"]["UserBadgeOption"];
-            };
-        };
+        requestBody?: components["requestBodies"]["UserBadgeOption"];
         responses: {
             204: components["responses"]["empty"];
             403: components["responses"]["forbidden"];
@@ -10937,7 +11050,6 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["RenameUserOption"];
-                "text/plain": components["schemas"]["RenameUserOption"];
             };
         };
         responses: {
@@ -11104,18 +11216,6 @@ export interface operations {
         responses: {
             200: components["responses"]["MarkupRender"];
             422: components["responses"]["validationError"];
-        };
-    };
-    getNodeInfo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["NodeInfo"];
         };
     };
     notifyGetList: {
@@ -11342,7 +11442,10 @@ export interface operations {
     };
     getOrgRunners: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description filter by disabled status (true or false) */
+                disabled?: boolean;
+            };
             header?: never;
             path: {
                 /** @description name of the organization */
@@ -11352,24 +11455,9 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["schemas"]["ActionRunnersResponse"];
+            200: components["responses"]["RunnerList"];
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
-        };
-    };
-    orgGetRunnerRegistrationToken: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description name of the organization */
-                org: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["RegistrationToken"];
         };
     };
     orgCreateRunnerRegistrationToken: {
@@ -11401,7 +11489,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["schemas"]["ActionRunner"];
+            200: components["responses"]["Runner"];
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
         };
@@ -11429,6 +11517,26 @@ export interface operations {
             };
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
+        };
+    };
+    updateOrgRunner: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description name of the organization */
+                org: string;
+                /** @description id of the runner */
+                runner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: components["requestBodies"]["EditActionRunnerOption"];
+        responses: {
+            200: components["responses"]["Runner"];
+            400: components["responses"]["error"];
+            404: components["responses"]["notFound"];
+            422: components["responses"]["validationError"];
         };
     };
     getOrgWorkflowRuns: {
@@ -12187,7 +12295,6 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["RenameOrgOption"];
-                "text/plain": components["schemas"]["RenameOrgOption"];
             };
         };
         responses: {
@@ -12231,6 +12338,24 @@ export interface operations {
         responses: {
             201: components["responses"]["Repository"];
             400: components["responses"]["error"];
+            403: components["responses"]["forbidden"];
+            404: components["responses"]["notFound"];
+        };
+    };
+    orgDeleteRepos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description name of the organization */
+                org: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            202: components["responses"]["empty"];
+            204: components["responses"]["empty"];
             403: components["responses"]["forbidden"];
             404: components["responses"]["notFound"];
         };
@@ -12321,7 +12446,7 @@ export interface operations {
                 /** @description page size of results */
                 limit?: number;
                 /** @description package type filter */
-                type?: "alpine" | "cargo" | "chef" | "composer" | "conan" | "conda" | "container" | "cran" | "debian" | "generic" | "go" | "helm" | "maven" | "npm" | "nuget" | "pub" | "pypi" | "rpm" | "rubygems" | "swift" | "vagrant";
+                type?: "alpine" | "cargo" | "chef" | "composer" | "conan" | "conda" | "container" | "cran" | "debian" | "generic" | "go" | "helm" | "maven" | "npm" | "nuget" | "pub" | "pypi" | "rpm" | "rubygems" | "swift" | "terraform" | "vagrant";
                 /** @description name filter */
                 q?: string;
             };
@@ -12360,6 +12485,26 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["PackageList"];
+            404: components["responses"]["notFound"];
+        };
+    };
+    deletePackage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description owner of the package */
+                owner: string;
+                /** @description type of the package */
+                type: string;
+                /** @description name of the package */
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: components["responses"]["empty"];
             404: components["responses"]["notFound"];
         };
     };
@@ -12447,7 +12592,7 @@ export interface operations {
             404: components["responses"]["notFound"];
         };
     };
-    deletePackage: {
+    deletePackageVersion: {
         parameters: {
             query?: never;
             header?: never;
@@ -12502,8 +12647,6 @@ export interface operations {
                 milestones?: string;
                 /** @description Search string */
                 q?: string;
-                /** @description Repository ID to prioritize in the results */
-                priority_repo_id?: number;
                 /** @description Filter by issue type */
                 type?: "issues" | "pulls";
                 /** @description Only show issues updated after the given time (RFC 3339 format) */
@@ -12522,6 +12665,8 @@ export interface operations {
                 reviewed?: boolean;
                 /** @description Filter by repository owner */
                 owner?: string;
+                /** @description Only show items which were created by the given user */
+                created_by?: string;
                 /** @description Filter by team (requires organization owner parameter) */
                 team?: string;
                 /** @description Page number of results to return (1-based) */
@@ -12666,7 +12811,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["EditRepoOption"];
-                "text/plain": components["schemas"]["EditRepoOption"];
             };
         };
         responses: {
@@ -12849,7 +12993,10 @@ export interface operations {
     };
     getRepoRunners: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description filter by disabled status (true or false) */
+                disabled?: boolean;
+            };
             header?: never;
             path: {
                 /** @description owner of the repo */
@@ -12861,26 +13008,9 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["schemas"]["ActionRunnersResponse"];
+            200: components["responses"]["RunnerList"];
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
-        };
-    };
-    repoGetRunnerRegistrationToken: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description owner of the repo */
-                owner: string;
-                /** @description name of the repo */
-                repo: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["RegistrationToken"];
         };
     };
     repoCreateRunnerRegistrationToken: {
@@ -12916,7 +13046,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["schemas"]["ActionRunner"];
+            200: components["responses"]["Runner"];
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
         };
@@ -12946,6 +13076,28 @@ export interface operations {
             };
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
+        };
+    };
+    updateRepoRunner: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description owner of the repo */
+                owner: string;
+                /** @description name of the repo */
+                repo: string;
+                /** @description id of the runner */
+                runner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: components["requestBodies"]["EditActionRunnerOption"];
+        responses: {
+            200: components["responses"]["Runner"];
+            400: components["responses"]["error"];
+            404: components["responses"]["notFound"];
+            422: components["responses"]["validationError"];
         };
     };
     getWorkflowRuns: {
@@ -12992,7 +13144,7 @@ export interface operations {
                 /** @description name of the repository */
                 repo: string;
                 /** @description id of the run */
-                run: string;
+                run: number;
             };
             cookie?: never;
         };
@@ -13054,6 +13206,59 @@ export interface operations {
             404: components["responses"]["notFound"];
         };
     };
+    getWorkflowRunAttempt: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description owner of the repo */
+                owner: string;
+                /** @description name of the repository */
+                repo: string;
+                /** @description id of the run */
+                run: number;
+                /** @description logical attempt number of the run */
+                attempt: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["WorkflowRun"];
+            400: components["responses"]["error"];
+            404: components["responses"]["notFound"];
+        };
+    };
+    listWorkflowRunAttemptJobs: {
+        parameters: {
+            query?: {
+                /** @description workflow status (pending, queued, in_progress, failure, success, skipped) */
+                status?: string;
+                /** @description page number of results to return (1-based) */
+                page?: number;
+                /** @description page size of results */
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                /** @description owner of the repo */
+                owner: string;
+                /** @description name of the repository */
+                repo: string;
+                /** @description id of the workflow run */
+                run: number;
+                /** @description logical attempt number of the run */
+                attempt: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["WorkflowJobsList"];
+            400: components["responses"]["error"];
+            404: components["responses"]["notFound"];
+        };
+    };
     listWorkflowRunJobs: {
         parameters: {
             query?: {
@@ -13080,6 +13285,80 @@ export interface operations {
             200: components["responses"]["WorkflowJobsList"];
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
+        };
+    };
+    rerunWorkflowJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description owner of the repo */
+                owner: string;
+                /** @description name of the repository */
+                repo: string;
+                /** @description id of the run */
+                run: number;
+                /** @description id of the job */
+                job_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: components["responses"]["WorkflowJob"];
+            400: components["responses"]["error"];
+            403: components["responses"]["forbidden"];
+            404: components["responses"]["notFound"];
+            409: components["responses"]["error"];
+            422: components["responses"]["validationError"];
+        };
+    };
+    rerunWorkflowRun: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description owner of the repo */
+                owner: string;
+                /** @description name of the repository */
+                repo: string;
+                /** @description id of the run */
+                run: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: components["responses"]["WorkflowRun"];
+            400: components["responses"]["error"];
+            403: components["responses"]["forbidden"];
+            404: components["responses"]["notFound"];
+            409: components["responses"]["error"];
+            422: components["responses"]["validationError"];
+        };
+    };
+    rerunFailedWorkflowRun: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description owner of the repo */
+                owner: string;
+                /** @description name of the repository */
+                repo: string;
+                /** @description id of the run */
+                run: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: components["responses"]["empty"];
+            400: components["responses"]["error"];
+            403: components["responses"]["forbidden"];
+            404: components["responses"]["notFound"];
+            409: components["responses"]["error"];
+            422: components["responses"]["validationError"];
         };
     };
     repoListActionsSecrets: {
@@ -13252,12 +13531,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["UpdateVariableOption"];
-                "text/plain": components["schemas"]["UpdateVariableOption"];
-            };
-        };
+        requestBody?: components["requestBodies"]["UpdateVariableOption"];
         responses: {
             /** @description response when updating a repo-level variable */
             201: {
@@ -13291,12 +13565,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["CreateVariableOption"];
-                "text/plain": components["schemas"]["CreateVariableOption"];
-            };
-        };
+        requestBody?: components["requestBodies"]["CreateVariableOption"];
         responses: {
             /** @description response when creating a repo-level variable */
             201: {
@@ -13428,7 +13697,10 @@ export interface operations {
     };
     ActionsDispatchWorkflow: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Whether the response should include the workflow run ID and URLs. */
+                return_run_details?: boolean;
+            };
             header?: never;
             path: {
                 /** @description owner of the repo */
@@ -13443,11 +13715,11 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["CreateActionWorkflowDispatch"];
-                "text/plain": components["schemas"]["CreateActionWorkflowDispatch"];
             };
         };
         responses: {
-            /** @description No Content */
+            200: components["responses"]["RunDetails"];
+            /** @description No Content, if return_run_details is missing or false */
             204: {
                 headers: {
                     [name: string]: unknown;
@@ -13517,7 +13789,10 @@ export interface operations {
     };
     repoGetArchive: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description subpath of the repository to download */
+                path?: string[];
+            };
             header?: never;
             path: {
                 /** @description owner of the repo */
@@ -13574,7 +13849,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["UpdateRepoAvatarOption"];
-                "text/plain": components["schemas"]["UpdateRepoAvatarOption"];
             };
         };
         responses: {
@@ -13817,6 +14091,33 @@ export interface operations {
             404: components["responses"]["notFound"];
         };
     };
+    repoUpdateBranch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description owner of the repo */
+                owner: string;
+                /** @description name of the repo */
+                repo: string;
+                /** @description name of the branch */
+                branch: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateBranchRepoOption"];
+            };
+        };
+        responses: {
+            204: components["responses"]["empty"];
+            403: components["responses"]["forbidden"];
+            404: components["responses"]["notFound"];
+            409: components["responses"]["conflict"];
+            422: components["responses"]["validationError"];
+        };
+    };
     repoDeleteBranch: {
         parameters: {
             query?: never;
@@ -13926,7 +14227,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["AddCollaboratorOption"];
-                "text/plain": components["schemas"]["AddCollaboratorOption"];
             };
         };
         responses: {
@@ -14229,6 +14529,7 @@ export interface operations {
         };
         responses: {
             200: components["responses"]["FileResponse"];
+            201: components["responses"]["FileResponse"];
             403: components["responses"]["error"];
             404: components["responses"]["notFound"];
             422: components["responses"]["error"];
@@ -14383,7 +14684,6 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["GetFilesOptions"];
-                "text/plain": components["schemas"]["GetFilesOptions"];
             };
         };
         responses: {
@@ -14429,7 +14729,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["CreateForkOption"];
-                "text/plain": components["schemas"]["CreateForkOption"];
             };
         };
         responses: {
@@ -14750,7 +15049,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["EditGitHookOption"];
-                "text/plain": components["schemas"]["EditGitHookOption"];
             };
         };
         responses: {
@@ -14812,12 +15110,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["EditHookOption"];
-                "text/plain": components["schemas"]["EditHookOption"];
-            };
-        };
+        requestBody?: components["requestBodies"]["EditHookOption"];
         responses: {
             200: components["responses"]["Hook"];
             404: components["responses"]["notFound"];
@@ -14905,7 +15198,7 @@ export interface operations {
             query?: {
                 /** @description whether issue is open or closed */
                 state?: "closed" | "open" | "all";
-                /** @description comma separated list of labels. Fetch only issues that have any of this labels. Non existent labels are discarded */
+                /** @description comma separated list of label names. Fetch only issues that have any of this label names. Non existent labels are discarded. */
                 labels?: string;
                 /** @description search string */
                 q?: string;
@@ -15238,7 +15531,7 @@ export interface operations {
         };
         requestBody?: components["requestBodies"]["EditReactionOption"];
         responses: {
-            200: components["responses"]["empty"];
+            204: components["responses"]["empty"];
             403: components["responses"]["forbidden"];
             404: components["responses"]["notFound"];
         };
@@ -15993,7 +16286,7 @@ export interface operations {
         };
         requestBody?: components["requestBodies"]["EditReactionOption"];
         responses: {
-            200: components["responses"]["empty"];
+            204: components["responses"]["empty"];
             403: components["responses"]["forbidden"];
             404: components["responses"]["notFound"];
         };
@@ -16633,7 +16926,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["MergeUpstreamRequest"];
-                "text/plain": components["schemas"]["MergeUpstreamRequest"];
             };
         };
         responses: {
@@ -16912,6 +17204,50 @@ export interface operations {
             423: components["responses"]["repoArchivedError"];
         };
     };
+    repoResolvePullReviewComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description owner of the repo */
+                owner: string;
+                /** @description name of the repo */
+                repo: string;
+                /** @description id of the review comment */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: components["responses"]["empty"];
+            400: components["responses"]["validationError"];
+            403: components["responses"]["forbidden"];
+            404: components["responses"]["notFound"];
+        };
+    };
+    repoUnresolvePullReviewComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description owner of the repo */
+                owner: string;
+                /** @description name of the repo */
+                repo: string;
+                /** @description id of the review comment */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: components["responses"]["empty"];
+            400: components["responses"]["validationError"];
+            403: components["responses"]["forbidden"];
+            404: components["responses"]["notFound"];
+        };
+    };
     repoListPinnedPullRequests: {
         parameters: {
             query?: never;
@@ -17025,6 +17361,34 @@ export interface operations {
             404: components["responses"]["notFound"];
         };
     };
+    repoCreatePullReviewCommentReply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description owner of the repo */
+                owner: string;
+                /** @description name of the repo */
+                repo: string;
+                /** @description index of the pull request */
+                index: number;
+                /** @description id of the review comment to reply to */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePullReviewCommentReplyOptions"];
+            };
+        };
+        responses: {
+            201: components["responses"]["PullReviewComment"];
+            400: components["responses"]["validationError"];
+            404: components["responses"]["notFound"];
+            422: components["responses"]["validationError"];
+        };
+    };
     repoGetPullRequestCommits: {
         parameters: {
             query?: {
@@ -17132,11 +17496,11 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["MergePullRequestOption"];
-                "text/plain": components["schemas"]["MergePullRequestOption"];
             };
         };
         responses: {
             200: components["responses"]["empty"];
+            403: components["responses"]["forbidden"];
             404: components["responses"]["notFound"];
             405: components["responses"]["empty"];
             409: components["responses"]["error"];
@@ -17250,7 +17614,6 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["CreatePullReviewOptions"];
-                "text/plain": components["schemas"]["CreatePullReviewOptions"];
             };
         };
         responses: {
@@ -17300,7 +17663,6 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["SubmitPullReviewOptions"];
-                "text/plain": components["schemas"]["SubmitPullReviewOptions"];
             };
         };
         responses: {
@@ -17373,7 +17735,6 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["DismissPullReviewOptions"];
-                "text/plain": components["schemas"]["DismissPullReviewOptions"];
             };
         };
         responses: {
@@ -17579,7 +17940,7 @@ export interface operations {
     repoListReleases: {
         parameters: {
             query?: {
-                /** @description filter (exclude / include) drafts, if you dont have repo write access none will show */
+                /** @description filter (exclude / include) drafts, if you don't have repo write access none will show */
                 draft?: boolean;
                 /** @description filter (exclude / include) pre-releases */
                 "pre-release"?: boolean;
@@ -18012,7 +18373,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["CreateStatusOption"];
-                "text/plain": components["schemas"]["CreateStatusOption"];
             };
         };
         responses: {
@@ -18251,7 +18611,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["CreateTagOption"];
-                "text/plain": components["schemas"]["CreateTagOption"];
             };
         };
         responses: {
@@ -18481,7 +18840,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["RepoTopicOptions"];
-                "text/plain": components["schemas"]["RepoTopicOptions"];
             };
         };
         responses: {
@@ -18548,7 +18906,6 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["TransferRepoOption"];
-                "text/plain": components["schemas"]["TransferRepoOption"];
             };
         };
         responses: {
@@ -19159,28 +19516,19 @@ export interface operations {
     };
     getUserRunners: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description filter by disabled status (true or false) */
+                disabled?: boolean;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            200: components["schemas"]["ActionRunnersResponse"];
+            200: components["responses"]["RunnerList"];
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
-        };
-    };
-    userGetRunnerRegistrationToken: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["RegistrationToken"];
         };
     };
     userCreateRunnerRegistrationToken: {
@@ -19207,7 +19555,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["schemas"]["ActionRunner"];
+            200: components["responses"]["Runner"];
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
         };
@@ -19233,6 +19581,24 @@ export interface operations {
             };
             400: components["responses"]["error"];
             404: components["responses"]["notFound"];
+        };
+    };
+    updateUserRunner: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description id of the runner */
+                runner_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: components["requestBodies"]["EditActionRunnerOption"];
+        responses: {
+            200: components["responses"]["Runner"];
+            400: components["responses"]["error"];
+            404: components["responses"]["notFound"];
+            422: components["responses"]["validationError"];
         };
     };
     getUserWorkflowRuns: {
@@ -19517,6 +19883,7 @@ export interface operations {
         requestBody: components["requestBodies"]["CreateOAuth2ApplicationOptions"];
         responses: {
             200: components["responses"]["OAuth2Application"];
+            400: components["responses"]["error"];
             404: components["responses"]["notFound"];
         };
     };
@@ -19636,7 +20003,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["CreateEmailOption"];
-                "text/plain": components["schemas"]["CreateEmailOption"];
             };
         };
         responses: {
@@ -19654,7 +20020,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["DeleteEmailOption"];
-                "text/plain": components["schemas"]["DeleteEmailOption"];
             };
         };
         responses: {
@@ -20057,7 +20422,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["UserSettingsOptions"];
-                "text/plain": components["schemas"]["UserSettingsOptions"];
             };
         };
         responses: {
