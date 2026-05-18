@@ -1,4 +1,4 @@
-import type { Repository } from "../types/api";
+import type { QueryOf, Repository } from "../types/api";
 import { getClient } from "./client";
 import type { GiteaRepositorySortKey } from "../domain/repository-sort";
 import type { SortOrder } from "../domain/options";
@@ -8,9 +8,7 @@ import { DEFAULT_PAGE_SIZE } from "../constants";
  * Parameters for repoSearch endpoint - supports server-side sorting.
  * Used by Explore Repositories command.
  */
-export type ListRepositoriesParams = {
-  limit?: number;
-  page?: number;
+export type ListRepositoriesParams = Omit<QueryOf<"repoSearch">, "sort" | "order"> & {
   sort?: GiteaRepositorySortKey;
   order?: SortOrder;
 };
@@ -30,7 +28,7 @@ export async function listRepositories(params: ListRepositoriesParams = {}): Pro
   return data?.data ?? [];
 }
 
-export type ListUserRepositoriesParams = { limit?: number; page?: number };
+export type ListUserRepositoriesParams = QueryOf<"userCurrentListRepos">;
 
 export async function listUserRepositories(params: ListUserRepositoriesParams = {}): Promise<Repository[]> {
   const client = getClient();

@@ -1,25 +1,7 @@
 import { getClient } from "./client";
-import type { Issue, Label, Milestone, User } from "../types/api";
+import type { Issue, Label, Milestone, PathParamsOf, QueryOf, RequestBodyOf, User } from "../types/api";
 
-export type IssueListParams = {
-  state?: "open" | "closed" | "all";
-  labels?: string;
-  milestones?: string;
-  q?: string;
-  priority_repo_id?: number;
-  type?: "issues" | "pulls";
-  since?: string;
-  before?: string;
-  assigned?: boolean;
-  created?: boolean;
-  mentioned?: boolean;
-  review_requested?: boolean;
-  reviewed?: boolean;
-  owner?: string;
-  team?: string;
-  page?: number;
-  limit?: number;
-};
+export type IssueListParams = QueryOf<"issueSearchIssues">;
 
 export async function searchIssues(params: IssueListParams = {}): Promise<Issue[]> {
   const client = getClient();
@@ -28,18 +10,7 @@ export async function searchIssues(params: IssueListParams = {}): Promise<Issue[
   return data ?? [];
 }
 
-export type ListRepoIssuesParams = {
-  owner: string;
-  repo: string;
-  state?: "open" | "closed" | "all";
-  labels?: string;
-  milestones?: string;
-  q?: string;
-  since?: string;
-  before?: string;
-  page?: number;
-  limit?: number;
-};
+export type ListRepoIssuesParams = PathParamsOf<"issueListIssues"> & QueryOf<"issueListIssues">;
 
 export async function listRepoIssues(params: ListRepoIssuesParams): Promise<Issue[]> {
   const client = getClient();
@@ -51,10 +22,7 @@ export async function listRepoIssues(params: ListRepoIssuesParams): Promise<Issu
   return data ?? [];
 }
 
-export type ListRepoLabelsParams = {
-  owner: string;
-  repo: string;
-};
+export type ListRepoLabelsParams = PathParamsOf<"issueListLabels">;
 
 export async function listRepoLabels(params: ListRepoLabelsParams): Promise<Label[]> {
   const client = getClient();
@@ -65,11 +33,7 @@ export async function listRepoLabels(params: ListRepoLabelsParams): Promise<Labe
   return data ?? [];
 }
 
-export type ListRepoMilestonesParams = {
-  owner: string;
-  repo: string;
-  state?: "open" | "closed" | "all";
-};
+export type ListRepoMilestonesParams = PathParamsOf<"issueGetMilestonesList"> & QueryOf<"issueGetMilestonesList">;
 
 export async function listRepoMilestones(params: ListRepoMilestonesParams): Promise<Milestone[]> {
   const client = getClient();
@@ -80,10 +44,7 @@ export async function listRepoMilestones(params: ListRepoMilestonesParams): Prom
   return data ?? [];
 }
 
-export type ListRepoAssigneesParams = {
-  owner: string;
-  repo: string;
-};
+export type ListRepoAssigneesParams = PathParamsOf<"repoGetAssignees">;
 
 export async function listRepoAssignees(params: ListRepoAssigneesParams): Promise<User[]> {
   const client = getClient();
@@ -94,17 +55,7 @@ export async function listRepoAssignees(params: ListRepoAssigneesParams): Promis
   return data ?? [];
 }
 
-export type CreateIssueParams = {
-  owner: string;
-  repo: string;
-  title: string;
-  body?: string;
-  labels?: number[];
-  milestone?: number;
-  assignees?: string[];
-  due_date?: string;
-  ref?: string;
-};
+export type CreateIssueParams = PathParamsOf<"issueCreateIssue"> & RequestBodyOf<"issueCreateIssue">;
 
 export async function createIssue(params: CreateIssueParams): Promise<Issue> {
   const client = getClient();

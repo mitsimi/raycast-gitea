@@ -5,31 +5,11 @@ import { getIssueItemKey, IssueItem, IssueKind } from "./components/issues";
 import { usePullRequests } from "./hooks/usePullRequests";
 import { useCurrentUser } from "./hooks/useCurrentUser";
 import { getPullRequestIcon } from "./utils/icons";
-
-const PullRequestCategory = {
-  All: "all",
-  Created: "created",
-  Assigned: "assigned",
-  Mentioned: "mentioned",
-  ReviewRequested: "review_requested",
-  Reviewed: "reviewed",
-  OwnedRepositories: "owned_repositories",
-} as const;
-type PullRequestCategory = (typeof PullRequestCategory)[keyof typeof PullRequestCategory];
-
-const categoryOptions = [
-  { title: "All", value: PullRequestCategory.All },
-  { title: "Created by you", value: PullRequestCategory.Created },
-  { title: "Assigned to you", value: PullRequestCategory.Assigned },
-  { title: "Mentioning you", value: PullRequestCategory.Mentioned },
-  { title: "Review requested", value: PullRequestCategory.ReviewRequested },
-  { title: "Reviewed by you", value: PullRequestCategory.Reviewed },
-  { title: "Repositories you own", value: PullRequestCategory.OwnedRepositories },
-];
+import { PullRequestCategory, PullRequestCategoryOptions } from "./domain/issue-category";
 
 export default function Command() {
   const prefs = getPreferenceValues<Preferences.MyPullRequests>();
-  const [selectedCategory, setSelectedCategory] = useCachedState<string>(
+  const [selectedCategory, setSelectedCategory] = useCachedState<PullRequestCategory>(
     "pull-requests-category-filter",
     PullRequestCategory.All,
   );
@@ -84,10 +64,10 @@ export default function Command() {
         <List.Dropdown
           tooltip="Filter by category"
           value={selectedCategory}
-          onChange={(value) => setSelectedCategory(value)}
+          onChange={(value) => setSelectedCategory(value as PullRequestCategory)}
         >
-          {categoryOptions.map((option) => (
-            <List.Dropdown.Item key={option.value} title={option.title} value={option.value} />
+          {PullRequestCategoryOptions.map((option) => (
+            <List.Dropdown.Item key={option.value} title={option.name} value={option.value} />
           ))}
         </List.Dropdown>
       }

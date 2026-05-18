@@ -5,24 +5,14 @@ import { useMemo, useState } from "react";
 import CreateIssue from "./issue-create";
 import { getIssueItemKey, IssueItem, IssueKind } from "./components/issues";
 import { getIssueIcon } from "./utils/icons";
-
-enum IssueCategory {
-  All = "all",
-  Created = "created",
-  Assigned = "assigned",
-  Mentioned = "mentioned",
-}
-
-const categoryOptions = [
-  { title: "All", value: IssueCategory.All },
-  { title: "Created", value: IssueCategory.Created },
-  { title: "Assigned", value: IssueCategory.Assigned },
-  { title: "Mentioned", value: IssueCategory.Mentioned },
-];
+import { IssueCategory, IssueCategoryOptions } from "./domain/issue-category";
 
 export default function Command() {
   const prefs = getPreferenceValues<Preferences.IssueMine>();
-  const [selectedCategory, setSelectedCategory] = useCachedState<string>("issues-category-filter", IssueCategory.All);
+  const [selectedCategory, setSelectedCategory] = useCachedState<IssueCategory>(
+    "issues-category-filter",
+    IssueCategory.All,
+  );
 
   const effectiveFilters = useMemo(() => {
     if (selectedCategory === IssueCategory.All) {
@@ -52,10 +42,10 @@ export default function Command() {
         <List.Dropdown
           tooltip="Filter by category"
           value={selectedCategory}
-          onChange={(value) => setSelectedCategory(value)}
+          onChange={(value) => setSelectedCategory(value as IssueCategory)}
         >
-          {categoryOptions.map((option) => (
-            <List.Dropdown.Item key={option.value} title={option.title} value={option.value} />
+          {IssueCategoryOptions.map((option) => (
+            <List.Dropdown.Item key={option.value} title={option.name} value={option.value} />
           ))}
         </List.Dropdown>
       }
