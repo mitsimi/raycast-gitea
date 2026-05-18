@@ -23,11 +23,11 @@ Raycast will load the extension in developer mode. Use Raycast's command search 
 
 ## OpenAPI / Swagger Workflow
 
-Gitea provides a Swagger v2 (OpenAPI 2.0) spec. This project converts it to OpenAPI 3 and generates types.
+Gitea provides a Swagger (OpenAPI 2.0) spec. This project converts it to OpenAPI 3 and generates types.
 
 Typical flow:
 
-1. Update or replace `swagger.v1.json` with the latest spec from your Gitea instance (http(s)://<your-gitea-instance>/swagger.v1.json).
+1. Update or replace `swagger.v1.json` with the latest spec from your Gitea instance (http(s)://<your-gitea-instance>/swagger.v1.json) or the official Gitea Swagger spec (https://gitea.com/swagger.v1.json).
 2. Convert v2 to v3: `npm run gen:swagger` (creates `openapi.json`)
 3. Generate types: `npm run gen:types` (writes `src/types/gitea.d.ts`)
 
