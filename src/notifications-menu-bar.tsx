@@ -1,7 +1,7 @@
 import { MenuBarExtra, Icon, Color, open, launchCommand, LaunchType } from "@raycast/api";
 import { showFailureToast, useCachedPromise, useCachedState } from "@raycast/utils";
 import { NotificationStatus } from "./domain/notification";
-import { readAllNotifications } from "./services/notifications";
+import { readAllNotifications, updateNotificationStatus } from "./services/notifications";
 import { listUnreadNotifications } from "./services/notifications";
 import { NotificationThread } from "./types/api";
 import { getNotificationIcon } from "./utils/icons";
@@ -18,17 +18,37 @@ export default function MenuBarCommand() {
   const unreadCount = notifications?.length ?? 0;
 
   const handleMarkAllAsRead = async () => {
+    const previousNotifications = notifications;
+    setNotifications([]);
+
     try {
       await readAllNotifications(NotificationStatus.Unread);
       revalidate();
     } catch (error) {
+      setNotifications(previousNotifications);
       showFailureToast(error, { title: "Failed to mark all as read" });
     }
   };
 
-  const handleOpenNotification = (item: NotificationThread) => {
+  const handleOpenNotification = async (item: NotificationThread) => {
     if (item.subject?.html_url) {
       open(item.subject.html_url);
+    }
+
+    if (!item.id) {
+      revalidate();
+      return;
+    }
+
+    const previousNotifications = notifications;
+    setNotifications((current) => current.filter((notification) => notification.id !== item.id));
+
+    try {
+      await updateNotificationStatus({ id: String(item.id), toStatus: NotificationStatus.Read });
+      revalidate();
+    } catch (error) {
+      setNotifications(previousNotifications);
+      showFailureToast(error, { title: "Failed to mark notification as read" });
     }
   };
 
