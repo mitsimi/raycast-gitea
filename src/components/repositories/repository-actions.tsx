@@ -1,15 +1,15 @@
 import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
 import type { Repository } from "../../types/api";
 import RepositoryCloneActions from "./repository-clone-actions";
+import CreateIssue from "../../issue-create";
 
 export default function RepositoryActions(props: {
   item: Repository;
   showDetails: boolean;
   setShowDetails: (show: boolean) => void;
-  createIssueAction?: ActionPanel.Section.Children;
   children?: ActionPanel.Section.Children;
 }) {
-  const cloneUrl = props.item.ssh_url || props.item.clone_url;
+  const cloneUrl = props.item.clone_url || props.item.ssh_url;
 
   return (
     <ActionPanel>
@@ -32,7 +32,7 @@ export default function RepositoryActions(props: {
           onAction={() => props.setShowDetails(!props.showDetails)}
         />
 
-        {props.createIssueAction}
+        {getCreateIssueAction(props.item)}
       </ActionPanel.Section>
 
       <ActionPanel.Section title="Copy">
@@ -73,4 +73,15 @@ export default function RepositoryActions(props: {
       {props.children && <ActionPanel.Section>{props.children}</ActionPanel.Section>}
     </ActionPanel>
   );
+}
+
+function getCreateIssueAction(item: Repository) {
+  return item.full_name && !item.archived && item.has_issues !== false ? (
+    <Action.Push
+      title="Create Issue"
+      icon={Icon.Plus}
+      shortcut={Keyboard.Shortcut.Common.New}
+      target={<CreateIssue initialRepo={item} />}
+    />
+  ) : null;
 }
