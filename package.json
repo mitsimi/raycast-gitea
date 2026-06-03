@@ -125,10 +125,10 @@
         },
         {
           "name": "includeRecentlyClosed",
-          "description": "Show recently closed issues",
+          "description": "Include closed issues in selected categories",
           "type": "checkbox",
           "required": false,
-          "label": "Recently Closed",
+          "label": "Include Closed",
           "default": false
         }
       ]
@@ -198,10 +198,10 @@
         },
         {
           "name": "includeRecentlyClosed",
-          "description": "Show recently closed pull requests",
+          "description": "Include closed pull requests in selected categories",
           "type": "checkbox",
           "required": false,
-          "label": "Recently Closed",
+          "label": "Include Closed",
           "default": false
         },
         {

@@ -89,7 +89,7 @@ describe("pull request services", () => {
     });
   });
 
-  it("includes recently closed and owned repository searches when requested", async () => {
+  it("includes closed and owned repository searches when requested", async () => {
     issueApi.search.mockResolvedValueOnce([pullRequest({ id: 1, title: "owned" })]);
 
     await expect(

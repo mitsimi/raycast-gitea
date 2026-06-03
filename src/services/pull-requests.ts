@@ -18,9 +18,10 @@ export type MyPullRequestsParams = {
 };
 
 export async function getMyPullRequests(params: MyPullRequestsParams): Promise<PaginatedResult<Issue>> {
+  const q = params.query?.trim() ? params.query.trim() : undefined;
   const baseQuery = {
     type: "pulls",
-    q: params.query,
+    q,
     page: params.page,
     limit: params.limit,
   } satisfies IssueListParams;

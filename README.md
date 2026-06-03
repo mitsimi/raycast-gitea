@@ -54,7 +54,7 @@ View issues across all your repositories. Shows issues created by you, assigned 
 **Command Preferences:**
 
 - Choose which categories to display by default (Created, Assigned, Mentioned)
-- Option to include recently closed issues
+- Option to include closed issues in selected categories
 
 ### My Pull Requests
 
@@ -74,7 +74,7 @@ View pull requests across all your repositories. Shows PRs created by you, assig
 **Command Preferences:**
 
 - Choose which categories to display by default
-- Option to include recently closed PRs
+- Option to include closed PRs in selected categories
 
 ### Search Issues
 
