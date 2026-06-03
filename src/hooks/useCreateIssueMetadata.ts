@@ -2,7 +2,7 @@ import { showFailureToast, useCachedPromise } from "@raycast/utils";
 import { getCreateIssueMetadata } from "../services/issues";
 
 export function useCreateIssueMetadata(owner?: string, repo?: string) {
-  const { data } = useCachedPromise(
+  const { data, isLoading } = useCachedPromise(
     async (o?: string, r?: string) => {
       const metadata = await getCreateIssueMetadata({ owner: o, repo: r });
       if (metadata.metadataFailures.length > 0) {
@@ -19,7 +19,7 @@ export function useCreateIssueMetadata(owner?: string, repo?: string) {
     },
   );
 
-  return data;
+  return { metadata: data, isLoading };
 }
 
 function formatMetadataFailureFields(fields: string[]): string {
