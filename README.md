@@ -144,6 +144,7 @@ Browse your personal repositories.
 
 **Features:**
 
+- **Search**: Type in the search bar to search your repositories
 - **Sorting Options**: Use dropdown to sort by:
   - Recently Updated (default)
   - Least Recently Updated
@@ -164,9 +165,11 @@ Browse your personal repositories.
 - **Actions**:
   - Open repository in browser (↵)
   - Clone with editor (VS Code, Cursor, Zed, IntelliJ) - ⌘⇧C for first editor
-  - Copy repository URL (⌘C)
+  - Copy HTML URL (⌘⇧H)
+  - Copy clone URL (⌘⇧C)
   - Copy SSH URL (⌘⇧S)
   - Create issue in repository (⌘N)
+  - Search issues in repository
   - Toggle details view (⌘⇧D)
 
 **Extension Preferences:**
@@ -179,6 +182,7 @@ Discover public repositories on your Gitea instance.
 
 **Features:**
 
+- **Search**: Type in the search bar to search public repositories
 - Same sorting options as "My Repositories"
 - Same details view and actions
 - Shows all public repositories you have access to browse
@@ -196,5 +200,6 @@ Common shortcuts across commands:
 | Toggle details    | ⌘⇧D   | Ctrl+Shift+D |
 | Mark as read      | ⌘⇧R   | Ctrl+Shift+R |
 | Pin/unpin         | ⌘⇧P   | Ctrl+Shift+P |
+| Copy HTML URL     | ⌘⇧H   | Ctrl+Shift+H |
 | Copy SSH URL      | ⌘⇧S   | Ctrl+Shift+S |
 | Clone with editor | ⌘⇧C   | Ctrl+Shift+C |
