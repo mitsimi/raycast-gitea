@@ -3,12 +3,15 @@ import { useCachedState } from "@raycast/utils";
 import { useMemo, useState } from "react";
 import { getIssueItemKey, IssueItem, IssueKind } from "./components/issues";
 import { usePullRequests } from "./hooks/usePullRequests";
-import { useCurrentUser } from "./hooks/useCurrentUser";
 import { getPullRequestIcon } from "./utils/icons";
 import { PullRequestCategory, PullRequestCategoryOptions } from "./domain/issue-category";
 
+type MyPullRequestsPreferences = Preferences.MyPullRequests & {
+  includeInRepositories?: boolean;
+};
+
 export default function Command() {
-  const prefs = getPreferenceValues<Preferences.MyPullRequests>();
+  const prefs = getPreferenceValues<MyPullRequestsPreferences>();
   const [selectedCategory, setSelectedCategory] = useCachedState<PullRequestCategory>(
     "pull-requests-category-filter",
     PullRequestCategory.All,
@@ -21,7 +24,7 @@ export default function Command() {
         includeAssigned: prefs.includeAssigned ?? true,
         includeMentioned: prefs.includeMentioned ?? true,
         includeReviewRequested: prefs.includeReviewRequested ?? true,
-        includeOwnedRepositories: prefs.includeOwnedRepositories ?? true,
+        includeInRepositories: prefs.includeInRepositories ?? prefs.includeOwnedRepositories ?? true,
         includeReviewed: prefs.includeReviewed ?? false,
         includeRecentlyClosed: prefs.includeRecentlyClosed ?? false,
       };
@@ -32,16 +35,14 @@ export default function Command() {
       includeMentioned: selectedCategory === PullRequestCategory.Mentioned,
       includeReviewRequested: selectedCategory === PullRequestCategory.ReviewRequested,
       includeReviewed: selectedCategory === PullRequestCategory.Reviewed,
-      includeOwnedRepositories: selectedCategory === PullRequestCategory.OwnedRepositories,
+      includeInRepositories: selectedCategory === PullRequestCategory.InRepositories,
       includeRecentlyClosed: prefs.includeRecentlyClosed ?? false,
     };
   }, [selectedCategory, prefs]);
 
   const [searchText, setSearchText] = useState<string>("");
-  const { user, isLoading: isLoadingUser } = useCurrentUser(effectiveFilters.includeOwnedRepositories);
   const { items, isLoading, pagination } = usePullRequests({
     ...effectiveFilters,
-    owner: user?.login,
     query: searchText,
   });
 
@@ -58,7 +59,7 @@ export default function Command() {
 
   return (
     <List
-      isLoading={isLoading || isLoadingUser}
+      isLoading={isLoading}
       searchBarPlaceholder="Search pull requests"
       searchBarAccessory={
         <List.Dropdown

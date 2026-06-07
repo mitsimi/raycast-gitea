@@ -30,9 +30,8 @@ describe("pull request services", () => {
         includeMentioned: false,
         includeReviewRequested: false,
         includeReviewed: false,
-        includeOwnedRepositories: false,
+        includeInRepositories: false,
         includeRecentlyClosed: false,
-        owner: "alice",
       }),
     ).resolves.toEqual({ items: [], hasMore: false });
     expect(issueApi.search).not.toHaveBeenCalled();
@@ -56,7 +55,7 @@ describe("pull request services", () => {
         includeMentioned: false,
         includeReviewRequested: true,
         includeReviewed: false,
-        includeOwnedRepositories: false,
+        includeInRepositories: false,
         includeRecentlyClosed: false,
         query: "fix",
         page: 2,
@@ -89,8 +88,8 @@ describe("pull request services", () => {
     });
   });
 
-  it("includes closed and owned repository searches when requested", async () => {
-    issueApi.search.mockResolvedValueOnce([pullRequest({ id: 1, title: "owned" })]);
+  it("includes closed pull requests in repositories the user participates in when requested", async () => {
+    issueApi.search.mockResolvedValueOnce([pullRequest({ id: 1, title: "participating" })]);
 
     await expect(
       getMyPullRequests({
@@ -99,13 +98,12 @@ describe("pull request services", () => {
         includeMentioned: false,
         includeReviewRequested: false,
         includeReviewed: false,
-        includeOwnedRepositories: true,
+        includeInRepositories: true,
         includeRecentlyClosed: true,
-        owner: "alice",
         limit: 10,
       }),
     ).resolves.toEqual({
-      items: [pullRequest({ id: 1, title: "owned" })],
+      items: [pullRequest({ id: 1, title: "participating" })],
       hasMore: false,
     });
 
@@ -115,7 +113,6 @@ describe("pull request services", () => {
       page: undefined,
       limit: 10,
       state: "all",
-      owner: "alice",
     });
   });
 });

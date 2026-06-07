@@ -165,19 +165,19 @@
           "default": true
         },
         {
+          "name": "includeInRepositories",
+          "description": "Show pull requests in repositories you own or contribute to",
+          "type": "checkbox",
+          "required": false,
+          "label": "In Your Repositories",
+          "default": true
+        },
+        {
           "name": "includeAssigned",
           "description": "Show pull requests assigned to you",
           "type": "checkbox",
           "required": false,
           "label": "Assigned",
-          "default": true
-        },
-        {
-          "name": "includeMentioned",
-          "description": "Show pull requests where you are mentioned",
-          "type": "checkbox",
-          "required": false,
-          "label": "Mentioned",
           "default": true
         },
         {
@@ -197,20 +197,20 @@
           "default": false
         },
         {
+          "name": "includeMentioned",
+          "description": "Show pull requests where you are mentioned",
+          "type": "checkbox",
+          "required": false,
+          "label": "Mentioned",
+          "default": true
+        },
+        {
           "name": "includeRecentlyClosed",
           "description": "Include closed pull requests in selected categories",
           "type": "checkbox",
           "required": false,
           "label": "Include Closed",
           "default": false
-        },
-        {
-          "name": "includeOwnedRepositories",
-          "description": "Show pull requests in repositories you own",
-          "type": "checkbox",
-          "required": false,
-          "label": "Owned Repositories",
-          "default": true
         }
       ]
     },

@@ -8,9 +8,8 @@ type UsePullRequestsOptions = {
   includeMentioned: boolean;
   includeReviewRequested: boolean;
   includeReviewed: boolean;
-  includeOwnedRepositories: boolean;
+  includeInRepositories: boolean;
   includeRecentlyClosed: boolean;
-  owner?: string;
   query?: string;
 };
 

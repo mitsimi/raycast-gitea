@@ -58,11 +58,11 @@ View issues across all your repositories. Shows issues created by you, assigned 
 
 ### My Pull Requests
 
-View pull requests across all your repositories. Shows PRs created by you, assigned to you, mentioning you, or requesting your review.
+View pull requests across your repositories. Shows PRs created by you, in your repositories, assigned to you, requesting your review, reviewed by you, or mentioning you.
 
 **Features:**
 
-- **Category Filter**: Use the dropdown to filter by All, Created, Assigned, Mentioned, Review Requested, or Reviewed
+- **Category Filter**: Use the dropdown to filter by All, Created by you, In your repositories, Assigned to you, Review requested, Reviewed by you, or Mentioning you
 - **Search**: Type in the search bar to filter PRs by text
 - **Smart Sorting**: Automatically sorts by state (open first) and then by update time
 - **Actions on PRs**:
