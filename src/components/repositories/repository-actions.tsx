@@ -2,6 +2,7 @@ import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
 import type { Repository } from "../../types/api";
 import RepositoryCloneActions from "./repository-clone-actions";
 import CreateIssue from "../../issue-create";
+import SearchIssues from "../../issue-search";
 
 export default function RepositoryActions(props: {
   item: Repository;
@@ -33,6 +34,7 @@ export default function RepositoryActions(props: {
         />
 
         {getCreateIssueAction(props.item)}
+        {getSearchIssuesAction(props.item)}
       </ActionPanel.Section>
 
       <ActionPanel.Section title="Copy">
@@ -82,6 +84,16 @@ function getCreateIssueAction(item: Repository) {
       icon={Icon.Plus}
       shortcut={Keyboard.Shortcut.Common.New}
       target={<CreateIssue initialRepo={item} />}
+    />
+  ) : null;
+}
+
+function getSearchIssuesAction(item: Repository) {
+  return item.full_name && item.has_issues !== false ? (
+    <Action.Push
+      title="Search Issues"
+      icon={Icon.MagnifyingGlass}
+      target={<SearchIssues initialSearchText={`repo:${item.full_name}`} />}
     />
   ) : null;
 }
