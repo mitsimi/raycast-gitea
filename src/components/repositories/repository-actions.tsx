@@ -1,7 +1,8 @@
-import { Action, ActionPanel, Icon, Keyboard } from "@raycast/api";
+import { Action, ActionPanel, Icon, Keyboard, getPreferenceValues } from "@raycast/api";
 import type { Repository } from "../../types/api";
 import RepositoryCloneActions from "./repository-clone-actions";
 import CreateIssue from "../../issue-create";
+import SearchIssues from "../../issue-search";
 
 export default function RepositoryActions(props: {
   item: Repository;
@@ -9,7 +10,8 @@ export default function RepositoryActions(props: {
   setShowDetails: (show: boolean) => void;
   children?: ActionPanel.Section.Children;
 }) {
-  const cloneUrl = props.item.clone_url || props.item.ssh_url;
+  const { cloneProtocol = "https" } = getPreferenceValues<ExtensionPreferences>();
+  const cloneUrl = getPreferredCloneUrl(props.item, cloneProtocol);
 
   return (
     <ActionPanel>
@@ -33,6 +35,7 @@ export default function RepositoryActions(props: {
         />
 
         {getCreateIssueAction(props.item)}
+        {getSearchIssuesAction(props.item)}
       </ActionPanel.Section>
 
       <ActionPanel.Section title="Copy">
@@ -84,4 +87,22 @@ function getCreateIssueAction(item: Repository) {
       target={<CreateIssue initialRepo={item} />}
     />
   ) : null;
+}
+
+function getSearchIssuesAction(item: Repository) {
+  return item.full_name && item.has_issues !== false ? (
+    <Action.Push
+      title="Search Issues"
+      icon={Icon.MagnifyingGlass}
+      target={<SearchIssues initialSearchText={`repo:${item.full_name}`} />}
+    />
+  ) : null;
+}
+
+function getPreferredCloneUrl(item: Repository, cloneProtocol: ExtensionPreferences["cloneProtocol"]) {
+  if (cloneProtocol === "https") {
+    return item.clone_url || item.ssh_url;
+  }
+
+  return item.ssh_url || item.clone_url;
 }
